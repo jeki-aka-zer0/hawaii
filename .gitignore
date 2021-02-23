@@ -1,0 +1,6 @@
+.idea
+.DS_Store
+Thumbs.db
+
+/var/data/*
+!/var/data/.gitkeep
