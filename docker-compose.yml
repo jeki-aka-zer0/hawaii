@@ -1,0 +1,29 @@
+version: '3'
+services:
+    hi-nginx:
+        build:
+            context: ./app/docker/development
+            dockerfile: nginx.docker
+        volumes:
+            - ./app:/app
+        depends_on:
+            - hi-php-fpm
+        ports:
+            - "8080:80"
+    hi-php-fpm:
+        build:
+            context: ./app/docker/development
+            dockerfile: php-fpm.docker
+        volumes:
+            - ./app:/app
+    hi-php-cli:
+        build:
+            context: app/docker/development
+            dockerfile: php-cli.docker
+        volumes:
+            - ./app:/app
+            - composer:/root/.composer/cache
+        tty: true
+
+volumes:
+    composer:
