@@ -16,6 +16,8 @@ services:
             dockerfile: php-fpm.docker
         volumes:
             - ./app:/app
+        depends_on:
+            - hi-postgres
     hi-php-cli:
         build:
             context: app/docker/development
@@ -23,7 +25,20 @@ services:
         volumes:
             - ./app:/app
             - composer:/root/.composer/cache
+        depends_on:
+            - hi-postgres
         tty: true
+    hi-postgres:
+        image: postgres:13.2-alpine
+        volumes:
+            - hi-postgres:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: app
+            POSTGRES_PASSWORD: secret
+            POSTGRES_DB: app
+        ports:
+            - "54321:5432"
 
 volumes:
+    hi-postgres:
     composer:
