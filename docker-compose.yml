@@ -38,6 +38,16 @@ services:
             POSTGRES_DB: app
         ports:
             - "54321:5432"
+    hi-nginx-admin:
+        build:
+            context: ./admin/docker/development
+            dockerfile: nginx.docker
+        volumes:
+            - ./admin:/admin
+        depends_on:
+            - hi-php-fpm
+        ports:
+            - "8081:80"
 
 volumes:
     hi-postgres:
