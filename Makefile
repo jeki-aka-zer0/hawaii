@@ -22,3 +22,7 @@ hi-init: hi-composer-install
 
 hi-composer-install:
 	docker-compose run --rm hi-php-cli composer install
+# 	docker-compose run --rm hi-node yarn start
+
+frontend-yarn-install:
+	docker-compose run --rm hi-node-cli yarn install

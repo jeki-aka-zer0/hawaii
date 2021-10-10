@@ -48,6 +48,25 @@ services:
             - hi-php-fpm
         ports:
             - "8081:80"
+    hi-node:
+        build:
+            context: admin/docker/development
+            dockerfile: node.docker
+#        image: node:15.14-alpine
+        volumes:
+            - ./admin:/admin
+#        working_dir: /admin
+        ports:
+            - "3001:3000"
+        command: yarn start
+        tty: true
+
+    hi-node-cli:
+        build:
+            context: admin/docker/development
+            dockerfile: node.docker
+        volumes:
+            - ./admin:/admin
 
 volumes:
     hi-postgres:
