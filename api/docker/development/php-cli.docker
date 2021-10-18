@@ -10,4 +10,4 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 COPY ./php/default.ini /usr/local/etc/php/conf.d/default.ini
 
-WORKDIR /app
+WORKDIR /api

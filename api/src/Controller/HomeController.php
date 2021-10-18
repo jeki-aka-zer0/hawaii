@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace Api\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +16,6 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('app/home.html.twig');
+        return $this->render('api/home.html.twig');
     }
 }

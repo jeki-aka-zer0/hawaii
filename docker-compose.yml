@@ -1,41 +1,41 @@
 version: '3'
 services:
-    hi-nginx:
+    api-nginx:
         build:
-            context: ./app/docker/development
+            context: api/docker/development
             dockerfile: nginx.docker
         volumes:
-            - ./app:/app
+            - ./api:/api
         depends_on:
-            - hi-php-fpm
+            - api-php-fpm
         ports:
             - "8080:80"
-    hi-php-fpm:
+    api-php-fpm:
         build:
-            context: ./app/docker/development
+            context: api/docker/development
             dockerfile: php-fpm.docker
         volumes:
-            - ./app:/app
+            - ./api:/api
         depends_on:
-            - hi-postgres
-    hi-php-cli:
+            - api-postgres
+    api-php-cli:
         build:
-            context: app/docker/development
+            context: api/docker/development
             dockerfile: php-cli.docker
         volumes:
-            - ./app:/app
+            - ./api:/api
             - composer:/root/.composer/cache
         depends_on:
-            - hi-postgres
+            - api-postgres
         tty: true
-    hi-postgres:
-        image: postgres:13.2-alpine
+    api-postgres:
+        image: postgres:14.0-alpine
         volumes:
-            - hi-postgres:/var/lib/postgresql/data
+            - api-postgres:/var/lib/postgresql/data
         environment:
-            POSTGRES_USER: app
+            POSTGRES_USER: hawaii
             POSTGRES_PASSWORD: secret
-            POSTGRES_DB: app
+            POSTGRES_DB: hawaii
         ports:
             - "54321:5432"
     frontend-node:
@@ -49,5 +49,5 @@ services:
         tty: true
 
 volumes:
-    hi-postgres:
+    api-postgres:
     composer:
