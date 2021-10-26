@@ -22,3 +22,6 @@ api-init: api-composer-install
 
 api-composer-install:
 	docker-compose run --rm api-php-cli composer install
+
+api-composer-bash:
+	docker-compose run --rm --env "COMPOSER_AUTH={\"github-oauth\": {\"github.com\": \"`composer config -g github-oauth.github.com`\"} }" api-php-cli bash
