@@ -8,6 +8,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --fil
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-COPY ./php/default.ini /usr/local/etc/php/conf.d/default.ini
+COPY ./default.ini /usr/local/etc/php/conf.d/default.ini
 
 WORKDIR /api

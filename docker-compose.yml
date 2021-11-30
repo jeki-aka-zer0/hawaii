@@ -2,8 +2,8 @@ version: '3'
 services:
     api-nginx:
         build:
-            context: api/docker/development
-            dockerfile: nginx.docker
+            context: api/docker/development/nginx
+            dockerfile: Dockerfile
         volumes:
             - ./api:/api
         depends_on:
@@ -12,16 +12,16 @@ services:
             - "8080:80"
     api-php-fpm:
         build:
-            context: api/docker/development
-            dockerfile: php-fpm.docker
+            context: api/docker/development/php-fpm
+            dockerfile: Dockerfile
         volumes:
             - ./api:/api
         depends_on:
             - api-postgres
     api-php-cli:
         build:
-            context: api/docker/development
-            dockerfile: php-cli.docker
+            context: api/docker/development/php-cli
+            dockerfile: Dockerfile
         volumes:
             - ./api:/api
             - composer:/root/.composer/cache
@@ -29,7 +29,7 @@ services:
             - api-postgres
         tty: true
     api-postgres:
-        image: postgres:14.0-alpine
+        image: postgres:14.1-alpine
         volumes:
             - api-postgres:/var/lib/postgresql/data
         environment:
@@ -40,8 +40,8 @@ services:
             - "54321:5432"
     frontend-node:
         build:
-            context: frontend/docker/development
-            dockerfile: node.docker
+            context: frontend/docker/development/node
+            dockerfile: Dockerfile
         volumes:
             - ./frontend:/frontend
         ports:
