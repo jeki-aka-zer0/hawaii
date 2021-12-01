@@ -1,5 +1,5 @@
-controllers:
-    resource: ../../src/Controller/
+eav_controllers:
+    resource: ../../src/Infrastructure/UI/Web/
     type: annotation
 
 kernel:
