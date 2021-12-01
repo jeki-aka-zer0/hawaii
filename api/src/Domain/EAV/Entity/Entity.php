@@ -16,21 +16,25 @@ final class Entity
     #[ORM\Id, ORM\Column(type: DoctrineEntityIdType::NAME)]
     private EntityId $id;
 
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private string $name;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $description;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
+    private EntityId $entityId;
 
-    public function __construct()
+    public function __construct(EntityId $entityId, string $name, ?string $description, DateTimeImmutable $createdAt)
     {
-        $this->createdAt = new DateTimeImmutable();
-        $this->updatedAt = new DateTimeImmutable();
+        $this->entityId = $entityId;
+        $this->name = $name;
+        $this->description = $description;
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $createdAt;
     }
 }
