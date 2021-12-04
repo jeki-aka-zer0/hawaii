@@ -10,9 +10,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class EntityController extends AbstractController
 {
-    #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'])]
+    #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'], format: 'json')]
+    public function create(CreateEntityCommand $request): Response
+    {
+        return new Response('{"test": "Coming soon"}');
+    }
+
+    #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'], format: 'json')]
     public function list(): Response
     {
-        return new Response('Coming soon');
+        return new Response('{"test": "Coming soon"}');
     }
 }
