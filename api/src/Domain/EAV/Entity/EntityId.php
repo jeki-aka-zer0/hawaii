@@ -10,9 +10,7 @@ use Webmozart\Assert\Assert;
 
 final class EntityId
 {
-    private string $value;
-
-    public function __construct(string $value)
+    public function __construct(private string $value)
     {
         Assert::uuid($value);
         $this->value = mb_strtolower($value);
