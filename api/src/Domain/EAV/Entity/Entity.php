@@ -27,7 +27,6 @@ final class Entity
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
-    private EntityId $entityId;
 
     public function __construct(EntityId $entityId, string $name, ?string $description, DateTimeImmutable $createdAt)
     {
