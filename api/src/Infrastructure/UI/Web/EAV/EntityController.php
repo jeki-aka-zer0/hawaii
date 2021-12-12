@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class EntityController extends AbstractController
 {
     #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'], format: 'json')]
-    public function create(CreateEntityCommand $request): Response
+    public function create(CreateEntityCommand $createEntityCommand): Response
     {
         return new Response('{"test": "Coming soon"}');
     }

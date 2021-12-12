@@ -2,8 +2,8 @@ POST http://localhost:8080/eav/entity
 Content-Type: application/json
 
 {
-  "name": "test",
-  "camel_case": "y1o"
+  "name": "Hello world",
+  "description": "Hello world - it's an old phrase used by developers"
 }
 
 ###
