@@ -4,7 +4,7 @@ doctrine:
         charset: UTF8
         server_version: 14.1
         types:
-            entity_id: App\Infrastructure\Domain\Model\DoctrineEntityIdType
+            entity_id: App\Infrastructure\Doctrine\EAV\EntityIdType
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware

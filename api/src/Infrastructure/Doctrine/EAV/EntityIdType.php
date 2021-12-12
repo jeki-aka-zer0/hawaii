@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Domain\Model;
+namespace App\Infrastructure\Doctrine\EAV;
 
 use App\Domain\EAV\Entity\EntityId;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\GuidType;
 use JetBrains\PhpStorm\Pure;
 
-final class DoctrineEntityIdType extends GuidType
+final class EntityIdType extends GuidType
 {
     public const NAME = 'entity_id';
 
