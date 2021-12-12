@@ -12,16 +12,16 @@ services:
             - "8080:80"
     api-php-fpm:
         build:
-            context: api/docker/development/php-fpm
-            dockerfile: Dockerfile
+            context: api/docker/development
+            dockerfile: php-fpm/Dockerfile
         volumes:
             - ./api:/api
         depends_on:
             - api-postgres
     api-php-cli:
         build:
-            context: api/docker/development/php-cli
-            dockerfile: Dockerfile
+            context: api/docker/development
+            dockerfile: php-cli/Dockerfile
         volumes:
             - ./api:/api
             - composer:/root/.composer/cache
