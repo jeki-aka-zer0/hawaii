@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Unit\Domain\EAV\Entity;
+namespace App\Tests\Unit\Domain\EAV\Entity;
 
 use App\Domain\EAV\Entity\EntityId;
 use PHPUnit\Framework\TestCase;

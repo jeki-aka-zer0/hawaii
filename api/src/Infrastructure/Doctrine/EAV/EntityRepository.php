@@ -23,4 +23,9 @@ final class EntityRepository extends ServiceEntityRepository implements \App\Dom
             ->setParameter(':name', $name)
             ->getQuery()->getSingleScalarResult() > 0;
     }
+
+    public function add(Entity $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
 }

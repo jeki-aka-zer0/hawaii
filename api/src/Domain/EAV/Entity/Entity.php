@@ -27,8 +27,18 @@ final class Entity
         private ?string $description,
 
         #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-        private DateTimeImmutable $createdAt
+        private DateTimeImmutable $createdAt = new DateTimeImmutable()
     ) {
         $this->updatedAt = $createdAt;
+    }
+
+    public function getEntityId(): EntityId
+    {
+        return $this->entityId;
+    }
+
+    public function isNameMatch(string $name): bool
+    {
+        return trim($name) === $this->name;
     }
 }

@@ -18,7 +18,7 @@ final class EntityController extends AbstractController
     {
         $entityId = $handler->handle($command);
 
-        return new JsonResponse(['entity_id' => $entityId], status: 201);
+        return new JsonResponse(['entity_id' => $entityId->getValue()], status: 201);
     }
 
     #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'], format: 'json')]
