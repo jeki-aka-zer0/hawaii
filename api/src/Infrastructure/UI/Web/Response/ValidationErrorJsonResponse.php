@@ -7,7 +7,6 @@ namespace App\Infrastructure\UI\Web\Response;
 use App\Infrastructure\UI\Web\Request\ValidationException;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\ConstraintViolation;
 
 final class ValidationErrorJsonResponse extends AbstractErrorJsonResponse
 {
@@ -21,7 +20,6 @@ final class ValidationErrorJsonResponse extends AbstractErrorJsonResponse
     {
         $errors = [];
         foreach ($exception->getViolations() as $violation) {
-            /** @var ConstraintViolation $violation */
             $errors[$violation->getPropertyPath()] = $violation->getMessage();
         }
 

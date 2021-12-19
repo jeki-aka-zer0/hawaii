@@ -21,17 +21,17 @@ final class Handler
     {
         $searchName = trim($command->name);
         if ($this->entities->hasByName($searchName)) {
-            throw new DomainException(sprintf('An entity with the name "%s" already exists.', $command->name));
+            throw new DomainException(sprintf('An entity with the name "%s" already exists.', $searchName));
         }
 
-        $entity = new Entity(
-            $entityId = EntityId::generate(),
-            $command->name,
-            $command->description,
-            new DateTimeImmutable()
+        $this->entities->add(
+            new Entity(
+                $entityId = EntityId::generate(),
+                $command->name,
+                $command->description,
+                new DateTimeImmutable()
+            )
         );
-
-        $this->entities->add($entity);
 
         $this->flusher->flush();
 

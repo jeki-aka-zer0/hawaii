@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\EAV;
 
 use App\Domain\EAV\Entity\Entity;
+use App\Domain\EAV\Repository\EntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class DbEntityRepository extends ServiceEntityRepository implements \App\Domain\EAV\Repository\EntityRepository
+final class DbEntityRepository extends ServiceEntityRepository implements EntityRepository
 {
     public function __construct(ManagerRegistry $registry, string $entityClass = Entity::class)
     {

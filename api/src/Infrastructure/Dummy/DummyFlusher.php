@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Dummy;
 
-final class Flusher implements \App\Domain\Flusher
+use App\Domain\Flusher;
+
+final class DummyFlusher implements Flusher
 {
     public function __construct(private bool $flushed = false)
     {

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Doctrine;
 
+use App\Domain\Flusher;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class Flusher implements \App\Domain\Flusher
+final class DbFlusher implements Flusher
 {
     private EntityManagerInterface $em;
 

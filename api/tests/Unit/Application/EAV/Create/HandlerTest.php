@@ -6,8 +6,8 @@ namespace App\Tests\Unit\Application\EAV\Create;
 
 use App\Application\EAV\Create\Command;
 use App\Application\EAV\Create\Handler;
+use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\InMemoryEntityRepository;
-use App\Infrastructure\Dummy\Flusher;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use DomainException;
 use JetBrains\PhpStorm\Pure;
@@ -19,6 +19,21 @@ final class HandlerTest extends TestCase
         'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
         'existent name with spaces' => ['name' => ' '.EntityBuilder::TEST_EXISTENT_NAME.' '],
     ];
+
+    private InMemoryEntityRepository $entities;
+    private DummyFlusher $flusher;
+    private Handler $handler;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->entities = new InMemoryEntityRepository([
+            (new EntityBuilder())->build(),
+        ]);
+        $this->flusher = new DummyFlusher();
+        $this->handler = new Handler($this->entities, $this->flusher);
+    }
 
     public function namesDataProvider(): array
     {
@@ -32,28 +47,33 @@ final class HandlerTest extends TestCase
      */
     public function testHandleShouldFailWhenEntityWithSameAlreadyExists(string $name): void
     {
+        $command = $this->getCommand(EntityBuilder::TEST_EXISTENT_NAME, 'Another test description');
+
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage(sprintf('An entity with the name "%s" already exists.', trim($name)));
 
-        $this->getHandler()->handle($this->getCommand());
+        $this->handler->handle($command);
     }
 
-    private function getHandler(): Handler
+    public function testHandleShouldSuccess(): void
     {
-        return new Handler(
-            new InMemoryEntityRepository([
-                (new EntityBuilder())->build(),
-            ]),
-            new Flusher(),
-        );
+        $name = 'Some name';
+        $description = 'Some description';
+        $command = $this->getCommand($name, $description);
+
+        $entityId = $this->handler->handle($command);
+
+        self::assertNotEmpty($entityId);
+        self::assertTrue($this->entities->hasByName($name));
+        self::assertTrue($this->flusher->isFlushed());
     }
 
     #[Pure]
-    private function getCommand(): Command
+    private function getCommand(string $name, string $description): Command
     {
         $command = new Command();
-        $command->name = EntityBuilder::TEST_EXISTENT_NAME;
-        $command->description = 'Another test description';
+        $command->name = $name;
+        $command->description = $description;
 
         return $command;
     }

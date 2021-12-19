@@ -7,23 +7,19 @@ namespace App\Infrastructure\Dummy\EAV;
 use App\Domain\EAV\Entity\Entity;
 use App\Domain\EAV\Repository\EntityRepository;
 use JetBrains\PhpStorm\Pure;
+use SplObjectStorage;
 
-final class InMemoryEntityRepository implements EntityRepository
+final class InMemoryEntityRepository extends SplObjectStorage implements EntityRepository
 {
-    /**
-     * @param Entity[] $collection
-     */
-    private array $collection;
-
     public function __construct(array $collection)
     {
-        array_map(fn(Entity $e) => $this->add($e), $collection);
+        array_map(fn(Entity $e) => $this->attach($e), $collection);
     }
 
     #[Pure]
     public function hasByName(string $name): bool
     {
-        foreach ($this->collection as $entity) {
+        foreach ($this as $entity) {
             /** @var Entity $entity */
             if ($entity->isNameMatch($name)) {
                 return true;
@@ -35,6 +31,6 @@ final class InMemoryEntityRepository implements EntityRepository
 
     public function add(Entity $entity): void
     {
-        $this->collection[$entity->getEntityId()->getValue()] = $entity;
+        $this->attach($entity);
     }
 }

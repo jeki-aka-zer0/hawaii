@@ -6,6 +6,7 @@ namespace App\Infrastructure\UI\Web\Request;
 
 use JetBrains\PhpStorm\Pure;
 use LogicException;
+use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Throwable;
 
@@ -21,6 +22,9 @@ final class ValidationException extends LogicException
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * @return ConstraintViolationListInterface|ConstraintViolation[]
+     */
     public function getViolations(): ConstraintViolationListInterface
     {
         return $this->violations;

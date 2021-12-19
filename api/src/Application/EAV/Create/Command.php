@@ -13,5 +13,5 @@ final class Command implements CommandInterface
     public string $name;
 
     #[Assert\Type('string')]
-    public string $description;
+    public ?string $description = null;
 }

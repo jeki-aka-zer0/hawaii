@@ -13,17 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class EntityController extends AbstractController
 {
-    #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'], format: 'json')]
+    #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'])]
     public function create(Command $command, Handler $handler): Response
     {
-        $entityId = $handler->handle($command);
-
-        return new JsonResponse(['entity_id' => $entityId->getValue()], status: 201);
+        return new JsonResponse(
+            [
+                'entity_id' => $handler->handle($command)->getValue(),
+            ],
+            status: 201
+        );
     }
 
-    #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'], format: 'json')]
+    #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'])]
     public function list(): Response
     {
-        return new Response('{"test": "Coming soon"}');
+        return new JsonResponse(['Coming soon']);
     }
 }
