@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\EAV\Entity;
 
+use App\Infrastructure\Doctrine\EAV\DbEntityRepository;
 use App\Infrastructure\Doctrine\EAV\EntityIdType;
-use App\Infrastructure\Doctrine\EAV\EntityRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EntityRepository::class)]
+#[ORM\Entity(repositoryClass: DbEntityRepository::class)]
 final class Entity
 {
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]

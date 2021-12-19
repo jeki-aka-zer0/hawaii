@@ -8,7 +8,7 @@ use App\Domain\EAV\Entity\Entity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class EntityRepository extends ServiceEntityRepository implements \App\Domain\EAV\Repository\EntityRepository
+final class DbEntityRepository extends ServiceEntityRepository implements \App\Domain\EAV\Repository\EntityRepository
 {
     public function __construct(ManagerRegistry $registry, string $entityClass = Entity::class)
     {

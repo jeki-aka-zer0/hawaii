@@ -8,7 +8,7 @@ use App\Application\EAV\Create\Command;
 use App\Application\EAV\Create\Handler;
 use App\Domain\EAV\Entity\Entity;
 use App\Domain\EAV\Entity\EntityId;
-use App\Infrastructure\Dummy\EAV\EntityRepository;
+use App\Infrastructure\Dummy\EAV\InMemoryEntityRepository;
 use App\Infrastructure\Dummy\Flusher;
 use DomainException;
 use JetBrains\PhpStorm\Pure;
@@ -42,7 +42,7 @@ final class HandlerTest extends TestCase
     private function getHandler(): Handler
     {
         return new Handler(
-            new EntityRepository([new Entity(EntityId::generate(), self::TEST_EXISTENT_NAME, 'Test description')]),
+            new InMemoryEntityRepository([new Entity(EntityId::generate(), self::TEST_EXISTENT_NAME, 'Test description')]),
             new Flusher()
         );
     }

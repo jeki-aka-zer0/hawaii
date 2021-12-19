@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Infrastructure\Dummy\EAV;
 
 use App\Domain\EAV\Entity\Entity;
+use App\Domain\EAV\Repository\EntityRepository;
 use JetBrains\PhpStorm\Pure;
 
-final class EntityRepository implements \App\Domain\EAV\Repository\EntityRepository
+final class InMemoryEntityRepository implements EntityRepository
 {
     /**
      * @param Entity[] $collection
