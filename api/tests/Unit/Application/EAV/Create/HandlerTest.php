@@ -6,24 +6,23 @@ namespace App\Tests\Unit\Application\EAV\Create;
 
 use App\Application\EAV\Create\Command;
 use App\Application\EAV\Create\Handler;
-use App\Domain\EAV\Entity\Entity;
-use App\Domain\EAV\Entity\EntityId;
 use App\Infrastructure\Dummy\EAV\InMemoryEntityRepository;
 use App\Infrastructure\Dummy\Flusher;
+use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use DomainException;
 use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\TestCase;
 
 final class HandlerTest extends TestCase
 {
-    private const TEST_EXISTENT_NAME = 'Test name';
+    private const NAMES_DATA_PROVIDER = [
+        'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
+        'existent name with spaces' => ['name' => ' '.EntityBuilder::TEST_EXISTENT_NAME.' '],
+    ];
 
     public function namesDataProvider(): array
     {
-        return [
-            'existent name' => ['name' => self::TEST_EXISTENT_NAME],
-            'existent name with spaces' => ['name' => ' '.self::TEST_EXISTENT_NAME.' '],
-        ];
+        return self::NAMES_DATA_PROVIDER;
     }
 
     /**
@@ -42,8 +41,10 @@ final class HandlerTest extends TestCase
     private function getHandler(): Handler
     {
         return new Handler(
-            new InMemoryEntityRepository([new Entity(EntityId::generate(), self::TEST_EXISTENT_NAME, 'Test description')]),
-            new Flusher()
+            new InMemoryEntityRepository([
+                (new EntityBuilder())->build(),
+            ]),
+            new Flusher(),
         );
     }
 
@@ -51,7 +52,7 @@ final class HandlerTest extends TestCase
     private function getCommand(): Command
     {
         $command = new Command();
-        $command->name = self::TEST_EXISTENT_NAME;
+        $command->name = EntityBuilder::TEST_EXISTENT_NAME;
         $command->description = 'Another test description';
 
         return $command;
