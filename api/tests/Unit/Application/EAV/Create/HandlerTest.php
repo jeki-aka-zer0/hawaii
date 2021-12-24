@@ -10,6 +10,7 @@ use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\InMemoryEntityRepository;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use DomainException;
+use Faker\Factory;
 use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\TestCase;
 
@@ -57,7 +58,7 @@ final class HandlerTest extends TestCase
 
     public function testHandleShouldSuccess(): void
     {
-        $name = 'Some name';
+        $name = Factory::create()->name;
         $description = 'Some description';
         $command = $this->getCommand($name, $description);
 
