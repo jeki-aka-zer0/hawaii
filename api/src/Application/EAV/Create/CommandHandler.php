@@ -11,7 +11,7 @@ use App\Domain\Flusher;
 use DateTimeImmutable;
 use DomainException;
 
-final class Handler
+final class CommandHandler
 {
     public function __construct(private EntityRepository $entities, private Flusher $flusher)
     {

@@ -32,11 +32,6 @@ final class Entity
         $this->updatedAt = $createdAt;
     }
 
-    public function getEntityId(): EntityId
-    {
-        return $this->entityId;
-    }
-
     public function isNameMatch(string $name): bool
     {
         return trim($name) === $this->name;

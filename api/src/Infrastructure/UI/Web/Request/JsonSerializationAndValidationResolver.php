@@ -9,6 +9,7 @@ use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -21,7 +22,7 @@ final class JsonSerializationAndValidationResolver implements ArgumentValueResol
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         return (new ReflectionClass($argument->getType()))
-            ->implementsInterface(CommandInterface::class);
+            ->implementsInterface(CommandQueryInterface::class);
     }
 
     public function resolve(Request $request, ArgumentMetadata $argument): Generator
@@ -35,12 +36,16 @@ final class JsonSerializationAndValidationResolver implements ArgumentValueResol
         yield $command;
     }
 
-    private function getCommand(Request $request, ArgumentMetadata $argument): CommandInterface
+    private function getCommand(Request $request, ArgumentMetadata $argument): CommandQueryInterface
     {
         $dtoClass = $argument->getType();
 
+        if ($request->isMethod(Request::METHOD_GET)) {
+            return $this->serializer->denormalize($request->query->all(), $dtoClass);
+        }
+
         return empty($request->getContent())
             ? new $dtoClass()
-            : $this->serializer->deserialize($request->getContent(), $dtoClass, 'json');
+            : $this->serializer->deserialize($request->getContent(), $dtoClass, JsonEncoder::FORMAT);
     }
 }

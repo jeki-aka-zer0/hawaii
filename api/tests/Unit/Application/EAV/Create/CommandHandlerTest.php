@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Application\EAV\Create;
 
 use App\Application\EAV\Create\Command;
-use App\Application\EAV\Create\Handler;
+use App\Application\EAV\Create\CommandHandler;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\InMemoryEntityRepository;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
@@ -14,7 +14,7 @@ use Faker\Factory;
 use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\TestCase;
 
-final class HandlerTest extends TestCase
+final class CommandHandlerTest extends TestCase
 {
     private const NAMES_DATA_PROVIDER = [
         'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
@@ -23,7 +23,7 @@ final class HandlerTest extends TestCase
 
     private InMemoryEntityRepository $entities;
     private DummyFlusher $flusher;
-    private Handler $handler;
+    private CommandHandler $handler;
 
     protected function setUp(): void
     {
@@ -33,7 +33,7 @@ final class HandlerTest extends TestCase
             (new EntityBuilder())->build(),
         ]);
         $this->flusher = new DummyFlusher();
-        $this->handler = new Handler($this->entities, $this->flusher);
+        $this->handler = new CommandHandler($this->entities, $this->flusher);
     }
 
     public function namesDataProvider(): array

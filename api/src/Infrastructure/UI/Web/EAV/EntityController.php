@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\UI\Web\EAV;
 
 use App\Application\EAV\Create\Command;
-use App\Application\EAV\Create\Handler;
+use App\Application\EAV\Create\CommandHandler;
+use App\Application\EAV\Read\Query;
+use App\Application\EAV\Read\QueryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 final class EntityController extends AbstractController
 {
     #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'])]
-    public function create(Command $command, Handler $handler): Response
+    public function create(Command $command, CommandHandler $handler): Response
     {
         return new JsonResponse(
             [
@@ -25,8 +27,12 @@ final class EntityController extends AbstractController
     }
 
     #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'])]
-    public function list(): Response
+    public function read(Query $query, QueryHandler $handler): Response
     {
-        return new JsonResponse(['Coming soon']);
+        return new JsonResponse(
+            [
+                'entities' => $handler->fetch($query),
+            ]
+        );
     }
 }
