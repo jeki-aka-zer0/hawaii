@@ -21,7 +21,11 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    App\Infrastructure\UI\Web\Request\JsonSerializationAndValidationResolver:
+    App\Infrastructure\UI\Web\Request\BodyResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 50 }
+
+    App\Infrastructure\UI\Web\Request\QueryResolver:
         tags:
             - { name: controller.argument_value_resolver, priority: 50 }
 
