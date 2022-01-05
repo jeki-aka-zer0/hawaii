@@ -5,14 +5,21 @@ doctrine:
         server_version: 14.1
         types:
             entity_id: App\Infrastructure\Doctrine\EAV\Entity\EntityIdType
+            attribute_id: App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
         mappings:
-            EAV:
+            EAV.entity:
                 is_bundle: false
                 type: attribute
                 dir: '%kernel.project_dir%/src/Domain/EAV/Entity/Entity'
                 prefix: 'App\Domain\EAV\Entity\Entity'
-                alias: EAV
+                alias: EAV.entity
+            EAV.attrubute:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/Domain/EAV/Attribute/Entity'
+                prefix: 'App\Domain\EAV\Attribute\Entity'
+                alias: EAV.attrubute
