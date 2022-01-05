@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Dummy\EAV;
+namespace App\Infrastructure\Dummy\EAV\Entity;
 
-use App\Domain\EAV\Entity\Entity;
-use App\Domain\EAV\Repository\EntityRepository;
+use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Repository\EntityRepository;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 

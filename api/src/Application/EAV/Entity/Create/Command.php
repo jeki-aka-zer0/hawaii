@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\EAV\Create;
+namespace App\Application\EAV\Entity\Create;
 
 use App\Infrastructure\UI\Web\Request\CommandInterface;
 use Symfony\Component\Validator\Constraints as Assert;

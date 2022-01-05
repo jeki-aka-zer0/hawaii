@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\EAV\Read;
+namespace App\Application\EAV\Entity\Read;
 
 use App\Infrastructure\UI\Web\Request\QueryInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;

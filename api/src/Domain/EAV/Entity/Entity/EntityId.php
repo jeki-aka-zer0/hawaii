@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\EAV\Entity;
+namespace App\Domain\EAV\Entity\Entity;
 
 use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;

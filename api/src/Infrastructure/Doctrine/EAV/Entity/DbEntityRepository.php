@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Doctrine\EAV;
+namespace App\Infrastructure\Doctrine\EAV\Entity;
 
-use App\Domain\EAV\Entity\Entity;
-use App\Domain\EAV\Repository\EntityRepository;
+use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Repository\EntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

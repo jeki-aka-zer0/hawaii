@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Domain\EAV\Repository\EntityRepository;
+use App\Domain\EAV\Entity\Repository\EntityRepository;
 use App\Domain\Flusher;
 use App\Infrastructure\Doctrine\DbFlusher;
-use App\Infrastructure\Doctrine\EAV\DbEntityRepository;
+use App\Infrastructure\Doctrine\EAV\Entity\DbEntityRepository;
 use App\Infrastructure\UI\Web\Request\BodyResolver;
 use App\Infrastructure\UI\Web\Request\QueryResolver;
 use App\Infrastructure\UI\Web\Response\ExceptionListener;

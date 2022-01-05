@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\UI\Web\EAV;
 
-use App\Application\EAV\Create\Command;
-use App\Application\EAV\Create\CommandHandler;
-use App\Application\EAV\Read\Query;
-use App\Application\EAV\Read\QueryHandler;
+use App\Application\EAV\Entity\Create\Command;
+use App\Application\EAV\Entity\Create\CommandHandler;
+use App\Application\EAV\Entity\Read\Query;
+use App\Application\EAV\Entity\Read\QueryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

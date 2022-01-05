@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\EAV\Repository;
+namespace App\Domain\EAV\Entity\Repository;
 
-use App\Domain\EAV\Entity\Entity;
+use App\Domain\EAV\Entity\Entity\Entity;
 
 interface EntityRepository
 {

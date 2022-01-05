@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\EAV\Entity;
 
-use App\Domain\EAV\Entity\EntityId;
+use App\Domain\EAV\Entity\Entity\EntityId;
 use PHPUnit\Framework\TestCase;
 use Webmozart\Assert\InvalidArgumentException;
 

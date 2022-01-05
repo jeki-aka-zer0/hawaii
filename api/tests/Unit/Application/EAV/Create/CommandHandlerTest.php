@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Application\EAV\Create;
 
-use App\Application\EAV\Create\Command;
-use App\Application\EAV\Create\CommandHandler;
+use App\Application\EAV\Entity\Create\Command;
+use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Infrastructure\Dummy\DummyFlusher;
-use App\Infrastructure\Dummy\EAV\InMemoryEntityRepository;
+use App\Infrastructure\Dummy\EAV\Entity\InMemoryEntityRepository;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use DomainException;
 use Faker\Factory;

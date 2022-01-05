@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Doctrine\EAV;
+namespace App\Infrastructure\Doctrine\EAV\Entity;
 
-use App\Domain\EAV\Entity\EntityId;
+use App\Domain\EAV\Entity\Entity\EntityId;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\GuidType;
 use JetBrains\PhpStorm\Pure;

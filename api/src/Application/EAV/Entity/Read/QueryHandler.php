@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\EAV\Read;
+namespace App\Application\EAV\Entity\Read;
 
 use Doctrine\DBAL\Connection;
+use function App\Application\EAV\Read\mb_strtolower;
 
 final class QueryHandler
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\EAV\Create;
+namespace App\Application\EAV\Entity\Create;
 
-use App\Domain\EAV\Entity\Entity;
-use App\Domain\EAV\Entity\EntityId;
-use App\Domain\EAV\Repository\EntityRepository;
+use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Entity\EntityId;
+use App\Domain\EAV\Entity\Repository\EntityRepository;
 use App\Domain\Flusher;
 use DateTimeImmutable;
 use DomainException;

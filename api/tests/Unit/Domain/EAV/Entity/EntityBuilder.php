@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\EAV\Entity;
 
-use App\Domain\EAV\Entity\Entity;
-use App\Domain\EAV\Entity\EntityId;
+use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Entity\EntityId;
 
 final class EntityBuilder
 {
