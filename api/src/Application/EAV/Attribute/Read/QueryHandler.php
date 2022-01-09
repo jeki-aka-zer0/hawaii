@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\EAV\Entity\Read;
+namespace App\Application\EAV\Attribute\Read;
 
 use Doctrine\DBAL\Connection;
 
@@ -17,9 +17,8 @@ final class QueryHandler
         $qb = $this->connection->createQueryBuilder()
             ->select([
                 'name',
-                'description',
             ])
-            ->from('entity');
+            ->from('attribute');
 
         if (null !== $query->name) {
             $qb

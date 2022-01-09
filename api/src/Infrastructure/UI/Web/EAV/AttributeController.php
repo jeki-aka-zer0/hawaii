@@ -6,6 +6,8 @@ namespace App\Infrastructure\UI\Web\EAV;
 
 use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
+use App\Application\EAV\Attribute\Read\Query;
+use App\Application\EAV\Attribute\Read\QueryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,16 @@ final class AttributeController extends AbstractController
                 'attribute_id' => $handler->handle($command)->getValue(),
             ],
             status: 201
+        );
+    }
+
+    #[Route('/eav/attribute', name: 'eav_attribute_list', methods: ['GET', 'HEAD'])]
+    public function read(Query $query, QueryHandler $handler): Response
+    {
+        return new JsonResponse(
+            [
+                'attributes' => $handler->fetch($query),
+            ]
         );
     }
 }

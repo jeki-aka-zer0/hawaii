@@ -7,6 +7,10 @@ Content-Type: application/json
   "description": "Hello world - it's an old phrase used by developers"
 }
 
+### Read entities
+GET http://localhost:8080/eav/entity?name=Hello
+Content-Type: application/json
+
 ### Create attribute
 POST http://localhost:8080/eav/attribute
 Content-Type: application/json
@@ -14,3 +18,7 @@ Content-Type: application/json
 {
   "name": "Color"
 }
+
+### Read attributes
+GET http://localhost:8080/eav/attribute?name=color
+Content-Type: application/json
