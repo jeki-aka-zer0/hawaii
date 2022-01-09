@@ -22,7 +22,7 @@ abstract class AbstractId
         return $this->getValue();
     }
 
-    public static function generate(): self
+    public static function generate(): static
     {
         return new static(Uuid::uuid4()->toString());
     }

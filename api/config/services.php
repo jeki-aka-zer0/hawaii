@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Domain\EAV\Attribute\Repository\AttributeRepository;
 use App\Domain\EAV\Entity\Repository\EntityRepository;
 use App\Domain\Flusher;
 use App\Infrastructure\Doctrine\DbFlusher;
+use App\Infrastructure\Doctrine\EAV\Attribute\DbAttributeRepository;
 use App\Infrastructure\Doctrine\EAV\Entity\DbEntityRepository;
 use App\Infrastructure\UI\Web\Request\BodyResolver;
 use App\Infrastructure\UI\Web\Request\QueryResolver;
@@ -19,6 +21,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->autowire()
         ->autoconfigure()
         ->bind(EntityRepository::class, service(DbEntityRepository::class))
+        ->bind(AttributeRepository::class, service(DbAttributeRepository::class))
         ->bind(Flusher::class, service(DbFlusher::class));
 
     $services->load('App\\', __DIR__.'/../src/')

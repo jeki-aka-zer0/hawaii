@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\UI\Web\EAV;
+
+use App\Application\EAV\Attribute\Create\Command;
+use App\Application\EAV\Attribute\Create\CommandHandler;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+final class AttributeController extends AbstractController
+{
+    #[Route('/eav/attribute', name: 'eav_attribute_create', methods: ['POST'])]
+    public function create(Command $command, CommandHandler $handler): Response
+    {
+        return new JsonResponse(
+            [
+                'attribute_id' => $handler->handle($command)->getValue(),
+            ],
+            status: 201
+        );
+    }
+}

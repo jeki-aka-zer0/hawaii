@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Application\EAV\Create;
+namespace App\Tests\Unit\Application\EAV\Attribute\Create;
 
-use App\Application\EAV\Entity\Create\Command;
-use App\Application\EAV\Entity\Create\CommandHandler;
+use App\Application\EAV\Attribute\Create\Command;
+use App\Application\EAV\Attribute\Create\CommandHandler;
 use App\Infrastructure\Dummy\DummyFlusher;
-use App\Infrastructure\Dummy\EAV\Entity\InMemoryEntityRepository;
-use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
+use App\Infrastructure\Dummy\EAV\Attribute\InMemoryAttributeRepository;
+use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
 use DomainException;
 use Faker\Factory;
 use JetBrains\PhpStorm\Pure;
@@ -17,11 +17,11 @@ use PHPUnit\Framework\TestCase;
 final class CommandHandlerTest extends TestCase
 {
     private const NAMES_DATA_PROVIDER = [
-        'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
-        'existent name with spaces' => ['name' => ' '.EntityBuilder::TEST_EXISTENT_NAME.' '],
+        'existent name' => ['name' => AttributeBuilder::TEST_EXISTENT_NAME],
+        'existent name with spaces' => ['name' => ' '.AttributeBuilder::TEST_EXISTENT_NAME.' '],
     ];
 
-    private InMemoryEntityRepository $entities;
+    private InMemoryAttributeRepository $entities;
     private DummyFlusher $flusher;
     private CommandHandler $handler;
 
@@ -29,8 +29,8 @@ final class CommandHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->entities = new InMemoryEntityRepository([
-            (new EntityBuilder())->build(),
+        $this->entities = new InMemoryAttributeRepository([
+            (new AttributeBuilder())->build(),
         ]);
         $this->flusher = new DummyFlusher();
         $this->handler = new CommandHandler($this->entities, $this->flusher);
@@ -46,12 +46,12 @@ final class CommandHandlerTest extends TestCase
      * @param string $name
      * @return void
      */
-    public function testHandleShouldFailWhenEntityWithSameAlreadyExists(string $name): void
+    public function testHandleShouldFailWhenAttributeWithSameAlreadyExists(string $name): void
     {
-        $command = $this->getCommand(EntityBuilder::TEST_EXISTENT_NAME, 'Another test description');
+        $command = $this->getCommand(AttributeBuilder::TEST_EXISTENT_NAME);
 
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage(sprintf('An entity with the name "%s" already exists.', trim($name)));
+        $this->expectExceptionMessage(sprintf('An attribute with the name "%s" already exists.', trim($name)));
 
         $this->handler->handle($command);
     }
@@ -59,22 +59,20 @@ final class CommandHandlerTest extends TestCase
     public function testHandleShouldSuccess(): void
     {
         $name = Factory::create()->name;
-        $description = 'Some description';
-        $command = $this->getCommand($name, $description);
+        $command = $this->getCommand($name);
 
-        $entityId = $this->handler->handle($command);
+        $attributeId = $this->handler->handle($command);
 
-        self::assertNotEmpty($entityId);
+        self::assertNotEmpty($attributeId);
         self::assertTrue($this->entities->hasByName($name));
         self::assertTrue($this->flusher->isFlushed());
     }
 
     #[Pure]
-    private function getCommand(string $name, string $description): Command
+    private function getCommand(string $name): Command
     {
         $command = new Command();
         $command->name = $name;
-        $command->description = $description;
 
         return $command;
     }

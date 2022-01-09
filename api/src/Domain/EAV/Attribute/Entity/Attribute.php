@@ -28,4 +28,9 @@ final class Attribute
     ) {
         $this->updatedAt = $createdAt;
     }
+
+    public function isNameMatch(string $name): bool
+    {
+        return trim($name) === $this->name;
+    }
 }

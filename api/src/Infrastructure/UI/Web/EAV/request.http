@@ -1,3 +1,4 @@
+### Create entity
 POST http://localhost:8080/eav/entity
 Content-Type: application/json
 
@@ -6,4 +7,10 @@ Content-Type: application/json
   "description": "Hello world - it's an old phrase used by developers"
 }
 
-###
+### Create attribute
+POST http://localhost:8080/eav/attribute
+Content-Type: application/json
+
+{
+  "name": "Color"
+}
