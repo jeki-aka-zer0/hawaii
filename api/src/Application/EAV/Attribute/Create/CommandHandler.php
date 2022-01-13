@@ -6,6 +6,7 @@ namespace App\Application\EAV\Attribute\Create;
 
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
+use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\EAV\Attribute\Repository\AttributeRepository;
 use App\Domain\Flusher;
 use DateTimeImmutable;
@@ -28,6 +29,7 @@ final class CommandHandler
             new Attribute(
                 $attributeId = AttributeId::generate(),
                 $command->name,
+                AttributeType::from($command->type),
                 new DateTimeImmutable()
             )
         );
