@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\EAV\Entity\Entity;
 
+use App\Domain\EAV\Value\Entity\Value;
 use App\Infrastructure\Doctrine\EAV\Entity\DbEntityRepository;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +21,9 @@ final class Entity
     public function __construct(
         #[ORM\Id, ORM\Column(type: EntityIdType::NAME)]
         private EntityId $entityId,
+
+        #[ORM\OneToMany(targetEntity: Value::class, mappedBy: 'entity', cascade: ['all'], orphanRemoval: true)]
+        private Collection $values,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
         private string $name,
