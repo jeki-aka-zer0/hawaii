@@ -14,8 +14,10 @@ use DomainException;
 
 final class CommandHandler
 {
-    public function __construct(private AttributeRepository $attributes, private Flusher $flusher)
-    {
+    public function __construct(
+        private readonly AttributeRepository $attributes,
+        private readonly Flusher $flusher
+    ) {
     }
 
     public function handle(Command $command): AttributeId

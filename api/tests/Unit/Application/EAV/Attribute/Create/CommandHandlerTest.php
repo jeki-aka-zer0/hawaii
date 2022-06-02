@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Application\EAV\Attribute\Create;
 
 use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
+use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\Attribute\InMemoryAttributeRepository;
 use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
@@ -46,7 +47,7 @@ final class CommandHandlerTest extends TestCase
      * @param string $name
      * @return void
      */
-    public function testHandleShouldFailWhenAttributeWithSameAlreadyExists(string $name): void
+    public function testHandleShouldFailWhenAttributeWithSameNameAlreadyExists(string $name): void
     {
         $command = $this->getCommand(AttributeBuilder::TEST_EXISTENT_NAME);
 
@@ -73,6 +74,7 @@ final class CommandHandlerTest extends TestCase
     {
         $command = new Command();
         $command->name = $name;
+        $command->type = AttributeType::String->value;
 
         return $command;
     }

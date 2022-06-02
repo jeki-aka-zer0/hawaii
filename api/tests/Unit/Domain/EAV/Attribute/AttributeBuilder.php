@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Domain\EAV\Attribute;
 
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
+use App\Domain\EAV\Attribute\Entity\AttributeType;
 
 final class AttributeBuilder
 {
@@ -13,6 +14,6 @@ final class AttributeBuilder
 
     public function build(): Attribute
     {
-        return new Attribute(AttributeId::generate(), self::TEST_EXISTENT_NAME);
+        return new Attribute(AttributeId::generate(), self::TEST_EXISTENT_NAME, AttributeType::String);
     }
 }

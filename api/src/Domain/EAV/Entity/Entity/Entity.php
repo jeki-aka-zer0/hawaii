@@ -8,6 +8,7 @@ use App\Domain\EAV\Value\Entity\Value;
 use App\Infrastructure\Doctrine\EAV\Entity\DbEntityRepository;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,12 +19,12 @@ final class Entity
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
+    #[ORM\OneToMany('entity', Value::class, ['all'], orphanRemoval: true)]
+    private Collection $values;
+
     public function __construct(
         #[ORM\Id, ORM\Column(type: EntityIdType::NAME)]
         private EntityId $entityId,
-
-        #[ORM\OneToMany(targetEntity: Value::class, mappedBy: 'entity', cascade: ['all'], orphanRemoval: true)]
-        private Collection $values,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
         private string $name,
@@ -35,6 +36,7 @@ final class Entity
         private DateTimeImmutable $createdAt = new DateTimeImmutable()
     ) {
         $this->updatedAt = $createdAt;
+        $this->values = new ArrayCollection();
     }
 
     public function isNameMatch(string $name): bool

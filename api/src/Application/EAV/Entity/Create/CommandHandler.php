@@ -13,8 +13,10 @@ use DomainException;
 
 final class CommandHandler
 {
-    public function __construct(private EntityRepository $entities, private Flusher $flusher)
-    {
+    public function __construct(
+        private readonly EntityRepository $entities,
+        private readonly Flusher $flusher
+    ) {
     }
 
     public function handle(Command $command): EntityId

@@ -14,7 +14,7 @@ final class ValidationException extends LogicException
 {
     #[Pure]
     public function __construct(
-        private ConstraintViolationListInterface $violations,
+        readonly private ConstraintViolationListInterface $violations,
         string $message = 'Invalid input.',
         int $code = 0,
         Throwable $previous = null
@@ -25,7 +25,7 @@ final class ValidationException extends LogicException
     /**
      * @return ConstraintViolationListInterface|ConstraintViolation[]
      */
-    public function getViolations(): ConstraintViolationListInterface
+    public function getViolations(): ConstraintViolationListInterface|ConstraintViolation
     {
         return $this->violations;
     }

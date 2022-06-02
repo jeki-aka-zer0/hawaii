@@ -46,7 +46,7 @@ final class CommandHandlerTest extends TestCase
      * @param string $name
      * @return void
      */
-    public function testHandleShouldFailWhenEntityWithSameAlreadyExists(string $name): void
+    public function testHandleShouldFailWhenEntityWithSameNameAlreadyExists(string $name): void
     {
         $command = $this->getCommand(EntityBuilder::TEST_EXISTENT_NAME, 'Another test description');
 
