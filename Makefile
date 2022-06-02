@@ -28,6 +28,9 @@ api-composer-install:
 api-composer-update:
 	docker-compose run --rm api-php-cli composer update
 
+api-migrations:
+	docker-compose run --rm api-php-cli bin/console doctrine:migrations:migrate --no-interaction
+
 api-composer-bash:
 	docker-compose run --rm --env "COMPOSER_AUTH={\"github-oauth\": {\"github.com\": \"`composer config -g github-oauth.github.com`\"} }" api-php-cli bash
 
