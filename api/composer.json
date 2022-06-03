@@ -88,6 +88,7 @@
     "require-dev": {
         "fzaninotto/faker": "^1.5",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^6.0"
+        "symfony/phpunit-bridge": "^6.0",
+        "symplify/config-transformer": "^10.2"
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38fd85538b6ef849c3d0b2a63c70f4a6",
+    "content-hash": "7a51f4a370a4c264855e429ed1b297ea",
     "packages": [
         {
             "name": "brick/math",
@@ -7369,6 +7369,47 @@
             "time": "2021-11-29T15:32:57+00:00"
         },
         {
+            "name": "symplify/config-transformer",
+            "version": "10.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symplify/config-transformer.git",
+                "reference": "1d6b76379d08e83460d77dda198e822eab2568b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symplify/config-transformer/zipball/1d6b76379d08e83460d77dda198e822eab2568b5",
+                "reference": "1d6b76379d08e83460d77dda198e822eab2568b5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "bin": [
+                "bin/config-transformer"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Prefixed version of Symfony YAML/XML to PHP/YAML config converter",
+            "support": {
+                "source": "https://github.com/symplify/config-transformer/tree/10.2.8"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.me/rectorphp",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/tomasvotruba",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-06-01T10:13:40+00:00"
+        },
+        {
             "name": "theseer/tokenizer",
             "version": "1.2.1",
             "source": {
@@ -7430,5 +7471,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
