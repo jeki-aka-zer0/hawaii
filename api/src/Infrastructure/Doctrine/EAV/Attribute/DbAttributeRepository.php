@@ -18,6 +18,7 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
 
     public function hasByName(string $name): bool
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->createQueryBuilder('a')
                 ->select('COUNT(a.attributeId)')
                 ->andWhere('lower(a.name) = :name')

@@ -18,9 +18,10 @@ final class DbEntityRepository extends ServiceEntityRepository implements Entity
 
     public function hasByName(string $name): bool
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->createQueryBuilder('e')
             ->select('COUNT(e.entityId)')
-            ->andWhere('e.name = :name')
+            ->andWhere('lower(e.name) = :name')
             ->setParameter(':name', $name)
             ->getQuery()->getSingleScalarResult() > 0;
     }

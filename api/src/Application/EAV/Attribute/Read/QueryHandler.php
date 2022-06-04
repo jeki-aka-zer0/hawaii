@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\EAV\Attribute\Read;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 final class QueryHandler
 {
@@ -12,6 +13,9 @@ final class QueryHandler
     {
     }
 
+    /**
+     * @throws Exception
+     */
     public function fetch(Query $query): array
     {
         $qb = $this->connection->createQueryBuilder()

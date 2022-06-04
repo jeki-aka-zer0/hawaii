@@ -8,6 +8,7 @@ use App\Application\EAV\Entity\Create\Command;
 use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Application\EAV\Entity\Read\Query;
 use App\Application\EAV\Entity\Read\QueryHandler;
+use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,9 @@ final class EntityController extends AbstractController
         );
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/eav/entity', name: 'eav_entity_list', methods: ['GET', 'HEAD'])]
     public function read(Query $query, QueryHandler $handler): Response
     {
