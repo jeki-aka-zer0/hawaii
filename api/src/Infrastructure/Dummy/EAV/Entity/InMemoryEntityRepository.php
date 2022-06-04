@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\Dummy\EAV\Entity;
 
 use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Entity\Repository\EntityRepository;
+use App\Domain\Shared\Repository\EntityNotFoundException;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
@@ -14,6 +16,18 @@ final class InMemoryEntityRepository extends SplObjectStorage implements EntityR
     public function __construct(array $collection)
     {
         array_map(fn(Entity $e) => $this->attach($e), $collection);
+    }
+
+    public function get(EntityId $entityId): Entity
+    {
+        foreach ($this as $entity) {
+            /** @var Entity $entity */
+            if ($entity->isEqual($entityId)) {
+                return $entity;
+            }
+        }
+
+        throw EntityNotFoundException::byId($entityId, 'Entity not found.');
     }
 
     #[Pure]

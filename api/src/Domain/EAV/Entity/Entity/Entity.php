@@ -39,6 +39,11 @@ final class Entity
         $this->values = new ArrayCollection();
     }
 
+    public function isEqual(EntityId $entityId): bool
+    {
+        return $this->entityId->isEqual($entityId);
+    }
+
     public function isNameMatch(string $name): bool
     {
         return mb_strtolower(trim($name)) === mb_strtolower($this->name);

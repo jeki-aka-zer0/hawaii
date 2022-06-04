@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\Dummy\EAV\Attribute;
 
 use App\Domain\EAV\Attribute\Entity\Attribute;
+use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Repository\AttributeRepository;
+use App\Domain\Shared\Repository\EntityNotFoundException;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
@@ -14,6 +16,18 @@ final class InMemoryAttributeRepository extends SplObjectStorage implements Attr
     public function __construct(array $collection)
     {
         array_map(fn(Attribute $e) => $this->attach($e), $collection);
+    }
+
+    public function get(AttributeId $attributeId): Attribute
+    {
+        foreach ($this as $attribute) {
+            /** @var Attribute $attribute */
+            if ($attribute->isEqual($attributeId)) {
+                return $attribute;
+            }
+        }
+
+        throw EntityNotFoundException::byId($attributeId, 'Attribute not found.');
     }
 
     #[Pure]

@@ -23,3 +23,13 @@ Content-Type: application/json
 ### Read attributes
 GET http://localhost:8080/eav/attribute?name=color
 Content-Type: application/json
+
+### Create value
+POST http://localhost:8080/eav/value
+Content-Type: application/json
+
+{
+  "entity_id": "58faa814-296d-4faa-81c8-1d173e7f03de",
+  "attribute_id": "3818eb8b-e06d-4e7a-b306-d99957fd1b23",
+  "value": "red"
+}

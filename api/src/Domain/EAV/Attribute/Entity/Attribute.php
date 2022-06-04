@@ -28,16 +28,21 @@ final class Attribute
         private AttributeId $attributeId,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
-        private string $name,
+        readonly public string $name,
 
         #[ORM\Column(type: AttributeTypeType::NAME, options: ['default' => AttributeTypeType::STRING])]
-        private AttributeType $type,
+        readonly public AttributeType $type,
 
         #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
         private DateTimeImmutable $createdAt = new DateTimeImmutable()
     ) {
         $this->updatedAt = $createdAt;
         $this->values = new ArrayCollection();
+    }
+
+    public function isEqual(AttributeId $attributeId): bool
+    {
+        return $this->attributeId->isEqual($attributeId);
     }
 
     public function isNameMatch(string $name): bool

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\EAV\Attribute;
 
 use App\Domain\EAV\Attribute\Entity\Attribute;
+use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Repository\AttributeRepository;
+use App\Domain\Shared\Repository\EntityNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +16,16 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
     public function __construct(ManagerRegistry $registry, string $entityClass = Attribute::class)
     {
         parent::__construct($registry, $entityClass);
+    }
+
+    public function get(AttributeId $attributeId): Attribute
+    {
+        $attribute = $this->find($attributeId->getValue());
+        if ($attribute === null) {
+            throw EntityNotFoundException::byId($attributeId, 'Attribute not found.');
+        }
+
+        return $attribute;
     }
 
     public function hasByName(string $name): bool
