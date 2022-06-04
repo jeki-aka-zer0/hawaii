@@ -41,6 +41,6 @@ final class Entity
 
     public function isNameMatch(string $name): bool
     {
-        return trim($name) === $this->name;
+        return mb_strtolower(trim($name)) === mb_strtolower($this->name);
     }
 }

@@ -20,8 +20,8 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
     {
         return $this->createQueryBuilder('a')
                 ->select('COUNT(a.attributeId)')
-                ->andWhere('a.name = :name')
-                ->setParameter(':name', $name)
+                ->andWhere('lower(a.name) = :name')
+                ->setParameter(':name', mb_strtolower($name))
                 ->getQuery()->getSingleScalarResult() > 0;
     }
 

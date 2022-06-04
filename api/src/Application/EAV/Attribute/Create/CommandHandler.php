@@ -22,15 +22,15 @@ final class CommandHandler
 
     public function handle(Command $command): AttributeId
     {
-        $searchName = trim($command->name);
-        if ($this->attributes->hasByName($searchName)) {
-            throw new DomainException(sprintf('An attribute with the name "%s" already exists.', $searchName));
+        $trimmedName = trim($command->name);
+        if ($this->attributes->hasByName($trimmedName)) {
+            throw new DomainException(sprintf('An attribute with the name "%s" already exists.', $command->name));
         }
 
         $this->attributes->add(
             new Attribute(
                 $attributeId = AttributeId::generate(),
-                $command->name,
+                $trimmedName,
                 AttributeType::from($command->type),
                 new DateTimeImmutable()
             )
