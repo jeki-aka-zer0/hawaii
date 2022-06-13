@@ -12,8 +12,8 @@ final class AttributeBuilder
 {
     public const TEST_EXISTENT_NAME = 'Color';
 
-    public function build(): Attribute
+    public function build(AttributeId $attributeId = null): Attribute
     {
-        return new Attribute(AttributeId::generate(), self::TEST_EXISTENT_NAME, AttributeType::String);
+        return new Attribute($attributeId ?? AttributeId::generate(), self::TEST_EXISTENT_NAME, AttributeType::String);
     }
 }

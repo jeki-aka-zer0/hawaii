@@ -7,7 +7,7 @@ namespace App\Tests\Unit\Application\EAV\Entity\Create;
 use App\Application\EAV\Entity\Create\Command;
 use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Infrastructure\Dummy\DummyFlusher;
-use App\Infrastructure\Dummy\EAV\Entity\InMemoryEntityRepository;
+use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use DomainException;
 use Faker\Factory;
@@ -21,7 +21,7 @@ final class CommandHandlerTest extends TestCase
         'existent name with spaces' => ['name' => ' '.EntityBuilder::TEST_EXISTENT_NAME.' '],
     ];
 
-    private InMemoryEntityRepository $entities;
+    private InMemoryRepository $entities;
     private DummyFlusher $flusher;
     private CommandHandler $handler;
 
@@ -29,7 +29,7 @@ final class CommandHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->entities = new InMemoryEntityRepository([
+        $this->entities = new InMemoryRepository([
             (new EntityBuilder())->build(),
         ]);
         $this->flusher = new DummyFlusher();
@@ -43,8 +43,6 @@ final class CommandHandlerTest extends TestCase
 
     /**
      * @dataProvider namesDataProvider
-     * @param string $name
-     * @return void
      */
     public function testHandleShouldFailWhenEntityWithSameNameAlreadyExists(string $name): void
     {

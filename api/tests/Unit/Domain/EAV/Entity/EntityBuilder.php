@@ -11,8 +11,8 @@ final class EntityBuilder
 {
     public const TEST_EXISTENT_NAME = 'Test name';
 
-    public function build(): Entity
+    public function build(EntityId $entityId = null): Entity
     {
-        return new Entity(EntityId::generate(), self::TEST_EXISTENT_NAME, 'Test description');
+        return new Entity($entityId ?? EntityId::generate(), self::TEST_EXISTENT_NAME, 'Test description');
     }
 }

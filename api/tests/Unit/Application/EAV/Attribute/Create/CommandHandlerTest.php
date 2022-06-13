@@ -8,7 +8,7 @@ use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Infrastructure\Dummy\DummyFlusher;
-use App\Infrastructure\Dummy\EAV\Attribute\InMemoryAttributeRepository;
+use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository;
 use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
 use DomainException;
 use Faker\Factory;
@@ -22,7 +22,7 @@ final class CommandHandlerTest extends TestCase
         'existent name with spaces' => ['name' => ' '.AttributeBuilder::TEST_EXISTENT_NAME.' '],
     ];
 
-    private InMemoryAttributeRepository $entities;
+    private InMemoryRepository $entities;
     private DummyFlusher $flusher;
     private CommandHandler $handler;
 
@@ -30,7 +30,7 @@ final class CommandHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->entities = new InMemoryAttributeRepository([
+        $this->entities = new InMemoryRepository([
             (new AttributeBuilder())->build(),
         ]);
         $this->flusher = new DummyFlusher();
@@ -44,8 +44,6 @@ final class CommandHandlerTest extends TestCase
 
     /**
      * @dataProvider namesDataProvider
-     * @param string $name
-     * @return void
      */
     public function testHandleShouldFailWhenAttributeWithSameNameAlreadyExists(string $name): void
     {

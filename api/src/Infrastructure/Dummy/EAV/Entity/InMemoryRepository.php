@@ -11,7 +11,7 @@ use App\Domain\Shared\Repository\EntityNotFoundException;
 use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
-final class InMemoryEntityRepository extends SplObjectStorage implements EntityRepository
+final class InMemoryRepository extends SplObjectStorage implements EntityRepository
 {
     public function __construct(array $collection)
     {
