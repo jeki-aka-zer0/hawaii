@@ -5,23 +5,42 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Domain\EAV\Value;
 
 use App\Domain\EAV\Attribute\Entity\Attribute;
+use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
+use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
+use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 
 final class ValueBuilder
 {
-    private const TEST_STRING_VALUE = 'test value';
-    private const TEST_INT_VALUE = 1;
-
-    public function build(Entity $entity, Attribute $attribute): Value
+    public function build(Entity $entity = null, Attribute $attribute = null): Value
     {
-        $value = match ($attribute->type) {
-            AttributeType::String => self::TEST_STRING_VALUE,
-            AttributeType::Int => self::TEST_INT_VALUE,
-        };
+        return new Value(
+            ValueId::generate(),
+            $entity ?? (new EntityBuilder())->build(EntityId::generate()),
+            $attribute ??= (new AttributeBuilder())->build(AttributeId::generate()),
+            self::generateRandomValueByAttribute($attribute)
+        );
+    }
 
-        return new Value(ValueId::generate(), $entity, $attribute, $value);
+    public static function generateRandomValueByAttribute(Attribute $attribute): string|int
+    {
+        return match ($attribute->type) {
+            AttributeType::String => self::generateRandomString(),
+            AttributeType::Int => self::generateRandomInt(),
+        };
+    }
+
+    public static function generateRandomString(): string
+    {
+        return sha1(microtime().self::generateRandomInt());
+    }
+
+    public static function generateRandomInt(): int
+    {
+        return random_int(PHP_INT_MIN, PHP_INT_MAX);
     }
 }
