@@ -8,10 +8,14 @@ use App\Application\EAV\Value\Upsert\Command;
 use App\Application\EAV\Value\Upsert\CommandHandler;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Entity\Entity\EntityId;
+use App\Domain\EAV\Value\Entity\Value;
+use App\Domain\EAV\Value\Repository\ValueRepository;
+use App\Domain\Flusher;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository as Attributes;
-use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository as Entites;
+use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository as Entities;
 use App\Infrastructure\Dummy\EAV\Value\InMemoryRepository;
+use App\Infrastructure\UI\Web\Request\CommandInterface;
 use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use App\Tests\Unit\Domain\EAV\Value\ValueBuilder;
@@ -55,6 +59,9 @@ final class CommandHandlerTest extends TestCase
         self::assertSame($value, $values->get($valueId));
     }
 
+    /**
+     * @return array{CommandHandler, Flusher|DummyFlusher, CommandInterface|Command, ValueRepository|InMemoryRepository, Value}
+     */
     private function buildHandlerAndOtherEntities(bool $persistValue, string|int $value = null): array
     {
         $entityId = EntityId::generate();
@@ -73,7 +80,7 @@ final class CommandHandlerTest extends TestCase
             new CommandHandler(
                 $values = new InMemoryRepository($persistValue ? [$value] : []),
                 new Attributes([$attribute]),
-                new Entites([$entity]),
+                new Entities([$entity]),
                 $flusher = new DummyFlusher()
             ),
             $flusher,

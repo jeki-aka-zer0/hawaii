@@ -26,7 +26,7 @@ final class ValueTest extends TestCase
         self::assertEquals($newValue, $value->value);
     }
 
-    public function equalDataProvider()
+    public function equalDataProvider(): array
     {
         $entity = (new EntityBuilder())->build($entityId = EntityId::generate());
         $attribute = (new AttributeBuilder())->build($attributeId = AttributeId::generate());

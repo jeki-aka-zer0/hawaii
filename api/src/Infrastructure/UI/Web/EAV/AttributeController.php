@@ -8,7 +8,6 @@ use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
 use App\Application\EAV\Attribute\Read\Query;
 use App\Application\EAV\Attribute\Read\QueryHandler;
-use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +26,6 @@ final class AttributeController extends AbstractController
         );
     }
 
-    /**
-     * @throws Exception
-     */
     #[Route('/eav/attribute', name: 'eav_attribute_list', methods: ['GET', 'HEAD'])]
     public function read(Query $query, QueryHandler $handler): Response
     {

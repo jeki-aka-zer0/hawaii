@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\EAV\Entity\Read;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 
 final class QueryHandler
 {
@@ -13,9 +12,6 @@ final class QueryHandler
     {
     }
 
-    /**
-     * @throws Exception
-     */
     public function fetch(Query $query): array
     {
         $qb = $this->connection->createQueryBuilder()
@@ -31,6 +27,7 @@ final class QueryHandler
                 ->setParameter('name', '%'.mb_strtolower($query->name).'%');
         }
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $qb->fetchAllAssociative();
     }
 }
