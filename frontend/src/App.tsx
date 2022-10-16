@@ -1,5 +1,6 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
+import EntitiesList from './EAV/EntitiesList'
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
         <p>
           Hello Hawaii.
         </p>
+        <EntitiesList />
       </header>
     </div>
   );
