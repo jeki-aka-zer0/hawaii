@@ -6,7 +6,9 @@ namespace App\Infrastructure\UI\Web\Request;
 
 use JetBrains\PhpStorm\Pure;
 use LogicException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Throwable;
 
@@ -28,5 +30,16 @@ final class ValidationException extends LogicException
     public function getViolations(): ConstraintViolationListInterface|ConstraintViolation
     {
         return $this->violations;
+    }
+
+    public static function unexpectedParameterType(NotNormalizableValueException $e): self
+    {
+        return new self(
+            new ConstraintViolationList(
+                [
+                    new ConstraintViolation('Unexpected parameter type.', '', [], null, $e->getPath(), null),
+                ]
+            )
+        );
     }
 }

@@ -17,7 +17,7 @@ const EntitiesList: React.FC = () => {
       signal: controller.signal
     }).then(res => {
       setLoading(false)
-      setEntities(res.data.entities)
+      setEntities(res.data.results)
     })
 
     return () => controller.abort()

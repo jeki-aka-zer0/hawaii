@@ -8,6 +8,8 @@ use JetBrains\PhpStorm\Pure;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -27,6 +29,15 @@ final class QueryResolver extends AbstractValidationResolver
 
     protected function getRequestDto(Request $request, ArgumentMetadata $argument): QueryInterface
     {
-        return $this->serializer->denormalize($request->query->all(), $argument->getType());
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            return $this->serializer->denormalize(
+                $request->query->all(),
+                $argument->getType(),
+                CsvEncoder::FORMAT, // hack to cast string to int. In query all the parameters come as strings
+            );
+        } catch (NotNormalizableValueException $e) {
+            throw ValidationException::unexpectedParameterType($e);
+        }
     }
 }
