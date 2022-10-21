@@ -9,19 +9,32 @@ type Entity = {
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [currentPageUrl, setCurrentPageUrl] = useState<string>('http://localhost:8080/eav/entity')
+  const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null)
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
 
   useEffect(() => {
     setLoading(true)
     const controller = new AbortController()
-    axios.get('http://localhost:8080/eav/entity', {
+    axios.get(currentPageUrl, {
       signal: controller.signal
     }).then(res => {
       setLoading(false)
       setEntities(res.data.results)
+      setPrevPageUrl(res.data.previous)
+      setNextPageUrl(res.data.next)
     })
 
     return () => controller.abort()
-  }, [])
+  }, [currentPageUrl])
+
+  function gotoPrevPage () {
+    prevPageUrl && setCurrentPageUrl(prevPageUrl)
+  }
+
+  function gotoNextPage () {
+    nextPageUrl && setCurrentPageUrl(nextPageUrl)
+  }
 
   if (loading) {
     return (<p>Loading...</p>)
@@ -32,6 +45,10 @@ const EntitiesList: React.FC = () => {
       {entities.map((e: Entity) => (
         <p key={e.name}><b>{e.name}</b>, {e.description}</p>
       ))}
+      <div>
+        {prevPageUrl && <button onClick={gotoPrevPage}>Previous</button>}
+        {nextPageUrl && <button onClick={gotoNextPage}>Next</button>}
+      </div>
     </>
   )
 }
