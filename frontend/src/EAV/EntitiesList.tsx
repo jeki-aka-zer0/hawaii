@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import EntityForm from './EntityForm'
 
 type Entity = {
   readonly name: string
@@ -16,14 +17,16 @@ const EntitiesList: React.FC = () => {
   useEffect(() => {
     setLoading(true)
     const controller = new AbortController()
-    axios.get(currentPageUrl, {
-      signal: controller.signal
-    }).then(res => {
-      setLoading(false)
-      setEntities(res.data.results)
-      setPrevPageUrl(res.data.previous)
-      setNextPageUrl(res.data.next)
-    })
+    axios
+      .get(currentPageUrl, {
+        signal: controller.signal
+      })
+      .then(res => {
+        setLoading(false)
+        setEntities(res.data.results)
+        setPrevPageUrl(res.data.previous)
+        setNextPageUrl(res.data.next)
+      })
 
     return () => controller.abort()
   }, [currentPageUrl])
@@ -42,6 +45,7 @@ const EntitiesList: React.FC = () => {
 
   return (
     <>
+      <EntityForm/>
       {entities.map((e: Entity) => (
         <p key={e.name}><b>{e.name}</b>, {e.description}</p>
       ))}
