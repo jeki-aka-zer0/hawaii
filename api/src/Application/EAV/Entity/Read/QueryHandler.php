@@ -54,7 +54,7 @@ final class QueryHandler
             ])
             ->setFirstResult($query->offset)
             ->setMaxResults($query->limit)
-            ->orderBy('lower(name)')
+            ->orderBy('created_at', 'DESC')
             ->fetchAllAssociative();
     }
 }
