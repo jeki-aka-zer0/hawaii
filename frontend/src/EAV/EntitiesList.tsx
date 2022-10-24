@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import EntityForm from './EntityForm'
 
 type Entity = {
   readonly name: string
@@ -45,7 +44,6 @@ const EntitiesList: React.FC = () => {
 
   return (
     <>
-      <EntityForm/>
       {entities.map((e: Entity) => (
         <p key={e.name}><b>{e.name}</b>, {e.description}</p>
       ))}
