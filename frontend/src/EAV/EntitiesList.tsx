@@ -26,6 +26,7 @@ const EntitiesList: React.FC = () => {
         setPrevPageUrl(res.data.previous)
         setNextPageUrl(res.data.next)
       })
+      .catch(error => console.log(error))
 
     return () => controller.abort()
   }, [currentPageUrl])

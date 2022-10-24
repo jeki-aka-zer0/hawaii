@@ -13,8 +13,8 @@ const EntityForm: React.FC = () => {
     console.log(data)
     axios
       .post('http://localhost:8080/eav/entity', data)
-      .then(response => {console.log(response.data)})
-      .catch(error => {console.log(error.data)})
+      .then(response => console.log(response.data))
+      .catch(error => console.log(error.data))
   }
 
   return (
