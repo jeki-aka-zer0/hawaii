@@ -12,7 +12,7 @@ const EntityForm: React.FC = () => {
   const onSubmit: SubmitHandler<Inputs> = data => {
     console.log(data)
     axios
-      .post('http://localhost:8080/eav/entity', data)
+      .post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
       .then(response => console.log(response.data))
       .catch(error => console.log(error.data))
   }

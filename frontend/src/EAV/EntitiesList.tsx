@@ -9,7 +9,7 @@ type Entity = {
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [currentPageUrl, setCurrentPageUrl] = useState<string>('http://localhost:8080/eav/entity')
+  const [currentPageUrl, setCurrentPageUrl] = useState<string>(`${process.env.REACT_APP_API_URL}/eav/entity`)
   const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null)
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
 
