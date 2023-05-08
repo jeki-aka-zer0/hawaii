@@ -45,7 +45,7 @@ input[type=submit] {
     color: #0a233f;
 }
 
-input[type=submit]:hover {
+input[type=submit]:hover:enabled {
     background: #c0de00;
     color: #102b48;
     position: relative;
@@ -55,6 +55,10 @@ input[type=submit]:hover {
 
 input[type=submit]:active {
     opacity: .9;
+}
+
+input[type=submit]:disabled {
+    cursor: not-allowed;
 }
 
 .error {
