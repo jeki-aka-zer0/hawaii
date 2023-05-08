@@ -1,12 +1,19 @@
 header {
+}
+
+header nav {
     margin: 20px 0;
 }
 
 header nav ul {
-    margin: 0;
+    display: flex;
+    width: 100%;
+}
+
+header nav ul li {
+    padding: 0 14px 0 0;
 }
 
 header nav a {
-    color: #fff;
+    text-decoration: none;
 }
-

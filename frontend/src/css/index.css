@@ -1,0 +1,18 @@
+html, body {
+    background-color: #05182c;
+    color: #d9fa02;
+    font-family: 'Courier', monospace;
+}
+
+a {
+    color: #02abfa;
+}
+
+a:hover {
+    color: #1f96cc;
+}
+
+.content {
+    margin: 0 auto;
+    max-width: 1000px;
+}

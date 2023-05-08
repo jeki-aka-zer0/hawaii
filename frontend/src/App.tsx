@@ -7,20 +7,20 @@ import EntityForm from './EAV/EntityForm'
 function App () {
   return (
     <>
-      <header>
+      <header className={'content'}>
         <nav>
           <ul>
             <li><Link to="/">Home</Link></li>
             <li>
               <Link to="/entities">Entities</Link>
-              <ul>
-                <li><Link to="/entities/create">Create</Link></li>
-              </ul>
+            </li>
+            <li>
+              <Link to="/entities/create">Create</Link>
             </li>
           </ul>
         </nav>
       </header>
-      <main>
+      <main className={'content'}>
         <Routes>
           <Route path="/" element={<h1>Welcome to Hawaii</h1>}/>
           <Route path="/entities">

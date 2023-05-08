@@ -1,4 +1,5 @@
 import React from 'react'
+import './EntityForm.css'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 
@@ -9,7 +10,7 @@ type Inputs = {
 
 const EntityForm: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = data => {
+  const onSubmit: SubmitHandler<Inputs> = (data: Inputs): void => {
     console.log(data)
     axios
       .post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
@@ -20,17 +21,13 @@ const EntityForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label htmlFor="name">
-          Name
-          <input type="text" {...register('name', { required: true })}/>
-          {errors.name && <span>This field is required</span>}
-        </label>
+        <label htmlFor="name">Name</label>
+        <input type="text" {...register("name", { required: true })} id="name" className={'size-m'}/>
+        {errors.name && <span className={"error"}>Name is required</span>}
       </div>
       <div>
-        <label htmlFor="description">
-          Description
-          <input type="text" {...register('description')}/>
-        </label>
+        <label htmlFor="description">Description</label>
+        <textarea {...register("description")} id="description" className={'size-m'}></textarea>
       </div>
       <div>
         <input type="submit" value="Create"/>
