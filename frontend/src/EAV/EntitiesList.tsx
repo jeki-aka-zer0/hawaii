@@ -40,7 +40,7 @@ const EntitiesList: React.FC = () => {
   }
 
   if (loading) {
-    return (<p>Loading...</p>)
+    return (<span className="loader">Loading<span>.</span><span>.</span><span>.</span></span>)
   }
 
   return (

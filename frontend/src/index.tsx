@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import './css/loader.min.css';
 import './css/reset.min.css';
 import './css/index.css'
 import App from './App'
