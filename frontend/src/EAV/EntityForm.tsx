@@ -1,6 +1,7 @@
 import React from 'react'
 import './EntityForm.css'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message/dist';
 import axios from 'axios'
 
 type Inputs = {
@@ -9,7 +10,9 @@ type Inputs = {
 };
 
 const EntityForm: React.FC = () => {
-  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>()
+  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
+    criteriaMode: 'all',
+  })
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs): void => {
     console.log(data)
     axios
@@ -22,8 +25,26 @@ const EntityForm: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <label htmlFor="name">Name</label>
-        <input type="text" {...register('name', { required: true, minLength: 2 })} id="name" className={'size-m'}/>
-        {errors.name && <span className={'error'}>Name is required</span>}
+        <input
+          id="name"
+          className={'size-m'}
+          type="text"
+          {...register('name', {
+            required: 'Name is required.',
+            minLength: { value: 2, message: 'Name must be at least 2 characters.' },
+            maxLength: { value: 255, message: 'Name must be at max 255 characters.' }
+          })}
+        />
+        <ErrorMessage
+          errors={errors}
+          name="name"
+          render={({ messages }) =>
+            messages &&
+            Object.entries(messages).map(([type, message]) => (
+              <span className={'error'} key={type}>{message}</span>
+            ))
+          }
+        />
       </div>
       <div>
         <label htmlFor="description">Description</label>
