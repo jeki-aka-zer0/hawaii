@@ -21,16 +21,16 @@ final class CommandHandler
 
     public function handle(Command $command): EntityId
     {
-        $trimmedName = trim($command->name);
-        if ($this->entities->hasByName($trimmedName)) {
-            throw new DomainException(sprintf('An entity with the name "%s" already exists.', $command->name));
+        $name = trim($command->name);
+         if ($this->entities->hasByName(mb_strtolower($name))) {
+            throw new DomainException(sprintf('An entity with the name "%s" already exists.', $name));
         }
 
         $this->entities->add(
             new Entity(
                 $entityId = EntityId::generate(),
-                $trimmedName,
-                $command->description,
+                $name,
+                trim($command->description) ?: null,
                 new DateTimeImmutable()
             )
         );

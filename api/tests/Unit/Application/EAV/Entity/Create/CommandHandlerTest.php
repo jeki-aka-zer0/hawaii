@@ -16,11 +16,6 @@ use PHPUnit\Framework\TestCase;
 
 final class CommandHandlerTest extends TestCase
 {
-    private const NAMES_DATA_PROVIDER = [
-        'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
-        'existent name with spaces' => ['name' => ' '.EntityBuilder::TEST_EXISTENT_NAME.' '],
-    ];
-
     private InMemoryRepository $entities;
     private DummyFlusher $flusher;
     private CommandHandler $handler;
@@ -38,7 +33,11 @@ final class CommandHandlerTest extends TestCase
 
     public function namesDataProvider(): array
     {
-        return self::NAMES_DATA_PROVIDER;
+        return [
+            'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
+            'existent name with spaces' => ['name' => ' ' . EntityBuilder::TEST_EXISTENT_NAME . ' '],
+            'existent name with upper case' => ['name' => mb_strtoupper(EntityBuilder::TEST_EXISTENT_NAME)],
+        ];
     }
 
     /**
@@ -46,7 +45,7 @@ final class CommandHandlerTest extends TestCase
      */
     public function testHandleShouldFailWhenEntityWithSameNameAlreadyExists(string $name): void
     {
-        $command = $this->getCommand(EntityBuilder::TEST_EXISTENT_NAME, 'Another test description');
+        $command = $this->getCommand($name, 'Another test description');
 
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage(sprintf('An entity with the name "%s" already exists.', trim($name)));
