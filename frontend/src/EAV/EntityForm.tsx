@@ -1,28 +1,50 @@
-import React from 'react'
+import React, { FC } from 'react'
 import './EntityForm.css'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { FieldPath, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message/dist';
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 type Inputs = {
   name: string;
   description: string;
 };
 
-const EntityForm: React.FC = () => {
-  const { register, handleSubmit, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
-    criteriaMode: 'all',
+interface ValidationErrorResponse<TFields extends FieldValues> {
+  errors: Record<FieldPath<TFields>, string[]>
+}
+
+const hasOwnProperty = <T extends object> (data: T, key: any): key is keyof T => {
+  return Object.prototype.hasOwnProperty.call(data, key)
+}
+
+function isValidationError<TFields extends FieldValues> (
+  error: any
+): error is AxiosError<ValidationErrorResponse<TFields>> {
+  return axios.isAxiosError(error) && 'errors' in error.response?.data
+}
+
+const EntityForm: FC = () => {
+  const { register, handleSubmit, setError, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
+    criteriaMode: 'all'
   })
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs): void => {
-    console.log(data)
     axios
       .post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
-      .then(response => console.log(response.data))
-      .catch(error => console.log(error.data))
+      .then(response => console.log('then', response.data))
+      .catch(result => {
+        if (result.response.status === 422 && isValidationError<Inputs>(result)) {
+          const validationErrors = result.response!.data.errors
+          for (const fieldName in validationErrors) {
+            if (hasOwnProperty(validationErrors, fieldName)) {
+              setError(fieldName, { message: validationErrors[fieldName].join(' ') })
+            }
+          }
+        }
+      })
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} data-testid="entity-form">
       <div>
         <label htmlFor="name">Name</label>
         <input
@@ -38,12 +60,7 @@ const EntityForm: React.FC = () => {
         <ErrorMessage
           errors={errors}
           name="name"
-          render={({ messages }) =>
-            messages &&
-            Object.entries(messages).map(([type, message]) => (
-              <span className={'error'} key={type}>{message}</span>
-            ))
-          }
+          render={({ message }) => <span className={'error'}>{message}</span>}
         />
       </div>
       <div>
@@ -51,7 +68,7 @@ const EntityForm: React.FC = () => {
         <textarea {...register('description')} id="description" className={'size-m'}></textarea>
       </div>
       <div>
-        <input type="submit" value="Create" disabled={isSubmitting && isDirty && isValid}/>
+        <input type="submit" value="Create" disabled={isSubmitting && isDirty && isValid} data-testid="entity-form-submit-btn"/>
       </div>
     </form>
   )
