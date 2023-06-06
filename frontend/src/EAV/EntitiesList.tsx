@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-
-type Entity = {
-  readonly name: string
-  readonly description: string
-}
+import {Entity, ListResponse} from "../types/types";
 
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -17,7 +13,7 @@ const EntitiesList: React.FC = () => {
     setLoading(true)
     const controller = new AbortController()
     axios
-      .get(currentPageUrl, {
+      .get<ListResponse>(currentPageUrl, {
         signal: controller.signal
       })
       .then(res => {
