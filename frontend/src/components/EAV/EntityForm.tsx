@@ -1,28 +1,15 @@
 import React, { FC } from 'react'
 import './EntityForm.css'
-import { FieldPath, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message/dist';
-import axios, { AxiosError, AxiosResponse } from 'axios'
-import { CreatedEntity } from '../types/types'
+import axios, { AxiosResponse } from 'axios'
+import { CreatedEntity } from '../../types/types'
+import { hasOwnProperty, isValidationError } from  '../../utils/utils'
 
 type Inputs = {
   name: string;
   description: string;
 };
-
-interface ValidationErrorResponse<TFields extends FieldValues> {
-  errors: Record<FieldPath<TFields>, string[]>
-}
-
-const hasOwnProperty = <T extends object> (data: T, key: any): key is keyof T => {
-  return Object.prototype.hasOwnProperty.call(data, key)
-}
-
-function isValidationError<TFields extends FieldValues> (
-  error: any
-): error is AxiosError<ValidationErrorResponse<TFields>> {
-  return axios.isAxiosError(error) && 'errors' in error.response?.data
-}
 
 const EntityForm: FC = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({

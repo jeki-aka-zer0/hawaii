@@ -19,7 +19,7 @@ final class EntityController extends AbstractController
 {
     private const EAV_ENTITY_LIST = 'eav_entity_list';
 
-    public function __construct(private UrlGeneratorInterface $router)
+    public function __construct(private readonly UrlGeneratorInterface $router)
     {
     }
 

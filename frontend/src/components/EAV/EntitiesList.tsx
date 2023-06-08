@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import {Entity, ListResponse} from "../types/types";
+import {Entity, ListResponse} from "../../types/types";
 
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])

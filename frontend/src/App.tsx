@@ -1,8 +1,8 @@
 import React from 'react'
 import './App.css'
-import EntitiesList from './EAV/EntitiesList'
+import EntitiesList from './components/EAV/EntitiesList'
 import { Link, Route, Routes } from 'react-router-dom'
-import EntityForm from './EAV/EntityForm'
+import EntityForm from './components/EAV/EntityForm'
 
 function App () {
   return (
