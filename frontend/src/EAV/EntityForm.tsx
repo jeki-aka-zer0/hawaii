@@ -2,7 +2,8 @@ import React, { FC } from 'react'
 import './EntityForm.css'
 import { FieldPath, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message/dist';
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { CreatedEntity } from '../types/types'
 
 type Inputs = {
   name: string;
@@ -29,8 +30,10 @@ const EntityForm: FC = () => {
   })
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs): void => {
     axios
-      .post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
-      .then(response => console.log('then', response.data))
+      .post<CreatedEntity>(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
+      .then((response: AxiosResponse<CreatedEntity>) => {
+        console.log('then', response.data)
+      })
       .catch(result => {
         if (result.response.status === 422 && isValidationError<Inputs>(result)) {
           const validationErrors = result.response!.data.errors
