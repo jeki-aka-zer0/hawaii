@@ -1,14 +1,18 @@
 export interface ListResponse {
-    results: Entity[]
-    previous: string | null
-    next: string | null
+  results: Entity[]
+  previous: string | null
+  next: string | null
 }
 
 export type CreatedEntity = {
-    readonly entity_id: string
+  readonly entity_id: string
 }
 
 export type Entity = {
-    readonly name: string
-    readonly description: string | null
+  readonly name: string
+  readonly description: string | null
+}
+
+export type FormErrors = {
+  [key: string]: string[]
 }
