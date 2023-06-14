@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Application\EAV\Attribute\Create;
 use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
+use App\Domain\Shared\Repository\FieldException;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository;
 use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
@@ -49,7 +50,7 @@ final class CommandHandlerTest extends TestCase
     {
         $command = $this->getCommand(AttributeBuilder::TEST_EXISTENT_NAME);
 
-        $this->expectException(DomainException::class);
+        $this->expectException(FieldException::class);
         $this->expectExceptionMessage(sprintf('An attribute with the name "%s" already exists.', trim($name)));
 
         $this->handler->handle($command);

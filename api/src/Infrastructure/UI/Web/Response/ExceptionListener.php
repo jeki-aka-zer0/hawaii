@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\UI\Web\Response;
 
 use App\Domain\Shared\Repository\EntityNotFoundException;
+use App\Domain\Shared\Repository\FieldException;
 use App\Infrastructure\UI\Web\Request\ValidationException;
 use DomainException;
 use JetBrains\PhpStorm\ArrayShape;
@@ -42,6 +43,11 @@ final class ExceptionListener
                 $response = HttpErrorJsonResponse::createNotFoundError($exception);
                 $level = Logger::ERROR;
                 $context = ['entity_id' => $exception->id->getValue()] + $this->getExceptionCodeAndTraceData($exception);
+                break;
+            case $exception instanceof FieldException:
+                $response = DomainErrorJsonResponse::createFieldError($exception);
+                $level = Logger::ERROR;
+                $context = ['field' => $exception->getField()] + $this->getExceptionCodeAndTraceData($exception);
                 break;
             case $exception instanceof DomainException:
                 /** @var DomainException $exception */
