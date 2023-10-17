@@ -17,6 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DbAttributeRepository::class)]
 final class Attribute
 {
+    public const LABEL = 'attribute';
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 

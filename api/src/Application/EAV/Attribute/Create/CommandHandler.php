@@ -10,8 +10,9 @@ use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\EAV\Attribute\Repository\AttributeRepository;
 use App\Domain\Flusher;
 use App\Domain\Shared\Repository\FieldException;
+use App\Domain\Shared\Util\Err;
+use App\Domain\Shared\Util\Str;
 use DateTimeImmutable;
-use DomainException;
 
 final class CommandHandler
 {
@@ -21,21 +22,21 @@ final class CommandHandler
     ) {
     }
 
-    public function handle(Command $command): AttributeId
+    public function handle(Command $cmd): AttributeId
     {
-        $trimmedName = trim($command->name);
-        if ($this->attributes->hasByName($trimmedName)) {
+        $nameTrimmed = (string)(new Str($cmd->name))->trim();
+        if ($this->attributes->hasByName($nameTrimmed)) {
             throw FieldException::build(
-                'name' /** @see \App\Application\EAV\Attribute\Create\Command::$name */,
-                sprintf('An attribute with the name "%s" already exists.', $command->name),
+                Command::LABEL_NAME,
+                Err::alreadyExists(Attribute::LABEL, Command::LABEL_NAME, $cmd->name),
             );
         }
 
         $this->attributes->add(
             new Attribute(
                 $attributeId = AttributeId::generate(),
-                $trimmedName,
-                AttributeType::from($command->type),
+                $nameTrimmed,
+                AttributeType::from($cmd->type),
                 new DateTimeImmutable()
             )
         );

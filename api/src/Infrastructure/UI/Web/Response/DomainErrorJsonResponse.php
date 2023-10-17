@@ -17,7 +17,7 @@ final class DomainErrorJsonResponse extends AbstractErrorJsonResponse
 
     public static function createFieldError(FieldException $exception): AbstractErrorJsonResponse
     {
-        return self::buildErrorResponse([$exception->getField() => $exception->getMessage()]);
+        return self::buildErrorResponse([$exception->getField() => [$exception->getMessage()]]);
     }
 
     protected static function buildErrorResponse(array $errors, int $status = Response::HTTP_UNPROCESSABLE_ENTITY): static

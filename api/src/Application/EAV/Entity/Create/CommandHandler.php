@@ -9,6 +9,8 @@ use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Entity\Repository\EntityRepository;
 use App\Domain\Flusher;
 use App\Domain\Shared\Repository\FieldException;
+use App\Domain\Shared\Util\Err;
+use App\Domain\Shared\Util\Str;
 use DateTimeImmutable;
 
 final class CommandHandler
@@ -19,21 +21,21 @@ final class CommandHandler
     ) {
     }
 
-    public function handle(Command $command): EntityId
+    public function handle(Command $cmd): EntityId
     {
-        $name = trim($command->name);
-        if ($this->entities->hasByName(mb_strtolower($name))) {
+        $nameTrimmed = (string)(new Str($cmd->name))->trim();
+        if ($this->entities->hasByName($nameTrimmed)) {
             throw FieldException::build(
-                'name' /** @see \App\Application\EAV\Entity\Create\Command::$name */,
-                sprintf('An entity with the name "%s" already exists.', $name),
+                Command::LABEL_NAME,
+                Err::alreadyExists(Entity::LABEL, Command::LABEL_NAME, $cmd->name)
             );
         }
 
         $this->entities->add(
             new Entity(
                 $entityId = EntityId::generate(),
-                $name,
-                trim($command->description) ?: null,
+                $nameTrimmed,
+                (string)(new Str($cmd->description ?? ''))->trim() ?: null,
                 new DateTimeImmutable()
             )
         );

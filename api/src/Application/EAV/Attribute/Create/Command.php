@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class Command implements CommandInterface
 {
+    public const LABEL_NAME = 'Name';
+
     #[Assert\NotBlank, Assert\Length(min: 2, max: 255)]
     public string $name;
 
