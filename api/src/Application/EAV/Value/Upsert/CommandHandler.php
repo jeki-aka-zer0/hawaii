@@ -13,13 +13,13 @@ use App\Domain\EAV\Value\Entity\ValueId;
 use App\Domain\EAV\Value\Repository\ValueRepository;
 use App\Domain\Flusher;
 
-final class CommandHandler
+final readonly class CommandHandler
 {
     public function __construct(
-        private readonly ValueRepository $values,
-        private readonly AttributeRepository $attributes,
-        private readonly EntityRepository $entities,
-        private readonly Flusher $flusher
+        private ValueRepository $values,
+        private AttributeRepository $attributes,
+        private EntityRepository $entities,
+        private Flusher $flusher
     ) {
     }
 
@@ -28,7 +28,7 @@ final class CommandHandler
         $entity = $this->entities->get($entityId = new EntityId($command->entityId));
         $attribute = $this->attributes->get($attributeId = new AttributeId($command->attributeId));
         $value = $this->values->findByEntityAndAttribute($entityId, $attributeId);
-        if ($value === null) {
+        if (null === $value) {
             $this->values->add(
                 $value = new Value(
                     ValueId::generate(),

@@ -6,12 +6,12 @@ namespace App\Infrastructure\UI\Web\Response\Pagination;
 
 use App\Application\Shared\ListDTO;
 
-final class PaginationDecoratorDTO
+final readonly class PaginationDecoratorDTO
 {
     public function __construct(
-        readonly private ListDTO $list,
-        readonly private ?string $previous,
-        readonly private ?string $next,
+        private ListDTO $list,
+        private ?string $previous,
+        private ?string $next,
     ) {
     }
 

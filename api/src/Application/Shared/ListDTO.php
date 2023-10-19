@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Shared;
 
-final class ListDTO
+final readonly class ListDTO
 {
     public function __construct(
-        readonly public int $count,
-        readonly public array $results,
+        public int $count,
+        public array $results,
     ) {
     }
 

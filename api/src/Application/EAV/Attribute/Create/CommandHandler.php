@@ -14,11 +14,11 @@ use App\Domain\Shared\Util\Err;
 use App\Domain\Shared\Util\Str;
 use DateTimeImmutable;
 
-final class CommandHandler
+final readonly class CommandHandler
 {
     public function __construct(
-        private readonly AttributeRepository $attributes,
-        private readonly Flusher $flusher
+        private AttributeRepository $attributes,
+        private Flusher $flusher
     ) {
     }
 

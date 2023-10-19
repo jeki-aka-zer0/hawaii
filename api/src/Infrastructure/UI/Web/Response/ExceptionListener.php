@@ -67,7 +67,9 @@ final class ExceptionListener
         $event->setResponse($response);
     }
 
-    #[ArrayShape(['code' => 'int', 'trace' => 'string'])]
+    /**
+     * @return array{code: int, trace: string}
+     */
     private function getExceptionCodeAndTraceData(Throwable $exception): array
     {
         return ['code' => $exception->getCode(), 'trace' => $exception->getTraceAsString()];

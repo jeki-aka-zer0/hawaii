@@ -22,6 +22,7 @@ final class BodyResolver extends AbstractValidationResolver
 
     public function supports(Request $request, ArgumentMetadata $argument): bool
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $request->isMethod(Request::METHOD_POST) && (new ReflectionClass($argument->getType()))
                 ->implementsInterface(CommandInterface::class);
     }
