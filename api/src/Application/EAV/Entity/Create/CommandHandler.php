@@ -26,8 +26,12 @@ final readonly class CommandHandler
         $nameTrimmed = (string)(new Str($cmd->name))->trim();
         if ($this->entities->hasByName($nameTrimmed)) {
             throw FieldException::build(
-                Command::LABEL_NAME,
-                Err::alreadyExists(Entity::LABEL, Command::LABEL_NAME, $cmd->name)
+                Command::FIELD_NAME,
+                Err::alreadyExists(
+                    Entity::LABEL,
+                    (string)(new Str(Command::FIELD_NAME))->humanize()->upFirst(),
+                    $cmd->name
+                )
             );
         }
 

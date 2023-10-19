@@ -42,6 +42,13 @@ final class Str
         return $this;
     }
 
+    public function humanize(): self
+    {
+        $this->str = implode(' ', explode('_', $this->str));
+
+        return $this;
+    }
+
     public function __toString(): string
     {
         return $this->str;

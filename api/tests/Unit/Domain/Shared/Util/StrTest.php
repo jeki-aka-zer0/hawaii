@@ -75,4 +75,13 @@ final class StrTest extends TestCase
 
         self::assertEquals('Test', (string)$actual);
     }
+
+    public function testHumanize(): void
+    {
+        $sut = new Str('member_identity');
+
+        $actual = $sut->humanize();
+
+        self::assertEquals('member identity', (string)$actual);
+    }
 }

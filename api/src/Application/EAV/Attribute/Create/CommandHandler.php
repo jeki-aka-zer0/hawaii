@@ -27,8 +27,12 @@ final readonly class CommandHandler
         $nameTrimmed = (string)(new Str($cmd->name))->trim();
         if ($this->attributes->hasByName($nameTrimmed)) {
             throw FieldException::build(
-                Command::LABEL_NAME,
-                Err::alreadyExists(Attribute::LABEL, Command::LABEL_NAME, $cmd->name),
+                Command::FIELD_NAME,
+                Err::alreadyExists(
+                    Attribute::LABEL,
+                    (string)(new Str(Command::FIELD_NAME))->humanize()->upFirst(),
+                    $cmd->name
+                ),
             );
         }
 

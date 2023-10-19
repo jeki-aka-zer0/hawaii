@@ -5,7 +5,7 @@ import { ErrorMessage } from '@hookform/error-message/dist'
 import axios, { AxiosResponse } from 'axios'
 import { CreatedEntity, FormErrors } from '../../types/types'
 import { hasOwnProperty, isValidationError } from '../../utils/utils'
-import { useNavigate } from 'react-router-dom'
+import { NavigateFunction, useNavigate } from 'react-router-dom'
 
 type Inputs = {
   name: string;
@@ -16,9 +16,9 @@ const EntityForm: FC = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
     criteriaMode: 'all'
   })
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs): Promise<void> => {
     try {
       const response: AxiosResponse<CreatedEntity> = await axios.post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
 
@@ -29,13 +29,14 @@ const EntityForm: FC = () => {
       } else {
         alert('Unexpected server response')
       }
-    } catch (result: any) {
+    } catch (err: any) {
       let errorShown: boolean = false
-      if (result.response.status === 422 && isValidationError<Inputs>(result)) {
-        const validationErrors: FormErrors = result.response!.data.errors
+      if (err.response.status === 422 && isValidationError<Inputs>(err)) {
+        const validationErrors: FormErrors = err.response!.data.errors
         for (const fieldName in validationErrors) {
           if (hasOwnProperty(validationErrors, fieldName)) {
             errorShown = true
+            console.log(fieldName , "name", validationErrors[fieldName].join(' '))
             setError(fieldName as keyof Inputs, { message: validationErrors[fieldName].join(' ') })
           }
         }
