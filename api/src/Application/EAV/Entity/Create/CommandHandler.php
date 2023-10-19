@@ -25,14 +25,7 @@ final readonly class CommandHandler
     {
         $nameTrimmed = (string)(new Str($cmd->name))->trim();
         if ($this->entities->hasByName($nameTrimmed)) {
-            throw FieldException::build(
-                Command::FIELD_NAME,
-                Err::alreadyExists(
-                    Entity::LABEL,
-                    (string)(new Str(Command::FIELD_NAME))->humanize()->upFirst(),
-                    $cmd->name
-                )
-            );
+            throw FieldException::alreadyExists($cmd->getNameField());
         }
 
         $this->entities->add(
@@ -40,7 +33,7 @@ final readonly class CommandHandler
                 $entityId = EntityId::generate(),
                 $nameTrimmed,
                 (string)(new Str($cmd->description ?? ''))->trim() ?: null,
-                new DateTimeImmutable()
+                new DateTimeImmutable(),
             )
         );
 

@@ -15,7 +15,7 @@ final class Paginator
     public function __construct(
         readonly private Query $query,
         readonly private string $routeName,
-        private UrlGeneratorInterface $router,
+        private readonly UrlGeneratorInterface $router,
         readonly private ListDTO $list,
     ) {
     }
