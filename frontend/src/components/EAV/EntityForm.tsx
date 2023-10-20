@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import './EntityForm.css'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message/dist'
 import axios, { AxiosResponse } from 'axios'

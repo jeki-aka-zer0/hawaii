@@ -12,6 +12,74 @@ a:hover {
     color: #1f96cc;
 }
 
+label {
+    cursor: pointer;
+    display: block;
+    font-size: .8em;
+    padding: 0 0 3px 3px;
+}
+
+input, textarea, button {
+    border: 0;
+    border-radius: 8px;
+    font-family: 'Courier', monospace;
+    padding: 10px 15px;
+    margin: 0 15px 15px 0;
+}
+
+input[type=text], textarea {
+    background: #0a233f;
+    caret-color: #d9fa02;
+    color: #d9fa02;
+}
+
+input:focus, textarea:focus {
+    outline: 0;
+    background: #102b48;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #102b48 inset !important;
+}
+
+input:-webkit-autofill {
+    -webkit-text-fill-color: #d9fa02 !important;
+}
+
+input.size-m, textarea.size-m {
+    width: 300px;
+}
+
+.error {
+    color: #fa0259;
+}
+
+input[type=submit], button {
+    background: #d9fa02;
+    cursor: pointer;
+    color: #0a233f;
+}
+
+input[type=submit]:hover:enabled, button:hover:enabled {
+    background: #c0de00;
+    color: #102b48;
+    position: relative;
+    top: 1px;
+    left: 1px;
+}
+
+input[type=submit]:active, button:active {
+    opacity: .9;
+}
+
+input[type=submit]:disabled, button:disabled {
+    cursor: not-allowed;
+    background: #a6bf00;
+}
+
 .content {
     margin: 0 auto;
     max-width: 1000px;

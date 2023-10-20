@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import './EntitiesList.css'
 import axios from 'axios'
 import {Entity, ListResponse} from "../../types/types";
 
@@ -44,9 +45,9 @@ const EntitiesList: React.FC = () => {
       {entities.map((e: Entity) => (
         <p key={e.name}><b>{e.name}</b>, {e.description}</p>
       ))}
-      <div>
-        {prevPageUrl && <button onClick={gotoPrevPage}>Previous</button>}
-        {nextPageUrl && <button onClick={gotoNextPage}>Next</button>}
+      <div className="pager">
+        {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
+        {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
       </div>
     </>
   )
