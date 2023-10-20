@@ -3,6 +3,7 @@ import './App.css'
 import EntitiesList from './components/EAV/EntitiesList'
 import { Link, Route, Routes } from 'react-router-dom'
 import EntityForm from './components/EAV/EntityForm'
+import EntityView from "./components/EAV/EntityView";
 
 function App () {
   return (
@@ -27,6 +28,7 @@ function App () {
             <Route index element={<EntitiesList/>}/>
             <Route path="create" element={<EntityForm/>}/>
           </Route>
+          <Route path="/entity/:entityId" element={<EntityView entityId={this.props.params.entityId}/>}/>
           <Route path="*" element={<h1>Page not found</h1>}/>
         </Routes>
       </main>
