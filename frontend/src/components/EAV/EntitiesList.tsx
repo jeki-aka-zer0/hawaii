@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './EntitiesList.css'
 import axios from 'axios'
 import {Entity, ListResponse} from "../../types/types";
+import Loader from "../Shared/Loader"
 
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -12,7 +13,7 @@ const EntitiesList: React.FC = () => {
 
   useEffect(() => {
     setLoading(true)
-    const controller = new AbortController()
+    const controller : AbortController = new AbortController()
     axios
       .get<ListResponse>(currentPageUrl, {
         signal: controller.signal
@@ -25,32 +26,30 @@ const EntitiesList: React.FC = () => {
       })
       .catch(error => console.log(error))
 
-    return () => controller.abort()
+    return (): void => controller.abort()
   }, [currentPageUrl])
 
-  function gotoPrevPage () {
+  function gotoPrevPage(): void {
     prevPageUrl && setCurrentPageUrl(prevPageUrl)
   }
 
-  function gotoNextPage () {
+  function gotoNextPage(): void {
     nextPageUrl && setCurrentPageUrl(nextPageUrl)
   }
 
-  if (loading) {
-    return (<span className="loader">Loading<span>.</span><span>.</span><span>.</span></span>)
-  }
-
-  return (
-    <>
-      {entities.map((e: Entity) => (
-        <p key={e.name}><b>{e.name}</b>, {e.description}</p>
-      ))}
-      <div className="pager">
-        {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
-        {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
-      </div>
-    </>
-  )
+  return loading
+      ? <Loader/>
+      : (
+          <>
+            {entities.map((e: Entity) => (
+                <p key={e.name}><b>{e.name}</b>, {e.description}</p>
+            ))}
+            <div className="pager">
+              {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
+              {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
+            </div>
+          </>
+      )
 }
 
 export default EntitiesList

@@ -1,6 +1,5 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client';
-import './css/loader.min.css';
 import './css/reset.min.css';
 import './css/index.css'
 import App from './App'
