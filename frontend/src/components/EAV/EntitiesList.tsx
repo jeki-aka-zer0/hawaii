@@ -3,6 +3,7 @@ import './EntitiesList.css'
 import axios from 'axios'
 import {Entity, ListResponse} from "../../types/types";
 import Loader from "../Shared/Loader"
+import { Link } from 'react-router-dom'
 
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
@@ -42,7 +43,7 @@ const EntitiesList: React.FC = () => {
       : (
           <>
             {entities.map((e: Entity) => (
-                <p key={e.name}><b>{e.name}</b>, {e.description}</p>
+              <p key={e.name}><b>{e.name}</b>, {e.description}, <Link to={`/entity/${e.entity_id}`}>View</Link></p>
             ))}
             <div className="pager">
               {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}

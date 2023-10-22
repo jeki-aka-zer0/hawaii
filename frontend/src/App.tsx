@@ -28,7 +28,7 @@ function App () {
             <Route index element={<EntitiesList/>}/>
             <Route path="create" element={<EntityForm/>}/>
           </Route>
-          <Route path="/entity/:entityId" element={<EntityView entityId={this.props.params.entityId}/>}/>
+          <Route path="/entity/:entityId" element={<EntityView/>}/>
           <Route path="*" element={<h1>Page not found</h1>}/>
         </Routes>
       </main>

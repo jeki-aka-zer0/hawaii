@@ -1,11 +1,11 @@
 import React, {useEffect, FC, useState} from 'react'
-import axios from "axios/index";
+import axios from "axios";
 import {Entity} from "../../types/types";
-import {useParams} from "react-router-dom";
+import { useParams } from 'react-router-dom'
 
-const EntityView: FC<{entityId:string}> = ({entityId}) => {
+const EntityView: FC = () => {
     const [loading, setLoading] = useState<boolean>(true)
-    useParams()
+    let { entityId } = useParams<"entityId">();
 
     useEffect(() => {
         setLoading(true)
@@ -16,7 +16,7 @@ const EntityView: FC<{entityId:string}> = ({entityId}) => {
             })
             .then(res => {
                 setLoading(false)
-                console.log()
+                console.log(res)
                 // setEntity(res.data.results)
             })
             .catch(error => console.log(error))
@@ -25,9 +25,7 @@ const EntityView: FC<{entityId:string}> = ({entityId}) => {
     })
 
     return (
-        <div>
-
-        </div>
+        <div>{entityId}</div>
     )
 }
 
