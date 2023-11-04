@@ -8,6 +8,9 @@ use App\Application\EAV\Entity\Create\Command;
 use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Application\EAV\Entity\Read\Query;
 use App\Application\EAV\Entity\Read\QueryHandler;
+use App\Application\EAV\Entity\Read\QueryOne;
+use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Infrastructure\UI\Web\Response\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class EntityController extends AbstractController
 {
-    private const EAV_ENTITY_LIST = 'eav_entity_list';
+    private const EAV_ENTITIES_READ = 'eav_entities_read';
 
     public function __construct(private readonly UrlGeneratorInterface $router)
     {
@@ -34,18 +37,24 @@ final class EntityController extends AbstractController
         );
     }
 
-    #[Route('/eav/entity', name: self::EAV_ENTITY_LIST, methods: ['GET', 'HEAD'])]
+    #[Route('/eav/entity', name: self::EAV_ENTITIES_READ, methods: ['GET', 'HEAD'])]
     public function read(Query $query, QueryHandler $handler): Response
     {
         return new JsonResponse(
             (new Paginator(
                 $query,
-                self::EAV_ENTITY_LIST,
+                self::EAV_ENTITIES_READ,
                 $this->router,
-                $handler->fetch($query),
+                $handler->read($query),
             ))
                 ->build()
                 ->toArray()
         );
+    }
+
+    #[Route('/eav/entity/{entityId}', name: 'eav_entity_read', methods: ['GET', 'HEAD'])]
+    public function readOne(QueryOne $query, QueryHandler $handler): Response
+    {
+        return new JsonResponse($handler->oneOrFail($query->getEntityId()));
     }
 }

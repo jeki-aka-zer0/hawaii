@@ -32,7 +32,7 @@ final class QueryResolver extends AbstractValidationResolver
         try {
             /** @noinspection PhpUnhandledExceptionInspection */
             return $this->serializer->denormalize(
-                $request->query->all(),
+                $request->query->all() + $request->attributes->all(),
                 $argument->getType(),
                 CsvEncoder::FORMAT, // hack to cast string to int. In query all the parameters come as strings
             );
