@@ -8,9 +8,9 @@ use App\Application\Shared\ListDTO;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
-final class QueryHandler
+final readonly class QueryHandler
 {
-    public function __construct(private readonly Connection $connection)
+    public function __construct(private Connection $connection)
     {
     }
 
@@ -49,6 +49,7 @@ final class QueryHandler
         /** @noinspection PhpUnhandledExceptionInspection */
         return $qb
             ->select([
+                'entity_id',
                 'name',
                 'description',
             ])

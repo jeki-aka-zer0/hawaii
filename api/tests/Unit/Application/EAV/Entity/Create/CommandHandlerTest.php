@@ -48,7 +48,7 @@ final class CommandHandlerTest extends TestCase
         $command = $this->getCommand($name, 'Another test description');
 
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage(sprintf('An entity with the name "%s" already exists.', trim($name)));
+        $this->expectExceptionMessage(sprintf('Entity with the name "%s" already exists', trim($name)));
 
         $this->handler->handle($command);
     }

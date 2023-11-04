@@ -51,7 +51,7 @@ final class CommandHandlerTest extends TestCase
         $command = $this->getCommand(AttributeBuilder::TEST_EXISTENT_NAME);
 
         $this->expectException(FieldException::class);
-        $this->expectExceptionMessage(sprintf('An attribute with the name "%s" already exists.', trim($name)));
+        $this->expectExceptionMessage(sprintf('Attribute with the name "%s" already exists', trim($name)));
 
         $this->handler->handle($command);
     }
