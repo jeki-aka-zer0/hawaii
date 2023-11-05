@@ -2,9 +2,11 @@ import React, { useEffect, FC, useState, useRef } from 'react'
 import axios from "axios";
 import {Entity} from "../../types/types";
 import { useParams } from 'react-router-dom'
+import Loader from '../Shared/Loader'
 
 const EntityView: FC = () => {
     const [loading, setLoading] = useState<boolean>(true)
+    const [entity, setEntity] = useState<Entity>()
     let { entityId } = useParams<"entityId">();
     const effectRun = useRef(false);
 
@@ -18,8 +20,7 @@ const EntityView: FC = () => {
               })
               .then(res => {
                   setLoading(false)
-                  console.log(res)
-                  // setEntity(res.data.results)
+                  setEntity(res.data)
               })
               .catch(error => console.log(error))
         }
@@ -30,8 +31,13 @@ const EntityView: FC = () => {
         }
     }, [])
 
-    return (
-        <div>{entityId}</div>
+    return loading
+      ? <Loader/>
+      : (
+        <div>
+            <h1>{entity?.name}</h1>
+            <p>{entity?.description}</p>
+        </div>
     )
 }
 

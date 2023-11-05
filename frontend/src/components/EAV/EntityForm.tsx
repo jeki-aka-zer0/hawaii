@@ -24,7 +24,7 @@ const EntityForm: FC = () => {
       if (response.status === 201) {
         const createdEntity: CreatedEntity = response.data;
         const entityId = createdEntity.entity_id
-        navigate(`/view/${entityId}`)
+        navigate(`/entity/${entityId}`)
       } else {
         alert('Unexpected server response')
       }

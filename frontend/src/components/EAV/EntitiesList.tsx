@@ -55,10 +55,10 @@ const EntitiesList: React.FC = () => {
                   <p>&nbsp;</p>
               </div>
             ))}
-            <div className="pager">
+            {(prevPageUrl || nextPageUrl) && <div className="pager">
               {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
               {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
-            </div>
+            </div>}
           </>
       )
 }
