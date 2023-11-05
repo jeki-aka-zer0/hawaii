@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './EntitiesList.css'
 import axios from 'axios'
 import {Entity, ListResponse} from "../../types/types";
@@ -11,23 +11,29 @@ const EntitiesList: React.FC = () => {
   const [currentPageUrl, setCurrentPageUrl] = useState<string>(`${process.env.REACT_APP_API_URL}/eav/entity`)
   const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null)
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
+  const effectRun = useRef(false);
 
   useEffect(() => {
     setLoading(true)
     const controller : AbortController = new AbortController()
-    axios
-      .get<ListResponse>(currentPageUrl, {
-        signal: controller.signal
-      })
-      .then(res => {
-        setLoading(false)
-        setEntities(res.data.results)
-        setPrevPageUrl(res.data.previous)
-        setNextPageUrl(res.data.next)
-      })
-      .catch(error => console.log(error))
+    if (effectRun.current) {
+      axios
+        .get<ListResponse>(currentPageUrl, {
+          signal: controller.signal
+        })
+        .then(res => {
+          setLoading(false)
+          setEntities(res.data.results)
+          setPrevPageUrl(res.data.previous)
+          setNextPageUrl(res.data.next)
+        })
+        .catch(error => console.log(error))
+    }
 
-    return (): void => controller.abort()
+    return (): void => {
+      controller.abort()
+      effectRun.current = true;
+    }
   }, [currentPageUrl])
 
   function gotoPrevPage(): void {
@@ -43,7 +49,11 @@ const EntitiesList: React.FC = () => {
       : (
           <>
             {entities.map((e: Entity) => (
-              <p key={e.name}><b>{e.name}</b>, {e.description}, <Link to={`/entity/${e.entity_id}`}>View</Link></p>
+              <div key={e.name}>
+                  <h3>{e.name}, <Link to={`/entity/${e.entity_id}`}>View</Link></h3>
+                  {e.description}
+                  <p>&nbsp;</p>
+              </div>
             ))}
             <div className="pager">
               {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
