@@ -44,7 +44,7 @@ final readonly class QueryHandler
             ->select(self::SELECT)
             ->where(sprintf('%s = :entity_id', EntityIdType::NAME))
             ->setParameter('entity_id', $entityId->getValue())
-            ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, 'Entity not found');
+            ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::LABEL);
     }
 
     private function getBasicQueryBuilder(Query $query): QueryBuilder

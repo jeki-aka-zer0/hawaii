@@ -27,7 +27,7 @@ final class InMemoryRepository extends SplObjectStorage implements AttributeRepo
             }
         }
 
-        throw EntityNotFoundException::byId($attributeId, 'Attribute not found.');
+        throw EntityNotFoundException::byId($attributeId, Attribute::LABEL);
     }
 
     #[Pure]

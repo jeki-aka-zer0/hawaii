@@ -21,6 +21,8 @@ use InvalidArgumentException;
 #[ORM\Entity(repositoryClass: DbValueRepository::class)]
 final class Value
 {
+    public const LABEL = 'value';
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 

@@ -22,7 +22,7 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
     {
         $attribute = $this->find($attributeId->getValue());
         if ($attribute === null) {
-            throw EntityNotFoundException::byId($attributeId, 'Attribute not found.');
+            throw EntityNotFoundException::byId($attributeId, Attribute::LABEL);
         }
 
         return $attribute;

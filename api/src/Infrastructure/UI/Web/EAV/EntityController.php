@@ -9,8 +9,6 @@ use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Application\EAV\Entity\Read\Query;
 use App\Application\EAV\Entity\Read\QueryHandler;
 use App\Application\EAV\Entity\Read\QueryOne;
-use App\Domain\EAV\Entity\Entity\Entity;
-use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Infrastructure\UI\Web\Response\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

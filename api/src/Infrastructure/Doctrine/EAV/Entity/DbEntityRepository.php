@@ -22,7 +22,7 @@ final class DbEntityRepository extends ServiceEntityRepository implements Entity
     {
         $entity = $this->find($entityId->getValue());
         if ($entity === null) {
-            throw EntityNotFoundException::byId($entityId, 'Entity not found.');
+            throw EntityNotFoundException::byId($entityId, Entity::LABEL);
         }
 
         return $entity;

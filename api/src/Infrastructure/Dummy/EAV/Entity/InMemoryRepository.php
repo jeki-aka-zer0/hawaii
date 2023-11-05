@@ -27,7 +27,7 @@ final class InMemoryRepository extends SplObjectStorage implements EntityReposit
             }
         }
 
-        throw EntityNotFoundException::byId($entityId, 'Entity not found.');
+        throw EntityNotFoundException::byId($entityId, Entity::LABEL);
     }
 
     #[Pure]
