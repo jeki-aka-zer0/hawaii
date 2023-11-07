@@ -4,6 +4,7 @@ import EntitiesList from './components/EAV/EntitiesList'
 import { Link, Route, Routes } from 'react-router-dom'
 import EntityForm from './components/EAV/EntityForm'
 import EntityView from "./components/EAV/EntityView";
+import { loader as entityLoader } from  "./components/EAV/EntityView"
 
 function App () {
   return (
