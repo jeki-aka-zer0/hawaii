@@ -9,17 +9,12 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\Shared\Repository\EntityNotFoundException;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
 final readonly class QueryHandler
 {
-    private const SELECT = [
-        EntityIdType::NAME,
-        'name',
-        'description',
-    ];
-
     public function __construct(private Connection $connection)
     {
     }
@@ -40,8 +35,8 @@ final readonly class QueryHandler
     public function oneOrFail(EntityId $entityId): array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->qbFromEntity()
-            ->select(self::SELECT)
+        return
+            $this->selectEntityFields($this->qbFromEntity())
             ->where(sprintf('%s = :entity_id', EntityIdType::NAME))
             ->setParameter('entity_id', $entityId->getValue())
             ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::LABEL);
@@ -67,21 +62,67 @@ final readonly class QueryHandler
     }
 
     /**
-     * @return array{entity_id: string, name: string, description: ?string}
+     * @return array<int, array{
+     *     entity_id: string,
+     *     name: string,
+     *     description: ?string,
+     *     attributes_values: array<int, array{
+     *          name: string,
+     *          value: string|int
+     *      }>
+     *     }>
      */
     private function getResults(QueryBuilder $qb, Query $query): array
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return $qb
-            ->select(self::SELECT)
+        /**
+         * @noinspection PhpUnhandledExceptionInspection
+         * @var array<int, array{
+         *     entity_id: string,
+         *     name: string,
+         *     description: ?string> $entities
+         */
+        $entities = $this->selectEntityFields($qb)
             ->setFirstResult($query->offset)
             ->setMaxResults($query->limit)
             ->orderBy('created_at', 'DESC')
             ->fetchAllAssociative();
+
+        $entityIds = array_map(static fn(array $row): string => $row[EntityIdType::NAME], $entities);
+
+        /**
+         * @noinspection PhpUnhandledExceptionInspection
+         * @var array<int, array{entity_id: string, name: string, value: string}> $attributesValues
+         */
+        $attributesValues = $this->connection->createQueryBuilder()
+            ->select('v.entity_id', 'a.name', 'v.value')
+            ->from('value', 'v')
+            ->leftJoin('v', 'attribute', 'a', 'a.attribute_id = v.attribute_id')
+            ->where('v.entity_id IN (:entity_ids)')
+            ->setParameter('entity_ids', $entityIds, ArrayParameterType::STRING)
+            ->fetchAllAssociative();
+
+        $attributesValuesMap = [];
+        foreach ($attributesValues as $row) {
+            $attributesValuesMap[$row['entity_id']][] = ['name' => $row['name'], 'value' => $row['value']];
+        }
+
+        foreach ($entities as $i => $entity) {
+            $entities[$i]['attributes_values'] = [];
+            if (isset($attributesValuesMap[$entity['entity_id']])) {
+                $entities[$i]['attributes_values'][] = $attributesValuesMap[$entity['entity_id']];
+            }
+        }
+
+        return $entities;
     }
 
     private function qbFromEntity(): QueryBuilder
     {
         return $this->connection->createQueryBuilder()->from('entity');
+    }
+
+    private function selectEntityFields(QueryBuilder $qb): QueryBuilder
+    {
+        return $qb->select(EntityIdType::NAME, 'name', 'description');
     }
 }
