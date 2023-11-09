@@ -25,13 +25,11 @@ abstract class BaseIntegrationTest extends KernelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        /** @noinspection PhpUnhandledExceptionInspection */
         self::$connection->beginTransaction();
     }
 
     protected function tearDown(): void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         self::$connection->rollBack();
         parent::tearDown();
     }
