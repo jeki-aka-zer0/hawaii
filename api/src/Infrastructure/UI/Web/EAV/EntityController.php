@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\UI\Web\EAV;
 
+use App\Application\EAV\Builder;
 use App\Application\EAV\Entity\Create\Command;
 use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Application\EAV\Entity\Read\Query;
@@ -20,7 +21,7 @@ final class EntityController extends AbstractController
 {
     private const EAV_ENTITIES_READ = 'eav_entities_read';
 
-    public function __construct(private readonly UrlGeneratorInterface $router)
+    public function __construct(private readonly UrlGeneratorInterface $router, private Builder $builder /** todo fix (create a CLI command): temporary fix for autowiring in tests */)
     {
     }
 
