@@ -37,5 +37,8 @@ api-composer-bash:
 api-test-integration:
 	docker-compose run --rm api-php-cli bin/phpunit
 
+eav-create-all:
+	docker-compose run --rm api-php-cli bin/console eav:populate 8 yes
+
 frontend-yarn-upgrade:
 	docker-compose run --rm frontend-node yarn upgrade
