@@ -109,7 +109,7 @@ final readonly class QueryHandler
         foreach ($entities as $i => $entity) {
             $entities[$i]['attributes_values'] = [];
             if (isset($attributesValuesMap[$entity['entity_id']])) {
-                $entities[$i]['attributes_values'][] = $attributesValuesMap[$entity['entity_id']];
+                $entities[$i]['attributes_values'] = $attributesValuesMap[$entity['entity_id']];
             }
         }
 

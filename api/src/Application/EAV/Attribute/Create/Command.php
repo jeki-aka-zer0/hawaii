@@ -29,4 +29,13 @@ final class Command implements CommandInterface
     {
         return new Field(Attribute::LABEL, self::FIELD_NAME, $this->name);
     }
+
+    public static function build(string $name, AttributeType $type): self
+    {
+        $cmd = new self();
+        $cmd->name = $name;
+        $cmd->type = $type->value;
+
+        return $cmd;
+    }
 }

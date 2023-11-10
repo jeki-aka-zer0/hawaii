@@ -23,4 +23,13 @@ final class Command implements CommandInterface
     {
         return new Field(Entity::LABEL, self::FIELD_NAME, $this->name);
     }
+
+    public static function build(string $name, string $description = null): self
+    {
+        $cmd = new self();
+        $cmd->name = $name;
+        $cmd->description = $description;
+
+        return $cmd;
+    }
 }

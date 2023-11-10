@@ -27,9 +27,9 @@ final readonly class Builder
     public function buildAll(
         string $entityName,
         string $attributeName,
+        AttributeType $attributeType,
         int|string $value,
         string $entityDescription = null,
-        AttributeType $attributeType = AttributeType::String,
     ): void {
         $entityId = $this->buildEntity($entityName, $entityDescription);
         $attributeId = $this->buildAttribute($attributeName, $attributeType);
@@ -38,29 +38,16 @@ final readonly class Builder
 
     public function buildEntity(string $name, string $description = null): EntityId
     {
-        $cmd = new EntityCommand();
-        $cmd->name = $name;
-        $cmd->description = $description;
-
-        return $this->entityHandler->handle($cmd);
+        return $this->entityHandler->handle(EntityCommand::build($name, $description));
     }
 
-    public function buildAttribute(string $name, AttributeType $type = AttributeType::String): AttributeId
+    public function buildAttribute(string $name, AttributeType $type): AttributeId
     {
-        $cmd = new AttributeCommand();
-        $cmd->name = $name;
-        $cmd->type = $type->value;
-
-        return $this->attributeHandler->handle($cmd);
+        return $this->attributeHandler->handle(AttributeCommand::build($name, $type));
     }
 
     public function buildValue(EntityId $entityId, AttributeId $attributeId, int|string $value): ValueId
     {
-        $cmd = new ValueCommand();
-        $cmd->entityId = $entityId->getValue();
-        $cmd->attributeId = $attributeId->getValue();
-        $cmd->value = $value;
-
-        return $this->valueHandler->handle($cmd);
+        return $this->valueHandler->handle(ValueCommand::build($entityId, $attributeId, $value));
     }
 }
