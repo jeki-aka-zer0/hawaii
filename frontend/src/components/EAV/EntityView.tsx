@@ -36,6 +36,10 @@ const EntityView: FC = () => {
       : (
         <div>
             <h1>{entity?.name}</h1>
+            <p>
+                {entity?.attributes_values.map(av => <span className={"tag"} title={av.name} key={av.name + av.value}>{av.value}</span>)}
+            </p>
+            <p>&nbsp;</p>
             <p>{entity?.description}</p>
         </div>
     )
