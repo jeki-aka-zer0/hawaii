@@ -23,15 +23,14 @@ final readonly class CommandHandler
 
     public function handle(Command $cmd): AttributeId
     {
-        $nameTrimmed = (string)(new Str($cmd->name))->trim();
-        if ($this->attributes->hasByName($nameTrimmed)) {
+        if ($this->attributes->hasByName((string)(new Str($cmd->name))->trim()->low())) {
             throw FieldException::alreadyExists($cmd->getNameField());
         }
 
         $this->attributes->add(
             new Attribute(
                 $attributeId = AttributeId::generate(),
-                $nameTrimmed,
+                (string)(new Str($cmd->name))->trim(),
                 AttributeType::from($cmd->type),
                 new DateTimeImmutable(),
             )
