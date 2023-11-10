@@ -9,9 +9,9 @@ use App\Application\EAV\Entity\Read\Query;
 use App\Application\EAV\Entity\Read\QueryHandler;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
-use App\Tests\Integration\BaseIntegrationTest;
+use App\Tests\Integration\AbstractIntegrationTest;
 
-final class QueryHandlerTest extends BaseIntegrationTest
+final class QueryHandlerTest extends AbstractIntegrationTest
 {
     private static QueryHandler $SUT;
 
