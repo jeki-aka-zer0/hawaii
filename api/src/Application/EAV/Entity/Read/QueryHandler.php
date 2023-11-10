@@ -35,11 +35,12 @@ final readonly class QueryHandler
     public function oneOrFail(EntityId $entityId): array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return
-            $this->selectEntityFields($this->qbFromEntity())
+        $entity = $this->selectEntityFields($this->qbFromEntity())
             ->where(sprintf('%s = :entity_id', EntityIdType::NAME))
             ->setParameter('entity_id', $entityId->getValue())
             ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::LABEL);
+
+        return $this->addAttributesValues([$entity])[0];
     }
 
     private function getBasicQueryBuilder(Query $query): QueryBuilder
@@ -87,6 +88,21 @@ final readonly class QueryHandler
             ->orderBy('created_at', 'DESC')
             ->fetchAllAssociative();
 
+        return $this->addAttributesValues($entities);
+    }
+
+    private function qbFromEntity(): QueryBuilder
+    {
+        return $this->connection->createQueryBuilder()->from('entity');
+    }
+
+    private function selectEntityFields(QueryBuilder $qb): QueryBuilder
+    {
+        return $qb->select(EntityIdType::NAME, 'name', 'description');
+    }
+
+    private function addAttributesValues(array $entities): array
+    {
         $entityIds = array_map(static fn(array $row): string => $row[EntityIdType::NAME], $entities);
 
         /**
@@ -114,15 +130,5 @@ final readonly class QueryHandler
         }
 
         return $entities;
-    }
-
-    private function qbFromEntity(): QueryBuilder
-    {
-        return $this->connection->createQueryBuilder()->from('entity');
-    }
-
-    private function selectEntityFields(QueryBuilder $qb): QueryBuilder
-    {
-        return $qb->select(EntityIdType::NAME, 'name', 'description');
     }
 }
