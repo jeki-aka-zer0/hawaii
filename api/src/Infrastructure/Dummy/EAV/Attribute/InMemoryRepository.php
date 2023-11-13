@@ -27,10 +27,9 @@ final class InMemoryRepository extends SplObjectStorage implements AttributeRepo
             }
         }
 
-        throw EntityNotFoundException::byId($attributeId, Attribute::LABEL);
+        throw EntityNotFoundException::byId($attributeId, Attribute::NAME);
     }
 
-    #[Pure]
     public function hasByName(string $name): bool
     {
         foreach ($this as $attribute) {

@@ -26,8 +26,8 @@ final class CommandHandlerTest extends TestCase
     private const STRING_VALUE = 'Some unique value imagined only for this current test';
 
     private const VALUES_DATA_PROVIDER = [
-        'int' => ['value' => 1000],
-        'string' => ['value' => self::STRING_VALUE],
+        'int' => [Value::FIELD_VALUE => 1000],
+        'string' => [Value::FIELD_VALUE => self::STRING_VALUE],
     ];
 
     public function valuesDataProvider(): array

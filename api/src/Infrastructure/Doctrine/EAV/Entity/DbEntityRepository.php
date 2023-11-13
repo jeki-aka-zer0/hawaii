@@ -22,7 +22,7 @@ final class DbEntityRepository extends ServiceEntityRepository implements Entity
     {
         $entity = $this->find($entityId->getValue());
         if ($entity === null) {
-            throw EntityNotFoundException::byId($entityId, Entity::LABEL);
+            throw EntityNotFoundException::byId($entityId, Entity::NAME);
         }
 
         return $entity;
@@ -32,10 +32,11 @@ final class DbEntityRepository extends ServiceEntityRepository implements Entity
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         return $this->createQueryBuilder('e')
-            ->select('COUNT(e.entityId)')
-            ->andWhere('lower(e.name) = :name')
-            ->setParameter(':name', $name)
-            ->getQuery()->getSingleScalarResult() > 0;
+                ->select('COUNT(e.entityId)')
+                ->andWhere(sprintf('lower(e.%s) = :name', Entity::FIELD_NAME))
+                ->setParameter(':name', $name)
+                ->getQuery()
+                ->getSingleScalarResult() > 0;
     }
 
     public function add(Entity $entity): void

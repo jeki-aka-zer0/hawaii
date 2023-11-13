@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 
 final class AttributeIdType extends GuidType
 {
-    public const NAME = 'attribute_id';
+    public const FIELD_ATTRIBUTE_ID = 'attribute_id';
 
     #[Pure]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
@@ -26,7 +26,7 @@ final class AttributeIdType extends GuidType
 
     public function getName(): string
     {
-        return self::NAME;
+        return self::FIELD_ATTRIBUTE_ID;
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

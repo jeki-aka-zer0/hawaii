@@ -11,8 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class Command implements CommandInterface
 {
-    public const FIELD_NAME = 'name';
-
     #[Assert\NotBlank, Assert\Length(min: 2, max: 255)]
     public string $name;
 
@@ -21,7 +19,7 @@ final class Command implements CommandInterface
 
     public function getNameField(): Field
     {
-        return new Field(Entity::LABEL, self::FIELD_NAME, $this->name);
+        return new Field(Entity::NAME, Entity::FIELD_NAME, $this->name);
     }
 
     public static function build(string $name, string $description = null): self

@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Application\EAV\Entity\Create;
 
 use App\Application\EAV\Entity\Create\Command;
 use App\Application\EAV\Entity\Create\CommandHandler;
+use App\Domain\EAV\Entity\Entity\Entity;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
@@ -34,9 +35,9 @@ final class CommandHandlerTest extends TestCase
     public function namesDataProvider(): array
     {
         return [
-            'existent name' => ['name' => EntityBuilder::TEST_EXISTENT_NAME],
-            'existent name with spaces' => ['name' => ' ' . EntityBuilder::TEST_EXISTENT_NAME . ' '],
-            'existent name with upper case' => ['name' => mb_strtoupper(EntityBuilder::TEST_EXISTENT_NAME)],
+            'existent name' => [Entity::FIELD_NAME => EntityBuilder::TEST_EXISTENT_NAME],
+            'existent name with spaces' => [Entity::FIELD_NAME => ' ' . EntityBuilder::TEST_EXISTENT_NAME . ' '],
+            'existent name with upper case' => [Entity::FIELD_NAME => mb_strtoupper(EntityBuilder::TEST_EXISTENT_NAME)],
         ];
     }
 

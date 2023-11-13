@@ -11,7 +11,7 @@ use JetBrains\PhpStorm\Pure;
 
 final class EntityIdType extends GuidType
 {
-    public const NAME = 'entity_id';
+    public const FIELD_ENTITY_ID = 'entity_id';
 
     #[Pure]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
@@ -26,7 +26,7 @@ final class EntityIdType extends GuidType
 
     public function getName(): string
     {
-        return self::NAME;
+        return self::FIELD_ENTITY_ID;
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

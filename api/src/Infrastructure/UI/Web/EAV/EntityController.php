@@ -9,6 +9,7 @@ use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Application\EAV\Entity\Read\Query;
 use App\Application\EAV\Entity\Read\QueryHandler;
 use App\Application\EAV\Entity\Read\QueryOne;
+use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
 use App\Infrastructure\UI\Web\Response\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +30,7 @@ final class EntityController extends AbstractController
     {
         return new JsonResponse(
             [
-                'entity_id' => $handler->handle($command)->getValue(),
+                EntityIdType::FIELD_ENTITY_ID => $handler->handle($command)->getValue(),
             ],
             status: 201
         );

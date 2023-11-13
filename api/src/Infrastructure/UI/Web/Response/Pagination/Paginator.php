@@ -10,6 +10,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class Paginator
 {
+    public const KEY_OFFSET = 'offset';
+    public const KEY_LIMIT = 'limit';
     private array $parameters;
 
     public function __construct(
@@ -57,13 +59,13 @@ final class Paginator
     {
         return $this->router->generate(
             $this->routeName,
-            ['offset' => $offset] + $this->getParameters(),
+            [self::KEY_OFFSET => $offset] + $this->getParameters(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
     }
 
     private function getParameters(): array
     {
-        return $this->parameters ??= ['limit' => $this->query->limit] + $this->query->toArray();
+        return $this->parameters ??= [self::KEY_LIMIT => $this->query->limit] + $this->query->toArray();
     }
 }

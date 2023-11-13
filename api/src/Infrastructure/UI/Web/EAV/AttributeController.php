@@ -8,6 +8,7 @@ use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
 use App\Application\EAV\Attribute\Read\Query;
 use App\Application\EAV\Attribute\Read\QueryHandler;
+use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,7 @@ final class AttributeController extends AbstractController
     {
         return new JsonResponse(
             [
-                'attribute_id' => $handler->handle($command)->getValue(),
+                AttributeIdType::FIELD_ATTRIBUTE_ID => $handler->handle($command)->getValue(),
             ],
             status: 201
         );

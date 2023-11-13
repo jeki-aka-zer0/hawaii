@@ -17,16 +17,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DbAttributeRepository::class)]
 final class Attribute
 {
-    public const LABEL = 'attribute';
+    public const NAME = 'attribute';
+    public const FIELD_NAME = 'name';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
-    #[ORM\OneToMany('attribute', Value::class, ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(Attribute::NAME, Value::class, ['all'], orphanRemoval: true)]
     private Collection $values;
 
     public function __construct(
-        #[ORM\Id, ORM\Column(type: AttributeIdType::NAME)]
+        #[ORM\Id, ORM\Column(type: AttributeIdType::FIELD_ATTRIBUTE_ID)]
         private AttributeId $attributeId,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]

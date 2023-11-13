@@ -6,6 +6,7 @@ namespace App\Infrastructure\UI\Web\Response;
 
 use App\Domain\Shared\Repository\EntityNotFoundException;
 use App\Domain\Shared\Repository\FieldException;
+use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
 use App\Infrastructure\UI\Web\Request\ValidationException;
 use DomainException;
 use JetBrains\PhpStorm\ArrayShape;
@@ -17,6 +18,10 @@ use Throwable;
 
 final class ExceptionListener
 {
+    private const KEY_FIELD = 'field';
+    private const KEY_CODE = 'code';
+    private const KEY_TRACE = 'trace';
+
     public function __construct(private LoggerInterface $logger)
     {
     }
@@ -42,12 +47,12 @@ final class ExceptionListener
                 /** @var EntityNotFoundException $exception */
                 $response = HttpErrorJsonResponse::createNotFoundError($exception);
                 $level = Logger::ERROR;
-                $context = ['entity_id' => $exception->id->getValue()] + $this->getExceptionCodeAndTraceData($exception);
+                $context = [EntityIdType::FIELD_ENTITY_ID => $exception->id->getValue()] + $this->getExceptionCodeAndTraceData($exception);
                 break;
             case $exception instanceof FieldException:
                 $response = DomainErrorJsonResponse::createFieldError($exception);
                 $level = Logger::ERROR;
-                $context = ['field' => $exception->getField()] + $this->getExceptionCodeAndTraceData($exception);
+                $context = [self::KEY_FIELD => $exception->getField()] + $this->getExceptionCodeAndTraceData($exception);
                 break;
             case $exception instanceof DomainException:
                 /** @var DomainException $exception */
@@ -72,6 +77,6 @@ final class ExceptionListener
      */
     private function getExceptionCodeAndTraceData(Throwable $exception): array
     {
-        return ['code' => $exception->getCode(), 'trace' => $exception->getTraceAsString()];
+        return [self::KEY_CODE => $exception->getCode(), self::KEY_TRACE => $exception->getTraceAsString()];
     }
 }

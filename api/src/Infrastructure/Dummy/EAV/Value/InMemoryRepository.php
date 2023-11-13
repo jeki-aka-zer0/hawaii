@@ -28,7 +28,7 @@ final class InMemoryRepository extends SplObjectStorage implements ValueReposito
             }
         }
 
-        throw EntityNotFoundException::byId($valueId, Value::LABEL);
+        throw EntityNotFoundException::byId($valueId, Value::NAME);
     }
 
     public function add(Value $value): void

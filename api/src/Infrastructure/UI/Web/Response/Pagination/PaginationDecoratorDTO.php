@@ -8,6 +8,9 @@ use App\Application\Shared\ListDTO;
 
 final readonly class PaginationDecoratorDTO
 {
+    private const KEY_PREVIOUS = 'previous';
+    private const KEY_NEXT = 'next';
+
     public function __construct(
         private ListDTO $list,
         private ?string $previous,
@@ -18,8 +21,8 @@ final readonly class PaginationDecoratorDTO
     public function toArray(): array
     {
         return $this->list->toArray() + [
-                'previous' => $this->previous,
-                'next' => $this->next,
+                self::KEY_PREVIOUS => $this->previous,
+                self::KEY_NEXT => $this->next,
             ];
     }
 }

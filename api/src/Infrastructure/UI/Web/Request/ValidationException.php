@@ -37,7 +37,7 @@ final class ValidationException extends LogicException
         return new self(
             new ConstraintViolationList(
                 [
-                    new ConstraintViolation('Unexpected parameter type.', '', [], null, $e->getPath(), null),
+                    new ConstraintViolation('Unexpected parameter type', '', [], null, $e->getPath(), null),
                 ]
             )
         );

@@ -6,6 +6,7 @@ namespace App\Infrastructure\UI\Web\EAV;
 
 use App\Application\EAV\Value\Upsert\Command;
 use App\Application\EAV\Value\Upsert\CommandHandler;
+use App\Infrastructure\Doctrine\EAV\Value\ValueIdType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,7 @@ final class ValueController extends AbstractController
     {
         return new JsonResponse(
             [
-                'value_id' => $handler->handle($command)->getValue(),
+                ValueIdType::FIELD_VALUE_ID => $handler->handle($command)->getValue(),
             ],
             status: 201
         );

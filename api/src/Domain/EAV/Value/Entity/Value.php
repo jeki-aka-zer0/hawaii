@@ -21,21 +21,22 @@ use InvalidArgumentException;
 #[ORM\Entity(repositoryClass: DbValueRepository::class)]
 final class Value
 {
-    public const LABEL = 'value';
+    public const NAME = 'value';
+    public const FIELD_VALUE = 'value';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
     public function __construct(
-        #[ORM\Id, ORM\Column(type: ValueIdType::NAME)]
+        #[ORM\Id, ORM\Column(type: ValueIdType::FIELD_VALUE_ID)]
         readonly public ValueId $valueId,
 
         #[ORM\ManyToOne(targetEntity: Entity::class, inversedBy: 'values')]
-        #[ORM\JoinColumn(name: EntityIdType::NAME, referencedColumnName: EntityIdType::NAME, nullable: false, onDelete: 'CASCADE')]
+        #[ORM\JoinColumn(name: EntityIdType::FIELD_ENTITY_ID, referencedColumnName: EntityIdType::FIELD_ENTITY_ID, nullable: false, onDelete: 'CASCADE')]
         private Entity $entity,
 
         #[ORM\ManyToOne(targetEntity: Attribute::class, inversedBy: 'values')]
-        #[ORM\JoinColumn(name: AttributeIdType::NAME, referencedColumnName: AttributeIdType::NAME, nullable: false, onDelete: 'CASCADE')]
+        #[ORM\JoinColumn(name: AttributeIdType::FIELD_ATTRIBUTE_ID, referencedColumnName: AttributeIdType::FIELD_ATTRIBUTE_ID, nullable: false, onDelete: 'CASCADE')]
         private Attribute $attribute,
 
         #[ORM\Column(type: Types::STRING, length: 255)]
@@ -65,7 +66,7 @@ final class Value
         $isAttributeIdEmpty = $attributeId === null;
 
         if ($isValueIdEmpty && $isEntityIdEmpty && $isAttributeIdEmpty) {
-            throw new InvalidArgumentException('At least one of the parameters must be set to compare Value entity.');
+            throw new InvalidArgumentException(sprintf('At least one of the parameters must be set to compare %s entity', self::NAME));
         }
 
         return ($isValueIdEmpty || $this->valueId->isEqual($valueId)) &&

@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace App\Infrastructure\UI\CLI\EAV;
 
 use App\Application\EAV\Builder;
+use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
+use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\Shared\Repository\FieldException;
+use App\Domain\Shared\Util\Str;
+use App\Infrastructure\UI\CLI\AbstractCommand;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class PopulateCommand extends Command
+final class PopulateCommand extends AbstractCommand
 {
     private const ENTITIES = [
         'Elasticsearch' => 'Is a search and analytics engine.',
@@ -49,6 +53,9 @@ final class PopulateCommand extends Command
         'UA',
     ];
 
+    private const ARG_NUMBER = 'number';
+    private const ARG_TRUNC = 'truncate';
+
     public function __construct(private readonly Builder $builder, private Connection $connection)
     {
         parent::__construct();
@@ -59,18 +66,16 @@ final class PopulateCommand extends Command
         $this
             ->setName('eav:populate')
             ->setDescription('Create certain amount of random entities')
-            ->addArgument('number', InputArgument::REQUIRED, 'Number of entities')
-            ->addArgument('trunc', InputArgument::OPTIONAL, 'Truncate all the EAV before start');
+            ->addArgument(self::ARG_NUMBER, InputArgument::REQUIRED, 'Number of entities')
+            ->addArgument(self::ARG_TRUNC, InputArgument::OPTIONAL, 'Truncate all the EAV before start');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('<info>Start</info>');
-
-        if ($input->getArgument('trunc')) {
+        if ($input->getArgument(self::ARG_TRUNC)) {
             $output->writeln('<question>EAV truncated</question>');
 
-            $this->connection->executeQuery('TRUNCATE entity, attribute, value CASCADE');
+            $this->connection->executeQuery(sprintf('TRUNCATE %s, %s, %s CASCADE', Entity::NAME, Attribute::NAME, Value::NAME));
         }
 
         $entityNames = array_keys(self::ENTITIES);
@@ -81,11 +86,11 @@ final class PopulateCommand extends Command
                 $attributes[$name] = $this->builder->buildAttribute($name, $type);
             }
         } catch (FieldException) {
-            $output->writeln("<question>Attribute '{$name}' already exist</question>");
+            $output->writeln(sprintf("<question>%s '%s' already exist</question>", (new Str(Attribute::NAME))->humanize(), $name));
         }
         $maxAttributesIndex = count($attributes) - 1;
 
-        $entitiesNumber = (int)$input->getArgument('number');
+        $entitiesNumber = (int)$input->getArgument(self::ARG_NUMBER);
         if ($entitiesNumber < 0) {
             return self::SUCCESS;
         }
@@ -108,8 +113,6 @@ final class PopulateCommand extends Command
             }
         }
 
-        $output->writeln('<info>Done!</info>');
-
-        return self::SUCCESS;
+        return $this->success($output);
     }
 }

@@ -10,6 +10,6 @@ final class UnknownErrorJsonResponse extends AbstractErrorJsonResponse
 {
     public static function createError(): self
     {
-        return parent::buildErrorResponse(['Something went wrong.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return parent::buildErrorResponse(['Something went wrong'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

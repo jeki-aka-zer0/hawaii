@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Application\EAV\Attribute\Create;
 
 use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
+use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\Shared\Repository\FieldException;
 use App\Infrastructure\Dummy\DummyFlusher;
@@ -19,8 +20,8 @@ use PHPUnit\Framework\TestCase;
 final class CommandHandlerTest extends TestCase
 {
     private const NAMES_DATA_PROVIDER = [
-        'existent name' => ['name' => AttributeBuilder::TEST_EXISTENT_NAME],
-        'existent name with spaces' => ['name' => ' '.AttributeBuilder::TEST_EXISTENT_NAME.' '],
+        'existent name' => [Attribute::FIELD_NAME => AttributeBuilder::TEST_EXISTENT_NAME],
+        'existent name with spaces' => [Attribute::FIELD_NAME => ' '.AttributeBuilder::TEST_EXISTENT_NAME.' '],
     ];
 
     private InMemoryRepository $entities;

@@ -16,16 +16,19 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DbEntityRepository::class)]
 final class Entity
 {
-    public const LABEL = 'entity';
+    public const NAME = 'entity';
+    public const FIELD_NAME = 'name';
+    public const FIELD_DESCRIPTION = 'description';
+    public const FIELD_CREATED_AT = 'created_at';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;
 
-    #[ORM\OneToMany('entity', Value::class, ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(Entity::NAME, Value::class, ['all'], orphanRemoval: true)]
     private Collection $values;
 
     public function __construct(
-        #[ORM\Id, ORM\Column(type: EntityIdType::NAME)]
+        #[ORM\Id, ORM\Column(type: EntityIdType::FIELD_ENTITY_ID)]
         private EntityId $entityId,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]

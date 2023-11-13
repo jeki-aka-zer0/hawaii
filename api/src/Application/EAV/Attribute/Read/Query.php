@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\EAV\Attribute\Read;
 
+use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Infrastructure\UI\Web\Request\QueryListInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,7 +16,7 @@ final class Query implements QueryListInterface
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
+            Attribute::FIELD_NAME => $this->name,
         ];
     }
 }

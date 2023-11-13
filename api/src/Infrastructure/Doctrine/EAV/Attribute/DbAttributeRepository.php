@@ -22,7 +22,7 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
     {
         $attribute = $this->find($attributeId->getValue());
         if ($attribute === null) {
-            throw EntityNotFoundException::byId($attributeId, Attribute::LABEL);
+            throw EntityNotFoundException::byId($attributeId, Attribute::NAME);
         }
 
         return $attribute;
@@ -33,9 +33,10 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
         /** @noinspection PhpUnhandledExceptionInspection */
         return $this->createQueryBuilder('a')
                 ->select('COUNT(a.attributeId)')
-                ->andWhere('lower(a.name) = :name')
-                ->setParameter(':name', mb_strtolower($name))
-                ->getQuery()->getSingleScalarResult() > 0;
+                ->andWhere(sprintf('lower(a.%s) = :name', Attribute::FIELD_NAME))
+                ->setParameter('name', mb_strtolower($name))
+                ->getQuery()
+                ->getSingleScalarResult() > 0;
     }
 
     public function add(Attribute $attribute): void

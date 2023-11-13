@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\EAV\Entity\Read;
 
+use App\Domain\EAV\Entity\Entity\Entity;
 use App\Infrastructure\UI\Web\Request\QueryListInterface;
+use App\Infrastructure\UI\Web\Response\Pagination\Paginator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class Query implements QueryListInterface
@@ -22,9 +24,9 @@ final class Query implements QueryListInterface
     public function toArray(): array
     {
         return [
-            'name' => $this->name,
-            'offset' => $this->offset,
-            'limit' => $this->limit,
+            Entity::FIELD_NAME => $this->name,
+            Paginator::KEY_OFFSET => $this->offset,
+            Paginator::KEY_LIMIT => $this->limit,
         ];
     }
 }

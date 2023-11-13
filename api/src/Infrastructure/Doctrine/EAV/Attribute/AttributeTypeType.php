@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine\EAV\Attribute;
 
 use App\Domain\EAV\Attribute\Entity\AttributeType;
+use App\Domain\Shared\Util\Str;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\SmallIntType;
 use InvalidArgumentException;
@@ -24,7 +25,7 @@ final class AttributeTypeType extends SmallIntType
         return match ($value) {
             AttributeType::String => self::STRING,
             AttributeType::Int => self::INT,
-            default => throw new InvalidArgumentException('Unexpected attribute type'),
+            default => throw new InvalidArgumentException(sprintf('Unexpected %s', self::getNameHumanize())),
         };
     }
 
@@ -36,7 +37,7 @@ final class AttributeTypeType extends SmallIntType
         return match ($value) {
             self::STRING => AttributeType::String,
             self::INT => AttributeType::Int,
-            default => throw new InvalidArgumentException(sprintf('Unexpected attribute type "%d" in db', $value)),
+            default => throw new InvalidArgumentException(sprintf('Unexpected %s "%d" in db', self::getNameHumanize(), $value)),
         };
     }
 
@@ -48,5 +49,10 @@ final class AttributeTypeType extends SmallIntType
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
+    }
+
+    private static function getNameHumanize(): Str
+    {
+        return (new Str(self::NAME))->humanize();
     }
 }
