@@ -42,7 +42,7 @@ final readonly class QueryHandler
     public function oneOrFail(EntityId $entityId): array
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $entity = $this->selectEntityFields($this->qbFromEntity())
+        $entity = $this->select($this->qbFrom())
             ->where(sprintf('%s = :entity_id', EntityIdType::FIELD_ENTITY_ID))
             ->setParameter('entity_id', $entityId->getValue())
             ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::NAME);
@@ -52,7 +52,7 @@ final readonly class QueryHandler
 
     private function getBasicQueryBuilder(Query $query): QueryBuilder
     {
-        return (new QB($this->qbFromEntity()))
+        return (new QB($this->qbFrom()))
             ->whereFieldLike(Entity::FIELD_NAME, $query->name)
             ->getQb();
     }
@@ -83,7 +83,7 @@ final readonly class QueryHandler
          *     name: string,
          *     description: ?string> $entities
          */
-        $entities = $this->selectEntityFields($qb)
+        $entities = $this->select($qb)
             ->setFirstResult($query->offset)
             ->setMaxResults($query->limit)
             ->orderBy(Entity::FIELD_CREATED_AT, QB::DESC)
@@ -92,12 +92,12 @@ final readonly class QueryHandler
         return $this->addAttributesValues($entities);
     }
 
-    private function qbFromEntity(): QueryBuilder
+    private function qbFrom(): QueryBuilder
     {
         return $this->connection->createQueryBuilder()->from(Entity::NAME);
     }
 
-    private function selectEntityFields(QueryBuilder $qb): QueryBuilder
+    private function select(QueryBuilder $qb): QueryBuilder
     {
         return $qb->select(EntityIdType::FIELD_ENTITY_ID, Entity::FIELD_NAME, Entity::FIELD_DESCRIPTION);
     }
@@ -112,9 +112,9 @@ final readonly class QueryHandler
          */
         $attributesValues = $this->connection->createQueryBuilder()
             ->select(
-                sprintf('v.%s', ValueIdType::FIELD_VALUE_ID),
+                sprintf('v.%s', EntityIdType::FIELD_ENTITY_ID),
                 sprintf('a.%s', Attribute::FIELD_NAME),
-                sprintf('v.%f', Value::FIELD_VALUE)
+                sprintf('v.%s', Value::FIELD_VALUE)
             )
             ->from(Value::NAME, 'v')
             ->leftJoin(
@@ -123,13 +123,13 @@ final readonly class QueryHandler
                 'a',
                 sprintf('a.%s = v.%s', AttributeIdType::FIELD_ATTRIBUTE_ID, AttributeIdType::FIELD_ATTRIBUTE_ID)
             )
-            ->where(sprintf('v.%s IN (:entity_ids)', ValueIdType::FIELD_VALUE_ID))
+            ->where(sprintf('v.%s IN (:entity_ids)', EntityIdType::FIELD_ENTITY_ID))
             ->setParameter('entity_ids', $entityIds, ArrayParameterType::STRING)
             ->fetchAllAssociative();
 
         $attributesValuesMap = [];
         foreach ($attributesValues as $row) {
-            $attributesValuesMap[$row[ValueIdType::FIELD_VALUE_ID]][] = [
+            $attributesValuesMap[$row[EntityIdType::FIELD_ENTITY_ID]][] = [
                 Attribute::FIELD_NAME => $row[Attribute::FIELD_NAME],
                 Value::FIELD_VALUE => $row[Value::FIELD_VALUE],
             ];
@@ -137,8 +137,8 @@ final readonly class QueryHandler
 
         foreach ($entities as $i => $entity) {
             $entities[$i][self::KEY_ATTRIBUTES_VALUES] = [];
-            if (isset($attributesValuesMap[$entity[ValueIdType::FIELD_VALUE_ID]])) {
-                $entities[$i][self::KEY_ATTRIBUTES_VALUES] = $attributesValuesMap[$entity[ValueIdType::FIELD_VALUE_ID]];
+            if (isset($attributesValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]])) {
+                $entities[$i][self::KEY_ATTRIBUTES_VALUES] = $attributesValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]];
             }
         }
 

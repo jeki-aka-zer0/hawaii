@@ -72,10 +72,11 @@ final class PopulateCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($input->getArgument(self::ARG_TRUNC)) {
-            $output->writeln('<question>EAV truncated</question>');
+        parent::execute($input, $output);
 
+        if ($input->getArgument(self::ARG_TRUNC)) {
             $this->connection->executeQuery(sprintf('TRUNCATE %s, %s, %s CASCADE', Entity::NAME, Attribute::NAME, Value::NAME));
+            $output->writeln('<question>EAV truncated</question>');
         }
 
         $entityNames = array_keys(self::ENTITIES);

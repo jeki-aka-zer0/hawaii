@@ -17,8 +17,7 @@ final class Query implements QueryListInterface
     #[Assert\PositiveOrZero]
     public int $offset = 0;
 
-    #[Assert\GreaterThanOrEqual(1)]
-    #[Assert\LessThanOrEqual(1000)]
+    #[Assert\GreaterThanOrEqual(1), Assert\LessThanOrEqual(1000)]
     public int $limit = 100;
 
     public function toArray(): array

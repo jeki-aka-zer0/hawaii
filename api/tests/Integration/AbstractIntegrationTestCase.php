@@ -7,7 +7,7 @@ namespace App\Tests\Integration;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-abstract class AbstractIntegrationTest extends KernelTestCase
+abstract class AbstractIntegrationTestCase extends KernelTestCase
 {
     protected static Connection $connection;
 

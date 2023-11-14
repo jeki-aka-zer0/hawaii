@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Infrastructure\UI\Web;
 
 use App\Application\Shared\ListDTO;
-use App\Tests\Integration\AbstractIntegrationTest;
+use App\Tests\Integration\AbstractIntegrationTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractEndpointTest extends AbstractIntegrationTest
+abstract class AbstractEndpointTestCase extends AbstractIntegrationTestCase
 {
     protected const EXPECTED_RESPONSE_NONE = [
         ListDTO::KEY_COUNT => 0,

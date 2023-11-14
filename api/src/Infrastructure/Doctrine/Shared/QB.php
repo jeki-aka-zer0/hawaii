@@ -15,7 +15,7 @@ final readonly class QB
     {
     }
 
-    public function whereFieldLike(string $field, string $searchStr): self
+    public function whereFieldLike(string $field, ?string $searchStr): self
     {
         if ($searchStr) {
             $this->qb

@@ -14,13 +14,13 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
 use App\Infrastructure\UI\Web\EAV\EntityController;
-use App\Tests\Integration\Infrastructure\UI\Web\AbstractEndpointTest;
+use App\Tests\Integration\Infrastructure\UI\Web\AbstractEndpointTestCase;
 use App\Tests\Shared\AssertTrait;
-use const App\Application\EAV\Entity\Read\KEY_ATTRIBUTES_VALUES;
 
-final class EntityControllerTest extends AbstractEndpointTest
+final class EntityControllerTest extends AbstractEndpointTestCase
 {
     use AssertTrait;
+
     private const ENTITY_NAME = 'Hello';
     private const ATTRIBUTE_NAME = 'Language';
     private const VALUE = 'en';
@@ -35,17 +35,21 @@ final class EntityControllerTest extends AbstractEndpointTest
                     [
                         Attribute::FIELD_NAME => self::ATTRIBUTE_NAME,
                         Value::FIELD_VALUE => self::VALUE,
-                    ]
+                    ],
                 ],
             ],
         ],
     ];
     private static EntityController $SUT;
+    private static QueryHandler $queryHandler;
+    private static Builder $builder;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$SUT = self::getContainer()->get(EntityController::class);
+        self::$queryHandler = self::getContainer()->get(QueryHandler::class);
+        self::$builder = self::getContainer()->get(Builder::class);
     }
 
     protected function setUp(): void
@@ -75,15 +79,12 @@ final class EntityControllerTest extends AbstractEndpointTest
      */
     public function testRead(array $queryParams, array $expected): void
     {
-        self::getContainer()
-            ->get(Builder::class)
+        self::$builder
             ->buildAll(self::ENTITY_NAME, self::ATTRIBUTE_NAME, AttributeType::String, self::VALUE);
         $query = new Query();
-        if ($queryParams[Entity::FIELD_NAME] ?? false) {
-            $query->name = $queryParams[Entity::FIELD_NAME];
-        }
+        $query->name = $queryParams[Entity::FIELD_NAME] ?? null;
 
-        $response = self::$SUT->read($query, self::getContainer()->get(QueryHandler::class));
+        $response = self::$SUT->read($query, self::$queryHandler);
 
         $this->assertArray($expected, $this->assertSuccessfulJson($response));
     }

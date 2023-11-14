@@ -35,9 +35,9 @@ api-composer-bash:
 	docker-compose run --rm --env "COMPOSER_AUTH={\"github-oauth\": {\"github.com\": \"`composer config -g github-oauth.github.com`\"} }" api-php-cli bash
 
 api-test-integration:
-	docker-compose run --rm api-php-cli bin/phpunit
+	docker-compose run --rm api-php-cli bin/phpunit tests/Integration
 
-eav-create-all:
+eav-populate:
 	docker-compose run --rm api-php-cli bin/console eav:populate 8 yes
 
 frontend-yarn-upgrade:

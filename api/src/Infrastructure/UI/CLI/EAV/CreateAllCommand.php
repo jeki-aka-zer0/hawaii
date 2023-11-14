@@ -35,6 +35,8 @@ final class CreateAllCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        parent::execute($input, $output);
+
         $this->builder->buildAll(
             $input->getArgument(Entity::NAME),
             $input->getArgument(Attribute::NAME),
