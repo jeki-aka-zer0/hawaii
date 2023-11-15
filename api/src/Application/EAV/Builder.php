@@ -17,6 +17,40 @@ use App\Domain\EAV\Value\Entity\ValueId;
 
 final readonly class Builder
 {
+    public const ENTITY_NAME_TO_DESC_MAP = [
+        'Elasticsearch' => 'Is a search and analytics engine.',
+        'Logstash' => 'Is a server‑side data processing pipeline that ingests data from multiple sources simultaneously, transforms it, and then sends it to a "stash" like Elasticsearch.',
+        'Kibana' => 'Lets users visualize data with charts and graphs in Elasticsearch.',
+        'Beat' => 'Is a family of lightweight, single-purpose data shippers. After adding this tool ELK was renamed to Elastic stack.',
+        'Spoofing' => 'In the context of information security, and especially network security, a spoofing attack is a situation in which a person or program successfully identifies as another by falsifying data, to gain an illegitimate advantage.',
+        'CGI' => 'A protocol for calling external software via a Web server to deliver dynamic content.',
+        'FastCGI' => 'is a binary protocol for interfacing interactive programs with a web server. It is a variation on the earlier Common Gateway Interface (CGI). FastCGI\'s main aim is to reduce the overhead related to interfacing between web server and CGI programs, allowing a server to handle more web page requests per unit of time.',
+        'Graceful degradation' => 'Is the ability of a computer, machine, electronic system or network to maintain limited functionality even when a large portion of it has been destroyed or rendered inoperative.',
+    ];
+
+    public const ATTRIBUTE_NAME_TO_TYPE_MAP = [
+        'Keyword' => AttributeType::String,
+        'Category' => AttributeType::String,
+        'Importance' => AttributeType::Int,
+        'Popularity' => AttributeType::Int,
+        'Lang' => AttributeType::String,
+    ];
+
+    private const STR_VALUES = [
+        'Repeat',
+        'TODO',
+        'Programming',
+        'Interesting fact',
+        'Education',
+        'ELK',
+        'CGI',
+        'Algorithm',
+        'EN',
+        'FR',
+        'RU',
+        'UA',
+    ];
+
     public function __construct(
         private EntityHandler $entityHandler,
         private AttributeHandler $attributeHandler,
@@ -49,5 +83,15 @@ final readonly class Builder
     public function buildValue(EntityId $entityId, AttributeId $attributeId, int|string $value): ValueId
     {
         return $this->valueHandler->handle(ValueCommand::build($entityId, $attributeId, $value));
+    }
+
+    public static function getRandomStrValue(): string
+    {
+        return self::STR_VALUES[array_rand(self::STR_VALUES)];
+    }
+
+    public static function getRandomIntValue(): int
+    {
+        return rand(1, 10);
     }
 }
