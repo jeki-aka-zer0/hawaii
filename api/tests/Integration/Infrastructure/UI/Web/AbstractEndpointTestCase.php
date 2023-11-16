@@ -17,8 +17,8 @@ abstract class AbstractEndpointTestCase extends AbstractIntegrationTestCase
 
     protected function assertSuccessfulJson(Response $response): array
     {
-        $this->assertTrue($response->isSuccessful());
-        $this->assertEquals('application/json', $response->headers->get('content-type'));
+        self::assertTrue($response->isSuccessful());
+        self::assertEquals('application/json', $response->headers->get('content-type'));
         return json_decode($response->getContent(), true, flags: JSON_THROW_ON_ERROR);
     }
 }

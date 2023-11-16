@@ -37,7 +37,7 @@ final class CreateAllCommand extends AbstractCommand
     {
         parent::execute($input, $output);
 
-        $this->builder->buildAll(
+        $this->builder->createAll(
             $input->getArgument(Entity::NAME),
             $input->getArgument(Attribute::NAME),
             AttributeType::from($input->getArgument(AttributeTypeType::NAME)),

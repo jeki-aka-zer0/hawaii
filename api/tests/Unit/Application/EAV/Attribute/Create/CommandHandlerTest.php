@@ -6,42 +6,38 @@ namespace App\Tests\Unit\Application\EAV\Attribute\Create;
 
 use App\Application\EAV\Attribute\Create\Command;
 use App\Application\EAV\Attribute\Create\CommandHandler;
+use App\Application\EAV\Builder;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\Shared\Repository\FieldException;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository;
-use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
-use DomainException;
-use Faker\Factory;
-use JetBrains\PhpStorm\Pure;
 use PHPUnit\Framework\TestCase;
 
 final class CommandHandlerTest extends TestCase
 {
-    private const NAMES_DATA_PROVIDER = [
-        'existent name' => [Attribute::FIELD_NAME => AttributeBuilder::TEST_EXISTENT_NAME],
-        'existent name with spaces' => [Attribute::FIELD_NAME => ' '.AttributeBuilder::TEST_EXISTENT_NAME.' '],
-    ];
+    private static InMemoryRepository $entities;
+    private static DummyFlusher $flusher;
+    private static CommandHandler $handler;
+    private static Attribute $alreadyExistentAttribute;
 
-    private InMemoryRepository $entities;
-    private DummyFlusher $flusher;
-    private CommandHandler $handler;
-
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-
-        $this->entities = new InMemoryRepository([
-            (new AttributeBuilder())->build(),
-        ]);
-        $this->flusher = new DummyFlusher();
-        $this->handler = new CommandHandler($this->entities, $this->flusher);
+        parent::setUpBeforeClass();
+        self::$handler = new CommandHandler(
+            self::$entities = new InMemoryRepository([self::getAlreadyExistentAttribute()]),
+            self::$flusher = new DummyFlusher(),
+        );
     }
 
     public function namesDataProvider(): array
     {
-        return self::NAMES_DATA_PROVIDER;
+        return [
+            'existent name' => ['name' => self::getAlreadyExistentAttribute()->name],
+            'existent name with spaces' => [
+                'name' => sprintf(' %s ', self::getAlreadyExistentAttribute()->name),
+            ],
+        ];
     }
 
     /**
@@ -49,33 +45,33 @@ final class CommandHandlerTest extends TestCase
      */
     public function testHandleShouldFailWhenAttributeWithSameNameAlreadyExists(string $name): void
     {
-        $command = $this->getCommand(AttributeBuilder::TEST_EXISTENT_NAME);
+        $command = $this->getCommand(self::getAlreadyExistentAttribute()->name);
 
         $this->expectException(FieldException::class);
         $this->expectExceptionMessage(sprintf('Attribute with the name "%s" already exists', trim($name)));
 
-        $this->handler->handle($command);
+        self::$handler->handle($command);
     }
 
-    public function testHandleShouldSuccess(): void
+    public function testHandleShouldCreateAttribute(): void
     {
-        $name = Factory::create()->name;
+        $name = Builder::getRandomAttributeName(self::getAlreadyExistentAttribute()->name);
         $command = $this->getCommand($name);
 
-        $attributeId = $this->handler->handle($command);
+        $attributeId = self::$handler->handle($command);
 
         self::assertNotEmpty($attributeId);
-        self::assertTrue($this->entities->hasByName($name));
-        self::assertTrue($this->flusher->isFlushed());
+        self::assertTrue(self::$entities->hasByName($name));
+        self::assertTrue(self::$flusher->isFlushed());
     }
 
-    #[Pure]
     private function getCommand(string $name): Command
     {
-        $command = new Command();
-        $command->name = $name;
-        $command->type = AttributeType::String->value;
+        return Command::build($name, AttributeType::String);
+    }
 
-        return $command;
+    private static function getAlreadyExistentAttribute(): Attribute
+    {
+        return self::$alreadyExistentAttribute ??= Builder::buildAttribute();
     }
 }

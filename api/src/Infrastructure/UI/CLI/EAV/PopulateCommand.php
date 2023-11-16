@@ -44,7 +44,7 @@ final class PopulateCommand extends AbstractCommand
         $attributeNameToEntityMap = [];
         try {
             foreach (Builder::ATTRIBUTE_NAME_TO_TYPE_MAP as $attrName => $attrType) {
-                $attributeNameToEntityMap[$attrName] = $this->builder->buildAttribute($attrName, $attrType);
+                $attributeNameToEntityMap[$attrName] = $this->builder->createAttribute($attrName, $attrType);
             }
         } catch (FieldException) {
             $output->writeln(sprintf("<question>%s '%s' already exist</question>", (new Str(Attribute::NAME))->humanize(), $attrName));
@@ -53,14 +53,13 @@ final class PopulateCommand extends AbstractCommand
         // create entities
         $maxAttributesIndex = count($attributeNameToEntityMap);
         foreach (Builder::ENTITY_NAME_TO_DESC_MAP as $entityName => $entityDesc) {
-            $entityId = $this->builder->buildEntity($entityName, $entityDesc);
+            $entityId = $this->builder->createEntity($entityName, $entityDesc);
             // create values
             $attributesNumber = rand(0, $maxAttributesIndex);
             for ($i = 0; $i < $attributesNumber; $i++) {
-                $attributeName = array_rand($attributeNameToEntityMap);
-                $this->builder->buildValue(
+                $this->builder->createValue(
                     $entityId,
-                    $attributeNameToEntityMap[$attributeName],
+                    $attributeNameToEntityMap[$attributeName = Builder::getRandomAttributeName()],
                     match (Builder::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName]) {
                         AttributeType::String => Builder::getRandomStrValue(),
                         AttributeType::Int => Builder::getRandomIntValue(),

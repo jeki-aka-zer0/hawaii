@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\EAV\Attribute;
 
+use App\Application\EAV\Builder;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use PHPUnit\Framework\TestCase;
 
 final class AttributeTest extends TestCase
 {
-    private const NAMES_DATA_PROVIDER = [
-        'same names' => [
-            Attribute::FIELD_NAME => AttributeBuilder::TEST_EXISTENT_NAME,
-            'isNameMatchExpected' => true,
-        ],
-        'same names in different case and with spaces' => [
-            /** @see AttributeBuilder::TEST_EXISTENT_NAME */
-            Attribute::FIELD_NAME => ' CoLoR ',
-            'isNameMatchExpected' => true,
-        ],
-        'different names' => [
-            Attribute::FIELD_NAME => 'some another name',
-            'isNameMatchExpected' => false,
-        ],
-    ];
+    private static Attribute $alreadyExistentAttribute;
 
     public function namesDataProvider(): array
     {
-        return self::NAMES_DATA_PROVIDER;
+        return [
+            'same names' => [
+                'name' => self::getAlreadyExistentAttribute()->name,
+                'isNameMatchExpected' => true,
+            ],
+            'same names in different case and with spaces' => [
+                'name' => sprintf(' %s ', strtoupper(self::getAlreadyExistentAttribute()->name)),
+                'isNameMatchExpected' => true,
+            ],
+            'different names' => [
+                'name' => 'some another name',
+                'isNameMatchExpected' => false,
+            ],
+        ];
     }
 
     /**
@@ -35,10 +35,13 @@ final class AttributeTest extends TestCase
      */
     public function testIsNameMatch(string $name, bool $isNameMatchExpected): void
     {
-        $attribute = (new AttributeBuilder())->build();
-
-        $isNameMatch = $attribute->isNameMatch($name);
+        $isNameMatch = self::getAlreadyExistentAttribute()->isNameMatch($name);
 
         self::assertEquals($isNameMatchExpected, $isNameMatch);
+    }
+
+    private static function getAlreadyExistentAttribute(): Attribute
+    {
+        return self::$alreadyExistentAttribute ??= Builder::buildAttribute();
     }
 }

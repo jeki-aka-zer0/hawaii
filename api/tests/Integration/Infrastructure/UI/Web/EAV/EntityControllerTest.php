@@ -80,7 +80,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
     public function testRead(array $queryParams, array $expected): void
     {
         self::$builder
-            ->buildAll(self::ENTITY_NAME, self::ATTRIBUTE_NAME, AttributeType::String, self::VALUE);
+            ->createAll(self::ENTITY_NAME, self::ATTRIBUTE_NAME, AttributeType::String, self::VALUE);
         $query = new Query();
         $query->name = $queryParams[Entity::FIELD_NAME] ?? null;
 

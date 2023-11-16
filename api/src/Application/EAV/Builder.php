@@ -10,6 +10,7 @@ use App\Application\EAV\Entity\Create\Command as EntityCommand;
 use App\Application\EAV\Entity\Create\CommandHandler as EntityHandler;
 use App\Application\EAV\Value\Upsert\Command as ValueCommand;
 use App\Application\EAV\Value\Upsert\CommandHandler as ValueHandler;
+use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\EAV\Entity\Entity\EntityId;
@@ -58,31 +59,43 @@ final readonly class Builder
     ) {
     }
 
-    public function buildAll(
+    public function createAll(
         string $entityName,
         string $attributeName,
         AttributeType $attributeType,
         int|string $value,
         string $entityDescription = null,
     ): void {
-        $entityId = $this->buildEntity($entityName, $entityDescription);
-        $attributeId = $this->buildAttribute($attributeName, $attributeType);
-        $this->buildValue($entityId, $attributeId, $value);
+        $entityId = $this->createEntity($entityName, $entityDescription);
+        $attributeId = $this->createAttribute($attributeName, $attributeType);
+        $this->createValue($entityId, $attributeId, $value);
     }
 
-    public function buildEntity(string $name, string $description = null): EntityId
+    public function createEntity(string $name, string $description = null): EntityId
     {
         return $this->entityHandler->handle(EntityCommand::build($name, $description));
     }
 
-    public function buildAttribute(string $name, AttributeType $type): AttributeId
+    public function createAttribute(string $name, AttributeType $type): AttributeId
     {
         return $this->attributeHandler->handle(AttributeCommand::build($name, $type));
     }
 
-    public function buildValue(EntityId $entityId, AttributeId $attributeId, int|string $value): ValueId
+    public function createValue(EntityId $entityId, AttributeId $attributeId, int|string $value): ValueId
     {
         return $this->valueHandler->handle(ValueCommand::build($entityId, $attributeId, $value));
+    }
+
+    public static function buildAttribute(AttributeId $id = null, AttributeType $type = AttributeType::String): Attribute
+    {
+        return new Attribute($id ?? AttributeId::generate(), self::getRandomAttributeName(), $type);
+    }
+
+    public static function getRandomAttributeName(string $exclude = ''): string
+    {
+        $name = array_rand(self::ATTRIBUTE_NAME_TO_TYPE_MAP);
+
+        return $exclude === $name ? self::getRandomAttributeName($exclude) : $name;
     }
 
     public static function getRandomStrValue(): string

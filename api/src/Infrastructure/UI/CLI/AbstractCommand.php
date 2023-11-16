@@ -10,9 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
 {
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>Start</info>');
+
+        return self::INVALID;
     }
 
     protected function success(OutputInterface $output): int

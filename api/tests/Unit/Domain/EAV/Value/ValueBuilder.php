@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\EAV\Value;
 
+use App\Application\EAV\Builder;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
@@ -11,7 +12,6 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
-use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 
 final class ValueBuilder
@@ -21,7 +21,7 @@ final class ValueBuilder
         return new Value(
             ValueId::generate(),
             $entity ?? (new EntityBuilder())->build(EntityId::generate()),
-            $attribute ??= (new AttributeBuilder())->build(AttributeId::generate()),
+            $attribute ??= Builder::buildAttribute(AttributeId::generate()),
             self::generateRandomValueByAttribute($attribute)
         );
     }

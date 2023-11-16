@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Domain\EAV\Value;
 
+use App\Application\EAV\Builder;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
-use App\Tests\Unit\Domain\EAV\Attribute\AttributeBuilder;
 use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +17,7 @@ final class ValueTest extends TestCase
 {
     public function testUpdateValue(): void
     {
-        $attribute = (new AttributeBuilder())->build();
+        $attribute = Builder::buildAttribute();
         $value = (new ValueBuilder())->build();
         $newValue = ValueBuilder::generateRandomValueByAttribute($attribute);
 
@@ -29,7 +29,7 @@ final class ValueTest extends TestCase
     public function equalDataProvider(): array
     {
         $entity = (new EntityBuilder())->build($entityId = EntityId::generate());
-        $attribute = (new AttributeBuilder())->build($attributeId = AttributeId::generate());
+        $attribute = Builder::buildAttribute($attributeId = AttributeId::generate());
         $value = (new ValueBuilder())->build($entity, $attribute);
 
         return [
