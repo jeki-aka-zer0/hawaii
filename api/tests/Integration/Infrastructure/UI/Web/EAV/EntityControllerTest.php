@@ -79,11 +79,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
         self::$builder->createAll(
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_NAME] ?? null,
                 $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Attribute::FIELD_NAME] ?? null,
-            match (true) {
-                is_string($val) => AttributeType::String,
-                is_int($val) => AttributeType::Int,
-                default => null,
-            },
+                $val ? Builder::getAttrTypeByVal($val) : null,
             $val,
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_DESCRIPTION] ?? null
         );
@@ -92,5 +88,24 @@ final class EntityControllerTest extends AbstractEndpointTestCase
         $response = self::$SUT->read($query, self::$queryHandler);
 
         $this->assertArray($expected, $this->assertSuccessfulJson($response));
+    }
+
+    public function testReadEntityWithoutAttrAndVal(): void
+    {
+        self::$builder->createEntity($name = Builder::getRandEntityName());
+
+        $response = self::$SUT->read(new Query(), self::$queryHandler);
+
+        $this->assertArray([
+            ListDTO::KEY_COUNT => 1,
+            ListDTO::KEY_RESULTS => [
+                [
+                    EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
+                    Entity::FIELD_NAME => $name,
+                    Entity::FIELD_DESCRIPTION => null,
+                    QueryHandler::KEY_ATTRS_VALUES => [],
+                ],
+            ],
+        ], $this->assertSuccessfulJson($response));
     }
 }

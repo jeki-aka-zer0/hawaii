@@ -160,4 +160,12 @@ final readonly class Builder
         /** @noinspection PhpUnhandledExceptionInspection */
         return random_int(PHP_INT_MIN, PHP_INT_MAX);
     }
+
+    public static function getAttrTypeByVal(string|int $val): ?AttributeType
+    {
+        return match (true) {
+            is_string($val) => AttributeType::String,
+            is_int($val) => AttributeType::Int,
+        };
+    }
 }
