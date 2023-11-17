@@ -16,7 +16,7 @@ use App\Domain\Flusher;
 final readonly class CommandHandler
 {
     public function __construct(
-        private ValueRepository $values,
+        private ValueRepository $val,
         private AttributeRepository $attrs,
         private EntityRepository $entities,
         private Flusher $flusher
@@ -27,10 +27,10 @@ final readonly class CommandHandler
     {
         $entity = $this->entities->get($entityId = new EntityId($cmd->entityId));
         $attr = $this->attrs->get($attrId = new AttributeId($cmd->attributeId));
-        $value = $this->values->findByEntityAndAttr($entityId, $attrId);
-        if (null === $value) {
-            $this->values->add(
-                $value = new Value(
+        $val = $this->val->findByEntityAndAttr($entityId, $attrId);
+        if (null === $val) {
+            $this->val->add(
+                $val = new Value(
                     ValueId::generate(),
                     $entity,
                     $attr,
@@ -38,11 +38,11 @@ final readonly class CommandHandler
                 )
             );
         } else {
-            $value->updateValue($cmd->value);
+            $val->updateVal($cmd->value);
         }
 
         $this->flusher->flush();
 
-        return $value->valueId;
+        return $val->valueId;
     }
 }

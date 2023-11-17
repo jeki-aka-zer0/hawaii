@@ -19,7 +19,7 @@ final class ValueController extends AbstractController
     {
         return new JsonResponse(
             [
-                ValueIdType::FIELD_VALUE_ID => $handler->handle($cmd)->getValue(),
+                ValueIdType::FIELD_VALUE_ID => $handler->handle($cmd)->getVal(),
             ],
             status: 201
         );

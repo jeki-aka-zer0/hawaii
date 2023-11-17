@@ -58,7 +58,7 @@ final readonly class Builder
     public function __construct(
         private EntityHandler $entityHandler,
         private AttributeHandler $attrHandler,
-        private ValueHandler $valueHandler,
+        private ValueHandler $valHandler,
     ) {
     }
 
@@ -66,7 +66,7 @@ final readonly class Builder
         string $entityName = null,
         string $attrName = null,
         AttributeType $attrType = null,
-        int|string $value = null,
+        int|string $val = null,
         string $entityDescription = null,
     ): void {
         $entityId = $this->createEntity(
@@ -80,7 +80,7 @@ final readonly class Builder
             self::ATTR_NAME_TO_TYPE_MAP[$attrName] ??
             throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
         );
-        $this->createValue($entityId, $attrId, $value ?? self::getRandomValue($attrType));
+        $this->createVal($entityId, $attrId, $val ?? self::getRandomVal($attrType));
     }
 
     public function createEntity(string $name, string $description = null): EntityId
@@ -93,9 +93,9 @@ final readonly class Builder
         return $this->attrHandler->handle(AttributeCommand::build($name, $type));
     }
 
-    public function createValue(EntityId $entityId, AttributeId $attrId, int|string $value): ValueId
+    public function createVal(EntityId $entityId, AttributeId $attrId, int|string $val): ValueId
     {
-        return $this->valueHandler->handle(ValueCommand::build($entityId, $attrId, $value));
+        return $this->valHandler->handle(ValueCommand::build($entityId, $attrId, $val));
     }
 
     public static function buildAttr(AttributeId $id = null, AttributeType $type = AttributeType::String): Attribute
@@ -112,13 +112,13 @@ final readonly class Builder
         );
     }
 
-    public static function buildValue(Entity $entity = null, Attribute $attr = null): Value
+    public static function buildVal(Entity $entity = null, Attribute $attr = null): Value
     {
         return new Value(
             ValueId::generate(),
             $entity ?? self::buildEntity(),
             $attr ??= self::buildAttr(),
-            self::getRandomValue($attr),
+            self::getRandomVal($attr),
         );
     }
 
@@ -139,7 +139,7 @@ final readonly class Builder
         return $exclude === $name ? self::getRandomStrFromArray($array, $exclude) : $name;
     }
 
-    public static function getRandomValue(Attribute|AttributeType $attr): string|int
+    public static function getRandomVal(Attribute|AttributeType $attr): string|int
     {
         return match (match ($attr::class) {
             Attribute::class => $attr->type,

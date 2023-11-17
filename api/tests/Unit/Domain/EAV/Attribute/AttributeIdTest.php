@@ -10,7 +10,7 @@ use Webmozart\Assert\InvalidArgumentException;
 
 final class AttributeIdTest extends TestCase
 {
-    public function testConstructShouldFailWhenValueIsNotUuid(): void
+    public function testConstructShouldFailWhenValIsNotUuid(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -19,11 +19,11 @@ final class AttributeIdTest extends TestCase
 
     public function testGenerateAndToStringAreEquals(): void
     {
-        $uuid = AttributeId::generate()->getValue();
+        $uuid = AttributeId::generate()->getVal();
 
         $attrId = new AttributeId($uuid);
 
-        self::assertEquals($uuid, $attrId->getValue());
+        self::assertEquals($uuid, $attrId->getVal());
         self::assertEquals($uuid, (string)$attrId);
     }
 }

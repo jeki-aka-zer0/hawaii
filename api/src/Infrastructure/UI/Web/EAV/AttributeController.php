@@ -21,7 +21,7 @@ final class AttributeController extends AbstractController
     {
         return new JsonResponse(
             [
-                AttributeIdType::FIELD_ATTR_ID => $handler->handle($cmd)->getValue(),
+                AttributeIdType::FIELD_ATTR_ID => $handler->handle($cmd)->getVal(),
             ],
             status: 201
         );

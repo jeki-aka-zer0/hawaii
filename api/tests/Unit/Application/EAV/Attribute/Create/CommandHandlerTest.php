@@ -19,13 +19,13 @@ final class CommandHandlerTest extends TestCase
     private static InMemoryRepository $entities;
     private static DummyFlusher $flusher;
     private static CommandHandler $handler;
-    private static Attribute $alreadyExistentAttribute;
+    private static Attribute $alreadyExistentAttr;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$handler = new CommandHandler(
-            self::$entities = new InMemoryRepository([self::getAlreadyExistentAttribute()]),
+            self::$entities = new InMemoryRepository([self::getAlreadyExistentAttr()]),
             self::$flusher = new DummyFlusher(),
         );
     }
@@ -33,9 +33,9 @@ final class CommandHandlerTest extends TestCase
     public function namesDataProvider(): array
     {
         return [
-            'existent name' => ['name' => self::getAlreadyExistentAttribute()->name],
+            'existent name' => ['name' => self::getAlreadyExistentAttr()->name],
             'existent name with spaces' => [
-                'name' => sprintf(' %s ', self::getAlreadyExistentAttribute()->name),
+                'name' => sprintf(' %s ', self::getAlreadyExistentAttr()->name),
             ],
         ];
     }
@@ -43,9 +43,9 @@ final class CommandHandlerTest extends TestCase
     /**
      * @dataProvider namesDataProvider
      */
-    public function testHandleShouldFailWhenAttributeWithSameNameAlreadyExists(string $name): void
+    public function testHandleShouldFailWhenAttrWithSameNameAlreadyExists(string $name): void
     {
-        $cmd = $this->getCommand(self::getAlreadyExistentAttribute()->name);
+        $cmd = $this->getCommand(self::getAlreadyExistentAttr()->name);
 
         $this->expectException(FieldException::class);
         $this->expectExceptionMessage(sprintf('Attribute with the name "%s" already exists', trim($name)));
@@ -53,9 +53,9 @@ final class CommandHandlerTest extends TestCase
         self::$handler->handle($cmd);
     }
 
-    public function testHandleShouldCreateAttribute(): void
+    public function testHandleShouldCreateAttr(): void
     {
-        $name = Builder::getRandomAttrName(self::getAlreadyExistentAttribute()->name);
+        $name = Builder::getRandomAttrName(self::getAlreadyExistentAttr()->name);
         $cmd = $this->getCommand($name);
 
         $attrId = self::$handler->handle($cmd);
@@ -70,8 +70,8 @@ final class CommandHandlerTest extends TestCase
         return Command::build($name, AttributeType::String);
     }
 
-    private static function getAlreadyExistentAttribute(): Attribute
+    private static function getAlreadyExistentAttr(): Attribute
     {
-        return self::$alreadyExistentAttribute ??= Builder::buildAttr();
+        return self::$alreadyExistentAttr ??= Builder::buildAttr();
     }
 }

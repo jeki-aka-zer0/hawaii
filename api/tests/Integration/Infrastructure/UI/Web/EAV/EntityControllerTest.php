@@ -36,7 +36,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::$connection->executeQuery(sprintf('TRUNCATE %s CASCADE', Entity::NAME));
+        self::$connection->executeQuery(sprintf('TRUNCATE %s, %s CASCADE', Entity::NAME, Attribute::NAME));
     }
 
     public function readDataProvider(): array
@@ -54,7 +54,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                             QueryHandler::KEY_ATTRS_VALUES => [
                                 [
                                     Attribute::FIELD_NAME => $attributeName = Builder::getRandomAttrName(),
-                                    Value::FIELD_VALUE => Builder::getRandomValue(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
+                                    Value::FIELD_VALUE => Builder::getRandomVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
                                 ],
                             ],
                         ],
@@ -75,16 +75,16 @@ final class EntityControllerTest extends AbstractEndpointTestCase
      */
     public function testRead(array $queryParams, array $expected): void
     {
-        $value = $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE] ?? null;
+        $val = $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE] ?? null;
         self::$builder->createAll(
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_NAME] ?? null,
                 $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Attribute::FIELD_NAME] ?? null,
             match (true) {
-                is_string($value) => AttributeType::String,
-                is_int($value) => AttributeType::Int,
+                is_string($val) => AttributeType::String,
+                is_int($val) => AttributeType::Int,
                 default => null,
             },
-            $value,
+            $val,
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_DESCRIPTION] ?? null
         );
         $query = Query::build($queryParams[Entity::FIELD_NAME] ?? null);

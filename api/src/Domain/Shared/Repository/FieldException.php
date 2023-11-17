@@ -28,7 +28,7 @@ final class FieldException extends DomainException
                 '%s with the %s "%s" already exists',
                 (new Str($field->entity))->low()->upFirst(),
                 (new Str($field->field))->humanize(),
-                (new Str($field->value))->trim()->trunc(),
+                (new Str($field->val))->trim()->trunc(),
             )
         );
     }

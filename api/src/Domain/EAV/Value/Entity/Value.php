@@ -47,29 +47,29 @@ final class Value
     ) {
         $this->updatedAt = $createdAt;
 
-        $this->updateValue($this->value);
+        $this->updateVal($this->value);
     }
 
-    public function updateValue(int|string $value): void
+    public function updateVal(int|string $val): void
     {
         $this->value = match ($this->attribute->type) {
-            AttributeType::String => trim((string)$value),
-            AttributeType::Int => (int)$value,
+            AttributeType::String => trim((string)$val),
+            AttributeType::Int => (int)$val,
         };
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function isEqual(ValueId $valueId = null, EntityId $entityId = null, AttributeId $attrId = null): bool
+    public function isEqual(ValueId $valId = null, EntityId $entityId = null, AttributeId $attrId = null): bool
     {
-        $isValueIdEmpty = $valueId === null;
+        $isValIdEmpty = $valId === null;
         $isEntityIdEmpty = $entityId === null;
         $isAttrIdEmpty = $attrId === null;
 
-        if ($isValueIdEmpty && $isEntityIdEmpty && $isAttrIdEmpty) {
+        if ($isValIdEmpty && $isEntityIdEmpty && $isAttrIdEmpty) {
             throw new InvalidArgumentException(sprintf('At least one of the parameters must be set to compare %s entity', self::NAME));
         }
 
-        return ($isValueIdEmpty || $this->valueId->isEqual($valueId)) &&
+        return ($isValIdEmpty || $this->valueId->isEqual($valId)) &&
             ($isEntityIdEmpty || $this->entity->isEqual($entityId)) &&
             ($isAttrIdEmpty || $this->attribute->isEqual($attrId));
     }

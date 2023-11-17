@@ -19,29 +19,29 @@ final class InMemoryRepository extends SplObjectStorage implements ValueReposito
         array_map(fn(Value $e) => $this->attach($e), $collection);
     }
 
-    public function get(ValueId $valueId): Value
+    public function get(ValueId $valId): Value
     {
-        foreach ($this as $value) {
-            /** @var Value $value */
-            if ($value->isEqual($valueId)) {
-                return $value;
+        foreach ($this as $val) {
+            /** @var Value $val */
+            if ($val->isEqual($valId)) {
+                return $val;
             }
         }
 
-        throw EntityNotFoundException::byId($valueId, Value::NAME);
+        throw EntityNotFoundException::byId($valId, Value::NAME);
     }
 
-    public function add(Value $value): void
+    public function add(Value $val): void
     {
-        $this->attach($value);
+        $this->attach($val);
     }
 
     public function findByEntityAndAttr(EntityId $entityId, AttributeId $attrId): ?Value
     {
-        foreach ($this as $value) {
-            /** @var Value $value */
-            if ($value->isEqual(entityId: $entityId, attrId: $attrId)) {
-                return $value;
+        foreach ($this as $val) {
+            /** @var Value $val */
+            if ($val->isEqual(entityId: $entityId, attrId: $attrId)) {
+                return $val;
             }
         }
 

@@ -47,7 +47,7 @@ final class ExceptionListener
                 /** @var EntityNotFoundException $exception */
                 $response = HttpErrorJsonResponse::createNotFoundError($exception);
                 $level = Logger::ERROR;
-                $context = [EntityIdType::FIELD_ENTITY_ID => $exception->id->getValue()] + $this->getExceptionCodeAndTraceData($exception);
+                $context = [EntityIdType::FIELD_ENTITY_ID => $exception->id->getVal()] + $this->getExceptionCodeAndTraceData($exception);
                 break;
             case $exception instanceof FieldException:
                 $response = DomainErrorJsonResponse::createFieldError($exception);

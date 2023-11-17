@@ -9,15 +9,15 @@ use Webmozart\Assert\Assert;
 
 abstract class AbstractId
 {
-    public function __construct(private string $value)
+    public function __construct(private string $val)
     {
-        Assert::uuid($value);
-        $this->value = mb_strtolower($value);
+        Assert::uuid($val);
+        $this->val = mb_strtolower($val);
     }
 
     public function __toString(): string
     {
-        return $this->getValue();
+        return $this->getVal();
     }
 
     public static function generate(): static
@@ -25,13 +25,13 @@ abstract class AbstractId
         return new static(Uuid::uuid4()->toString());
     }
 
-    public function getValue(): string
+    public function getVal(): string
     {
-        return $this->value;
+        return $this->val;
     }
 
     public function isEqual(self $other): bool
     {
-        return $this->getValue() === $other->getValue();
+        return $this->getVal() === $other->getVal();
     }
 }

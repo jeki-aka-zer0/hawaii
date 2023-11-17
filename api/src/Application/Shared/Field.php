@@ -9,7 +9,7 @@ final readonly class Field
     public function __construct(
         public string $entity,
         public string $field,
-        public mixed $value,
+        public mixed $val,
     ) {
     }
 }

@@ -22,11 +22,11 @@ final class DbValueRepository extends ServiceEntityRepository implements ValueRe
 
     public function findByEntityAndAttr(EntityId $entityId, AttributeId $attrId): ?Value
     {
-        return $this->findOneBy([Entity::NAME => $entityId->getValue(), Attribute::NAME => $attrId->getValue()]);
+        return $this->findOneBy([Entity::NAME => $entityId->getVal(), Attribute::NAME => $attrId->getVal()]);
     }
 
-    public function add(Value $value): void
+    public function add(Value $val): void
     {
-        $this->getEntityManager()->persist($value);
+        $this->getEntityManager()->persist($val);
     }
 }

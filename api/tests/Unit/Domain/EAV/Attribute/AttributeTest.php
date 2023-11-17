@@ -10,17 +10,17 @@ use PHPUnit\Framework\TestCase;
 
 final class AttributeTest extends TestCase
 {
-    private static Attribute $alreadyExistentAttribute;
+    private static Attribute $alreadyExistentAttr;
 
     public function namesDataProvider(): array
     {
         return [
             'same names' => [
-                'name' => self::getAlreadyExistentAttribute()->name,
+                'name' => self::getAlreadyExistentAttr()->name,
                 'isNameMatchExpected' => true,
             ],
             'same names in different case and with spaces' => [
-                'name' => sprintf(' %s ', mb_strtoupper(self::getAlreadyExistentAttribute()->name)),
+                'name' => sprintf(' %s ', mb_strtoupper(self::getAlreadyExistentAttr()->name)),
                 'isNameMatchExpected' => true,
             ],
             'different names' => [
@@ -35,13 +35,13 @@ final class AttributeTest extends TestCase
      */
     public function testIsNameMatch(string $name, bool $isNameMatchExpected): void
     {
-        $isNameMatch = self::getAlreadyExistentAttribute()->isNameMatch($name);
+        $isNameMatch = self::getAlreadyExistentAttr()->isNameMatch($name);
 
         self::assertEquals($isNameMatchExpected, $isNameMatch);
     }
 
-    private static function getAlreadyExistentAttribute(): Attribute
+    private static function getAlreadyExistentAttr(): Attribute
     {
-        return self::$alreadyExistentAttribute ??= Builder::buildAttr();
+        return self::$alreadyExistentAttr ??= Builder::buildAttr();
     }
 }

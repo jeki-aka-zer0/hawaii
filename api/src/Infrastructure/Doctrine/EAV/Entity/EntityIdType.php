@@ -14,7 +14,7 @@ final class EntityIdType extends GuidType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        return $value instanceof EntityId ? $value->getValue() : $value;
+        return $value instanceof EntityId ? $value->getVal() : $value;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): EntityId

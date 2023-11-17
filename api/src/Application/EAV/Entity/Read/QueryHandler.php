@@ -43,10 +43,10 @@ final readonly class QueryHandler
         /** @noinspection PhpUnhandledExceptionInspection */
         $entity = $this->select($this->qbFrom())
             ->where(sprintf('%s = :entity_id', EntityIdType::FIELD_ENTITY_ID))
-            ->setParameter('entity_id', $entityId->getValue())
+            ->setParameter('entity_id', $entityId->getVal())
             ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::NAME);
 
-        return $this->addAttrsValues([$entity])[0];
+        return $this->addAttrsVal([$entity])[0];
     }
 
     private function getBasicQueryBuilder(Query $query): QueryBuilder
@@ -88,7 +88,7 @@ final readonly class QueryHandler
             ->orderBy(Entity::FIELD_CREATED_AT, QB::DESC)
             ->fetchAllAssociative();
 
-        return $this->addAttrsValues($entities);
+        return $this->addAttrsVal($entities);
     }
 
     private function qbFrom(): QueryBuilder
@@ -101,15 +101,15 @@ final readonly class QueryHandler
         return $qb->select(EntityIdType::FIELD_ENTITY_ID, Entity::FIELD_NAME, Entity::FIELD_DESCRIPTION);
     }
 
-    private function addAttrsValues(array $entities): array
+    private function addAttrsVal(array $entities): array
     {
         $entityIds = array_map(static fn(array $row): string => $row[EntityIdType::FIELD_ENTITY_ID], $entities);
 
         /**
          * @noinspection PhpUnhandledExceptionInspection
-         * @var array<int, array{entity_id: string, name: string, value: string}> $attrsValues
+         * @var array<int, array{entity_id: string, name: string, value: string}> $attrsVal
          */
-        $attrsValues = $this->connection->createQueryBuilder()
+        $attrsVal = $this->connection->createQueryBuilder()
             ->select(
                 sprintf('v.%s', EntityIdType::FIELD_ENTITY_ID),
                 sprintf('a.%s', Attribute::FIELD_NAME),
@@ -126,9 +126,9 @@ final readonly class QueryHandler
             ->setParameter('entity_ids', $entityIds, ArrayParameterType::STRING)
             ->fetchAllAssociative();
 
-        $attrsValuesMap = [];
-        foreach ($attrsValues as $row) {
-            $attrsValuesMap[$row[EntityIdType::FIELD_ENTITY_ID]][] = [
+        $attrsValMap = [];
+        foreach ($attrsVal as $row) {
+            $attrsValMap[$row[EntityIdType::FIELD_ENTITY_ID]][] = [
                 Attribute::FIELD_NAME => $row[Attribute::FIELD_NAME],
                 Value::FIELD_VALUE => $row[Value::FIELD_VALUE],
             ];
@@ -136,8 +136,8 @@ final readonly class QueryHandler
 
         foreach ($entities as $i => $entity) {
             $entities[$i][self::KEY_ATTRS_VALUES] = [];
-            if (isset($attrsValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]])) {
-                $entities[$i][self::KEY_ATTRS_VALUES] = $attrsValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]];
+            if (isset($attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]])) {
+                $entities[$i][self::KEY_ATTRS_VALUES] = $attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]];
             }
         }
 

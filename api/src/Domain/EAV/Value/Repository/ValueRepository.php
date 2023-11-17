@@ -12,5 +12,5 @@ interface ValueRepository
 {
     public function findByEntityAndAttr(EntityId $entityId, AttributeId $attrId): ?Value;
 
-    public function add(Value $value): void;
+    public function add(Value $val): void;
 }

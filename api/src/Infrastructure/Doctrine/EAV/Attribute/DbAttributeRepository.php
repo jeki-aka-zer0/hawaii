@@ -20,7 +20,7 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
 
     public function get(AttributeId $attrId): Attribute
     {
-        $attr = $this->find($attrId->getValue());
+        $attr = $this->find($attrId->getVal());
         if ($attr === null) {
             throw EntityNotFoundException::byId($attrId, Attribute::NAME);
         }

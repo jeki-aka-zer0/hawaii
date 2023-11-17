@@ -17,13 +17,13 @@ trait AssertTrait
             return;
         }
 
-        foreach ($expected as $expectedKey => $expectedValue) {
-            if (is_array($expectedValue)) {
-                $this->assertArray($expectedValue, $actual[$expectedKey]);
-            } elseif ($expectedValue === self::TYPE_UUID) {
+        foreach ($expected as $expectedKey => $expectedVal) {
+            if (is_array($expectedVal)) {
+                $this->assertArray($expectedVal, $actual[$expectedKey]);
+            } elseif ($expectedVal === self::TYPE_UUID) {
                 Assert::uuid($actual[$expectedKey]);
             } else {
-                Assert::eq($actual[$expectedKey], $expectedValue);
+                Assert::eq($actual[$expectedKey], $expectedVal);
             }
         }
     }

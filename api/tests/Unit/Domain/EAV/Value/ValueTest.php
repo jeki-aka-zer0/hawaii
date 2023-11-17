@@ -14,56 +14,56 @@ use PHPUnit\Framework\TestCase;
 
 final class ValueTest extends TestCase
 {
-    public function testUpdateValue(): void
+    public function testUpdateVal(): void
     {
-        $attribute = Builder::buildAttr();
-        $value = Builder::buildValue();
-        $newValue = Builder::getRandomValue($attribute);
+        $attr = Builder::buildAttr();
+        $val = Builder::buildVal();
+        $newVal = Builder::getRandomVal($attr);
 
-        $value->updateValue($newValue);
+        $val->updateVal($newVal);
 
-        self::assertEquals($newValue, $value->value);
+        self::assertEquals($newVal, $val->value);
     }
 
     public function equalDataProvider(): array
     {
         $entity = Builder::buildEntity($entityId = EntityId::generate());
-        $attribute = Builder::buildAttr($attrId = AttributeId::generate());
-        $value = Builder::buildValue($entity, $attribute);
+        $attr = Builder::buildAttr($attrId = AttributeId::generate());
+        $val = Builder::buildVal($entity, $attr);
 
         return [
             'same by all attributes' => [
-                'value' => $value,
+                'val' => $val,
                 'expected' => true,
-                'valueId' => $value->valueId,
+                'valId' => $val->valueId,
                 'entityId' => $entityId,
                 'attrId' => $attrId,
             ],
-            'same by valueId and entityId' => [
-                'value' => $value,
+            'same by valId and entityId' => [
+                'val' => $val,
                 'expected' => true,
-                'valueId' => $value->valueId,
+                'valId' => $val->valueId,
                 'entityId' => $entityId,
                 'attrId' => null,
             ],
-            'same by valueId and attrId' => [
-                'value' => $value,
+            'same by valId and attrId' => [
+                'val' => $val,
                 'expected' => true,
-                'valueId' => $value->valueId,
+                'valId' => $val->valueId,
                 'entityId' => null,
                 'attrId' => $attrId,
             ],
             'same by entityId and attrId' => [
-                'value' => $value,
+                'val' => $val,
                 'expected' => true,
-                'valueId' => null,
+                'valId' => null,
                 'entityId' => $entityId,
                 'attrId' => $attrId,
             ],
-            'same by value id' => [
-                'value' => $value,
+            'same by val id' => [
+                'val' => $val,
                 'expected' => true,
-                'valueId' => $value->valueId,
+                'valId' => $val->valueId,
                 'entityId' => null,
                 'attrId' => null,
             ],
@@ -74,19 +74,19 @@ final class ValueTest extends TestCase
      * @dataProvider equalDataProvider
      */
     public function testIsEqual(
-        Value $value,
+        Value $val,
         bool $expected,
-        ?ValueId $valueId = null,
+        ?ValueId $valId = null,
         ?EntityId $entityId = null,
         ?AttributeId $attrId = null,
     ): void {
-        self::assertEquals($expected, $value->isEqual($valueId, $entityId, $attrId));
+        self::assertEquals($expected, $val->isEqual($valId, $entityId, $attrId));
     }
 
     public function testIsEqualShouldFailWithoutArguments(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
-        Builder::buildValue()->isEqual();
+        Builder::buildVal()->isEqual();
     }
 }

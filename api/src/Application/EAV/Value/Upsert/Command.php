@@ -23,12 +23,12 @@ final class Command implements CommandInterface
     #[Assert\NotBlank, Assert\Type(['string', 'int'])]
     public string|int $value;
 
-    public static function build(EntityId $entityId, AttributeId $attrId, int|string $value): self
+    public static function build(EntityId $entityId, AttributeId $attrId, int|string $val): self
     {
         $cmd = new self();
-        $cmd->entityId = $entityId->getValue();
-        $cmd->attributeId = $attrId->getValue();
-        $cmd->value = $value;
+        $cmd->entityId = $entityId->getVal();
+        $cmd->attributeId = $attrId->getVal();
+        $cmd->value = $val;
 
         return $cmd;
     }

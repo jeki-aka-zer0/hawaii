@@ -30,7 +30,7 @@ final class EntityController extends AbstractController
     {
         return new JsonResponse(
             [
-                EntityIdType::FIELD_ENTITY_ID => $handler->handle($cmd)->getValue(),
+                EntityIdType::FIELD_ENTITY_ID => $handler->handle($cmd)->getVal(),
             ],
             status: 201
         );
