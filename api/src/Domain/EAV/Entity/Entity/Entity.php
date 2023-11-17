@@ -32,7 +32,7 @@ final class Entity
         private EntityId $entityId,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
-        private string $name,
+        public string $name,
 
         #[ORM\Column(type: Types::TEXT, nullable: true)]
         private ?string $description,

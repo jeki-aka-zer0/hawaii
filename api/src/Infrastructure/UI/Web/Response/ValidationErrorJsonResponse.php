@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Infrastructure\UI\Web\Response;
 
 use App\Infrastructure\UI\Web\Request\ValidationException;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ValidationErrorJsonResponse extends AbstractErrorJsonResponse

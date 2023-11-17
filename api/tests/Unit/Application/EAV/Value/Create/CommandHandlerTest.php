@@ -17,7 +17,6 @@ use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository as Attributes;
 use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository as Entities;
 use App\Infrastructure\Dummy\EAV\Value\InMemoryRepository;
 use App\Infrastructure\UI\Web\Request\CommandInterface;
-use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use PHPUnit\Framework\TestCase;
 
 final class CommandHandlerTest extends TestCase
@@ -71,7 +70,7 @@ final class CommandHandlerTest extends TestCase
         $command->attributeId = $attributeId->getValue();
         $command->value = $value ?? self::STRING_VALUE;
 
-        $entity = (new EntityBuilder())->build($entityId);
+        $entity = Builder::buildEntity($entityId);
         $attribute = Builder::buildAttribute($attributeId);
         $value = Builder::buildValue($entity, $attribute);
 

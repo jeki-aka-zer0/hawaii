@@ -8,7 +8,6 @@ use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Repository\AttributeRepository;
 use App\Domain\Shared\Repository\EntityNotFoundException;
-use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
 final class InMemoryRepository extends SplObjectStorage implements AttributeRepository

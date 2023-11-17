@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Shared\Entity;
 
-use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -16,7 +15,6 @@ abstract class AbstractId
         $this->value = mb_strtolower($value);
     }
 
-    #[Pure]
     public function __toString(): string
     {
         return $this->getValue();

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\UI\Web\Request;
 
-use JetBrains\PhpStorm\Pure;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -14,7 +13,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class BodyResolver extends AbstractValidationResolver
 {
-    #[Pure]
     public function __construct(ValidatorInterface $validator, private readonly SerializerInterface $serializer)
     {
         parent::__construct($validator);

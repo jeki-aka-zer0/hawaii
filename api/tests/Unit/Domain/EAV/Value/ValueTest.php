@@ -9,7 +9,6 @@ use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
-use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +27,7 @@ final class ValueTest extends TestCase
 
     public function equalDataProvider(): array
     {
-        $entity = (new EntityBuilder())->build($entityId = EntityId::generate());
+        $entity = Builder::buildEntity($entityId = EntityId::generate());
         $attribute = Builder::buildAttribute($attributeId = AttributeId::generate());
         $value = Builder::buildValue($entity, $attribute);
 

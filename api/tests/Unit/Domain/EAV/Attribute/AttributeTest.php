@@ -20,7 +20,7 @@ final class AttributeTest extends TestCase
                 'isNameMatchExpected' => true,
             ],
             'same names in different case and with spaces' => [
-                'name' => sprintf(' %s ', strtoupper(self::getAlreadyExistentAttribute()->name)),
+                'name' => sprintf(' %s ', mb_strtoupper(self::getAlreadyExistentAttribute()->name)),
                 'isNameMatchExpected' => true,
             ],
             'different names' => [

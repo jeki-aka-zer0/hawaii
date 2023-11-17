@@ -94,6 +94,15 @@ final readonly class Builder
         return new Attribute($id ?? AttributeId::generate(), self::getRandomAttributeName(), $type);
     }
 
+    public static function buildEntity(EntityId $entityId = null): Entity
+    {
+        return new Entity(
+            $entityId ?? EntityId::generate(),
+            $name = self::getRandomEntityName(),
+            self::ENTITY_NAME_TO_DESC_MAP[$name]
+        );
+    }
+
     public static function buildValue(Entity $entity = null, Attribute $attribute = null): Value
     {
         return new Value(
@@ -106,9 +115,19 @@ final readonly class Builder
 
     public static function getRandomAttributeName(string $exclude = ''): string
     {
-        $name = array_rand(self::ATTRIBUTE_NAME_TO_TYPE_MAP);
+        return self::getRandomStrFromArray(self::ATTRIBUTE_NAME_TO_TYPE_MAP, $exclude);
+    }
 
-        return $exclude === $name ? self::getRandomAttributeName($exclude) : $name;
+    public static function getRandomEntityName(string $exclude = ''): string
+    {
+        return self::getRandomStrFromArray(self::ENTITY_NAME_TO_DESC_MAP, $exclude);
+    }
+
+    private static function getRandomStrFromArray(array $array, string $exclude): string
+    {
+        $name = array_rand($array);
+
+        return $exclude === $name ? self::getRandomStrFromArray($array, $exclude) : $name;
     }
 
     public static function getRandomValue(Attribute $attribute): string|int

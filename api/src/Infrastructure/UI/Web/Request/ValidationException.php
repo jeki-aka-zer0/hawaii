@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\UI\Web\Request;
 
-use JetBrains\PhpStorm\Pure;
 use LogicException;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -14,7 +13,6 @@ use Throwable;
 
 final class ValidationException extends LogicException
 {
-    #[Pure]
     public function __construct(
         readonly private ConstraintViolationListInterface $violations,
         string $message = 'Invalid input.',

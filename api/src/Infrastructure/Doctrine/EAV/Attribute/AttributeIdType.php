@@ -7,13 +7,11 @@ namespace App\Infrastructure\Doctrine\EAV\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\GuidType;
-use JetBrains\PhpStorm\Pure;
 
 final class AttributeIdType extends GuidType
 {
     public const FIELD_ATTRIBUTE_ID = 'attribute_id';
 
-    #[Pure]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         return $value instanceof AttributeId ? $value->getValue() : $value;

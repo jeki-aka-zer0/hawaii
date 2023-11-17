@@ -8,7 +8,6 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Entity\Repository\EntityRepository;
 use App\Domain\Shared\Repository\EntityNotFoundException;
-use JetBrains\PhpStorm\Pure;
 use SplObjectStorage;
 
 final class InMemoryRepository extends SplObjectStorage implements EntityRepository

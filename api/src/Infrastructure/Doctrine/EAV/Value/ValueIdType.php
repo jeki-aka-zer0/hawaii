@@ -7,13 +7,11 @@ namespace App\Infrastructure\Doctrine\EAV\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\GuidType;
-use JetBrains\PhpStorm\Pure;
 
 final class ValueIdType extends GuidType
 {
     public const FIELD_VALUE_ID = 'value_id';
 
-    #[Pure]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         return $value instanceof ValueId ? $value->getValue() : $value;
