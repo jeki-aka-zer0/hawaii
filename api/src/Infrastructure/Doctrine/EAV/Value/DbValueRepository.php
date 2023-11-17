@@ -20,9 +20,9 @@ final class DbValueRepository extends ServiceEntityRepository implements ValueRe
         parent::__construct($registry, $entityClass);
     }
 
-    public function findByEntityAndAttribute(EntityId $entityId, AttributeId $attributeId): ?Value
+    public function findByEntityAndAttr(EntityId $entityId, AttributeId $attrId): ?Value
     {
-        return $this->findOneBy([Entity::NAME => $entityId->getValue(), Attribute::NAME => $attributeId->getValue()]);
+        return $this->findOneBy([Entity::NAME => $entityId->getValue(), Attribute::NAME => $attrId->getValue()]);
     }
 
     public function add(Value $value): void

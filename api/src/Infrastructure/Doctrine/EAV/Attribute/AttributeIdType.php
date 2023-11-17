@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\GuidType;
 
 final class AttributeIdType extends GuidType
 {
-    public const FIELD_ATTRIBUTE_ID = 'attribute_id';
+    public const FIELD_ATTR_ID = 'attribute_id';
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
@@ -24,7 +24,7 @@ final class AttributeIdType extends GuidType
 
     public function getName(): string
     {
-        return self::FIELD_ATTRIBUTE_ID;
+        return self::FIELD_ATTR_ID;
     }
 
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool

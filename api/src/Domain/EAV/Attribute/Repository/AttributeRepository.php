@@ -13,9 +13,9 @@ interface AttributeRepository
     /**
      * @throws EntityNotFoundException
      */
-    public function get(AttributeId $attributeId): Attribute;
+    public function get(AttributeId $attrId): Attribute;
 
     public function hasByName(string $name): bool;
 
-    public function add(Attribute $attribute): void;
+    public function add(Attribute $attr): void;
 }

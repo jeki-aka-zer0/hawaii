@@ -36,7 +36,7 @@ final class Value
         private Entity $entity,
 
         #[ORM\ManyToOne(targetEntity: Attribute::class, inversedBy: 'values')]
-        #[ORM\JoinColumn(name: AttributeIdType::FIELD_ATTRIBUTE_ID, referencedColumnName: AttributeIdType::FIELD_ATTRIBUTE_ID, nullable: false, onDelete: 'CASCADE')]
+        #[ORM\JoinColumn(name: AttributeIdType::FIELD_ATTR_ID, referencedColumnName: AttributeIdType::FIELD_ATTR_ID, nullable: false, onDelete: 'CASCADE')]
         private Attribute $attribute,
 
         #[ORM\Column(type: Types::STRING, length: 255)]
@@ -59,18 +59,18 @@ final class Value
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function isEqual(ValueId $valueId = null, EntityId $entityId = null, AttributeId $attributeId = null): bool
+    public function isEqual(ValueId $valueId = null, EntityId $entityId = null, AttributeId $attrId = null): bool
     {
         $isValueIdEmpty = $valueId === null;
         $isEntityIdEmpty = $entityId === null;
-        $isAttributeIdEmpty = $attributeId === null;
+        $isAttrIdEmpty = $attrId === null;
 
-        if ($isValueIdEmpty && $isEntityIdEmpty && $isAttributeIdEmpty) {
+        if ($isValueIdEmpty && $isEntityIdEmpty && $isAttrIdEmpty) {
             throw new InvalidArgumentException(sprintf('At least one of the parameters must be set to compare %s entity', self::NAME));
         }
 
         return ($isValueIdEmpty || $this->valueId->isEqual($valueId)) &&
             ($isEntityIdEmpty || $this->entity->isEqual($entityId)) &&
-            ($isAttributeIdEmpty || $this->attribute->isEqual($attributeId));
+            ($isAttrIdEmpty || $this->attribute->isEqual($attrId));
     }
 }

@@ -16,7 +16,7 @@ final class ValueTest extends TestCase
 {
     public function testUpdateValue(): void
     {
-        $attribute = Builder::buildAttribute();
+        $attribute = Builder::buildAttr();
         $value = Builder::buildValue();
         $newValue = Builder::getRandomValue($attribute);
 
@@ -28,7 +28,7 @@ final class ValueTest extends TestCase
     public function equalDataProvider(): array
     {
         $entity = Builder::buildEntity($entityId = EntityId::generate());
-        $attribute = Builder::buildAttribute($attributeId = AttributeId::generate());
+        $attribute = Builder::buildAttr($attrId = AttributeId::generate());
         $value = Builder::buildValue($entity, $attribute);
 
         return [
@@ -37,35 +37,35 @@ final class ValueTest extends TestCase
                 'expected' => true,
                 'valueId' => $value->valueId,
                 'entityId' => $entityId,
-                'attributeId' => $attributeId,
+                'attrId' => $attrId,
             ],
             'same by valueId and entityId' => [
                 'value' => $value,
                 'expected' => true,
                 'valueId' => $value->valueId,
                 'entityId' => $entityId,
-                'attributeId' => null,
+                'attrId' => null,
             ],
-            'same by valueId and attributeId' => [
+            'same by valueId and attrId' => [
                 'value' => $value,
                 'expected' => true,
                 'valueId' => $value->valueId,
                 'entityId' => null,
-                'attributeId' => $attributeId,
+                'attrId' => $attrId,
             ],
-            'same by entityId and attributeId' => [
+            'same by entityId and attrId' => [
                 'value' => $value,
                 'expected' => true,
                 'valueId' => null,
                 'entityId' => $entityId,
-                'attributeId' => $attributeId,
+                'attrId' => $attrId,
             ],
             'same by value id' => [
                 'value' => $value,
                 'expected' => true,
                 'valueId' => $value->valueId,
                 'entityId' => null,
-                'attributeId' => null,
+                'attrId' => null,
             ],
         ];
     }
@@ -78,9 +78,9 @@ final class ValueTest extends TestCase
         bool $expected,
         ?ValueId $valueId = null,
         ?EntityId $entityId = null,
-        ?AttributeId $attributeId = null,
+        ?AttributeId $attrId = null,
     ): void {
-        self::assertEquals($expected, $value->isEqual($valueId, $entityId, $attributeId));
+        self::assertEquals($expected, $value->isEqual($valueId, $entityId, $attrId));
     }
 
     public function testIsEqualShouldFailWithoutArguments(): void

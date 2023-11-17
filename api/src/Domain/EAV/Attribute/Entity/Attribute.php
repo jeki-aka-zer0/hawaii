@@ -27,7 +27,7 @@ final class Attribute
     private Collection $values;
 
     public function __construct(
-        #[ORM\Id, ORM\Column(type: AttributeIdType::FIELD_ATTRIBUTE_ID)]
+        #[ORM\Id, ORM\Column(type: AttributeIdType::FIELD_ATTR_ID)]
         private AttributeId $attributeId,
 
         #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
@@ -43,9 +43,9 @@ final class Attribute
         $this->values = new ArrayCollection();
     }
 
-    public function isEqual(AttributeId $attributeId): bool
+    public function isEqual(AttributeId $attrId): bool
     {
-        return $this->attributeId->isEqual($attributeId);
+        return $this->attributeId->isEqual($attrId);
     }
 
     public function isNameMatch(string $name): bool

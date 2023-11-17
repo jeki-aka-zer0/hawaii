@@ -55,12 +55,12 @@ final class CommandHandlerTest extends TestCase
 
     public function testHandleShouldCreateAttribute(): void
     {
-        $name = Builder::getRandomAttributeName(self::getAlreadyExistentAttribute()->name);
+        $name = Builder::getRandomAttrName(self::getAlreadyExistentAttribute()->name);
         $cmd = $this->getCommand($name);
 
-        $attributeId = self::$handler->handle($cmd);
+        $attrId = self::$handler->handle($cmd);
 
-        self::assertNotEmpty($attributeId);
+        self::assertNotEmpty($attrId);
         self::assertTrue(self::$entities->hasByName($name));
         self::assertTrue(self::$flusher->isFlushed());
     }
@@ -72,6 +72,6 @@ final class CommandHandlerTest extends TestCase
 
     private static function getAlreadyExistentAttribute(): Attribute
     {
-        return self::$alreadyExistentAttribute ??= Builder::buildAttribute();
+        return self::$alreadyExistentAttribute ??= Builder::buildAttr();
     }
 }

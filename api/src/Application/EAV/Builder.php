@@ -32,7 +32,7 @@ final readonly class Builder
         'Graceful degradation' => 'Is the ability of a computer, machine, electronic system or network to maintain limited functionality even when a large portion of it has been destroyed or rendered inoperative.',
     ];
 
-    public const ATTRIBUTE_NAME_TO_TYPE_MAP = [
+    public const ATTR_NAME_TO_TYPE_MAP = [
         'Keyword' => AttributeType::String,
         'Category' => AttributeType::String,
         'Importance' => AttributeType::Int,
@@ -57,15 +57,15 @@ final readonly class Builder
 
     public function __construct(
         private EntityHandler $entityHandler,
-        private AttributeHandler $attributeHandler,
+        private AttributeHandler $attrHandler,
         private ValueHandler $valueHandler,
     ) {
     }
 
     public function createAll(
         string $entityName = null,
-        string $attributeName = null,
-        AttributeType $attributeType = null,
+        string $attrName = null,
+        AttributeType $attrType = null,
         int|string $value = null,
         string $entityDescription = null,
     ): void {
@@ -73,14 +73,14 @@ final readonly class Builder
             $entityName ??= self::getRandomEntityName(),
             $entityDescription ?? self::ENTITY_NAME_TO_DESC_MAP[$entityName] ?? null,
         );
-        /** @var AttributeType $attributeType */
-        $attributeId = $this->createAttribute(
-            $attributeName ??= self::getRandomAttributeName(),
-            $attributeType ??=
-            self::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName] ??
+        /** @var AttributeType $attrType */
+        $attrId = $this->createAttr(
+            $attrName ??= self::getRandomAttrName(),
+            $attrType ??=
+            self::ATTR_NAME_TO_TYPE_MAP[$attrName] ??
             throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
         );
-        $this->createValue($entityId, $attributeId, $value ?? self::getRandomValue($attributeType));
+        $this->createValue($entityId, $attrId, $value ?? self::getRandomValue($attrType));
     }
 
     public function createEntity(string $name, string $description = null): EntityId
@@ -88,19 +88,19 @@ final readonly class Builder
         return $this->entityHandler->handle(EntityCommand::build($name, $description));
     }
 
-    public function createAttribute(string $name, AttributeType $type): AttributeId
+    public function createAttr(string $name, AttributeType $type): AttributeId
     {
-        return $this->attributeHandler->handle(AttributeCommand::build($name, $type));
+        return $this->attrHandler->handle(AttributeCommand::build($name, $type));
     }
 
-    public function createValue(EntityId $entityId, AttributeId $attributeId, int|string $value): ValueId
+    public function createValue(EntityId $entityId, AttributeId $attrId, int|string $value): ValueId
     {
-        return $this->valueHandler->handle(ValueCommand::build($entityId, $attributeId, $value));
+        return $this->valueHandler->handle(ValueCommand::build($entityId, $attrId, $value));
     }
 
-    public static function buildAttribute(AttributeId $id = null, AttributeType $type = AttributeType::String): Attribute
+    public static function buildAttr(AttributeId $id = null, AttributeType $type = AttributeType::String): Attribute
     {
-        return new Attribute($id ?? AttributeId::generate(), self::getRandomAttributeName(), $type);
+        return new Attribute($id ?? AttributeId::generate(), self::getRandomAttrName(), $type);
     }
 
     public static function buildEntity(EntityId $entityId = null): Entity
@@ -112,19 +112,19 @@ final readonly class Builder
         );
     }
 
-    public static function buildValue(Entity $entity = null, Attribute $attribute = null): Value
+    public static function buildValue(Entity $entity = null, Attribute $attr = null): Value
     {
         return new Value(
             ValueId::generate(),
             $entity ?? self::buildEntity(),
-            $attribute ??= self::buildAttribute(),
-            self::getRandomValue($attribute),
+            $attr ??= self::buildAttr(),
+            self::getRandomValue($attr),
         );
     }
 
-    public static function getRandomAttributeName(string $exclude = ''): string
+    public static function getRandomAttrName(string $exclude = ''): string
     {
-        return self::getRandomStrFromArray(self::ATTRIBUTE_NAME_TO_TYPE_MAP, $exclude);
+        return self::getRandomStrFromArray(self::ATTR_NAME_TO_TYPE_MAP, $exclude);
     }
 
     public static function getRandomEntityName(string $exclude = ''): string
@@ -139,11 +139,11 @@ final readonly class Builder
         return $exclude === $name ? self::getRandomStrFromArray($array, $exclude) : $name;
     }
 
-    public static function getRandomValue(Attribute|AttributeType $attribute): string|int
+    public static function getRandomValue(Attribute|AttributeType $attr): string|int
     {
-        return match (match ($attribute::class) {
-            Attribute::class => $attribute->type,
-            AttributeType::class => $attribute,
+        return match (match ($attr::class) {
+            Attribute::class => $attr->type,
+            AttributeType::class => $attr,
         }) {
             AttributeType::String => self::getRandomStrValue(),
             AttributeType::Int => self::getRandomIntValue(),

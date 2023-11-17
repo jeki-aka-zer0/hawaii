@@ -63,12 +63,12 @@ final class CommandHandlerTest extends TestCase
     private function buildHandlerAndOtherEntities(bool $persistValue, string|int $value = null): array
     {
         $entityId = EntityId::generate();
-        $attributeId = AttributeId::generate();
+        $attrId = AttributeId::generate();
 
-        $cmd = Command::build($entityId, $attributeId, $value ?? self::STRING_VALUE);
+        $cmd = Command::build($entityId, $attrId, $value ?? self::STRING_VALUE);
 
         $entity = Builder::buildEntity($entityId);
-        $attribute = Builder::buildAttribute($attributeId);
+        $attribute = Builder::buildAttr($attrId);
         $value = Builder::buildValue($entity, $attribute);
 
         return [

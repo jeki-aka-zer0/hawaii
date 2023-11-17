@@ -17,17 +17,17 @@ final class Command implements CommandInterface
     #[Assert\NotBlank, Assert\Uuid, SerializedName(EntityIdType::FIELD_ENTITY_ID)]
     public string $entityId;
 
-    #[Assert\NotBlank, Assert\Uuid, SerializedName(AttributeIdType::FIELD_ATTRIBUTE_ID)]
+    #[Assert\NotBlank, Assert\Uuid, SerializedName(AttributeIdType::FIELD_ATTR_ID)]
     public string $attributeId;
 
     #[Assert\NotBlank, Assert\Type(['string', 'int'])]
     public string|int $value;
 
-    public static function build(EntityId $entityId, AttributeId $attributeId, int|string $value): self
+    public static function build(EntityId $entityId, AttributeId $attrId, int|string $value): self
     {
         $cmd = new self();
         $cmd->entityId = $entityId->getValue();
-        $cmd->attributeId = $attributeId->getValue();
+        $cmd->attributeId = $attrId->getValue();
         $cmd->value = $value;
 
         return $cmd;

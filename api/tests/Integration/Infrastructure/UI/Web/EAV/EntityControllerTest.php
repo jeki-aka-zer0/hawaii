@@ -51,10 +51,10 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                             EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
                             Entity::FIELD_NAME => $entityName = Builder::getRandomEntityName(),
                             Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName],
-                            QueryHandler::KEY_ATTRIBUTES_VALUES => [
+                            QueryHandler::KEY_ATTRS_VALUES => [
                                 [
-                                    Attribute::FIELD_NAME => $attributeName = Builder::getRandomAttributeName(),
-                                    Value::FIELD_VALUE => Builder::getRandomValue(Builder::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName]),
+                                    Attribute::FIELD_NAME => $attributeName = Builder::getRandomAttrName(),
+                                    Value::FIELD_VALUE => Builder::getRandomValue(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
                                 ],
                             ],
                         ],
@@ -75,10 +75,10 @@ final class EntityControllerTest extends AbstractEndpointTestCase
      */
     public function testRead(array $queryParams, array $expected): void
     {
-        $value = $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRIBUTES_VALUES][0][Value::FIELD_VALUE] ?? null;
+        $value = $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE] ?? null;
         self::$builder->createAll(
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_NAME] ?? null,
-                $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRIBUTES_VALUES][0][Attribute::FIELD_NAME] ?? null,
+                $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Attribute::FIELD_NAME] ?? null,
             match (true) {
                 is_string($value) => AttributeType::String,
                 is_int($value) => AttributeType::Int,

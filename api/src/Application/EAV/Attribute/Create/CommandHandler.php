@@ -16,20 +16,20 @@ use DateTimeImmutable;
 final readonly class CommandHandler
 {
     public function __construct(
-        private AttributeRepository $attributes,
+        private AttributeRepository $attrs,
         private Flusher $flusher
     ) {
     }
 
     public function handle(Command $cmd): AttributeId
     {
-        if ($this->attributes->hasByName((string)(new Str($cmd->name))->trim()->low())) {
+        if ($this->attrs->hasByName((string)(new Str($cmd->name))->trim()->low())) {
             throw FieldException::alreadyExists($cmd->getNameField());
         }
 
-        $this->attributes->add(
+        $this->attrs->add(
             new Attribute(
-                $attributeId = AttributeId::generate(),
+                $attrId = AttributeId::generate(),
                 (string)(new Str($cmd->name))->trim(),
                 AttributeType::from($cmd->type),
                 new DateTimeImmutable(),
@@ -38,6 +38,6 @@ final readonly class CommandHandler
 
         $this->flusher->flush();
 
-        return $attributeId;
+        return $attrId;
     }
 }

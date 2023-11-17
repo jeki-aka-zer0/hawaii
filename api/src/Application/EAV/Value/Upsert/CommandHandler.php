@@ -17,7 +17,7 @@ final readonly class CommandHandler
 {
     public function __construct(
         private ValueRepository $values,
-        private AttributeRepository $attributes,
+        private AttributeRepository $attrs,
         private EntityRepository $entities,
         private Flusher $flusher
     ) {
@@ -26,14 +26,14 @@ final readonly class CommandHandler
     public function handle(Command $cmd): ValueId
     {
         $entity = $this->entities->get($entityId = new EntityId($cmd->entityId));
-        $attribute = $this->attributes->get($attributeId = new AttributeId($cmd->attributeId));
-        $value = $this->values->findByEntityAndAttribute($entityId, $attributeId);
+        $attr = $this->attrs->get($attrId = new AttributeId($cmd->attributeId));
+        $value = $this->values->findByEntityAndAttr($entityId, $attrId);
         if (null === $value) {
             $this->values->add(
                 $value = new Value(
                     ValueId::generate(),
                     $entity,
-                    $attribute,
+                    $attr,
                     $cmd->value,
                 )
             );

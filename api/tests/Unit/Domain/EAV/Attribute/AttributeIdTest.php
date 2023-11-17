@@ -21,9 +21,9 @@ final class AttributeIdTest extends TestCase
     {
         $uuid = AttributeId::generate()->getValue();
 
-        $attributeId = new AttributeId($uuid);
+        $attrId = new AttributeId($uuid);
 
-        self::assertEquals($uuid, $attributeId->getValue());
-        self::assertEquals($uuid, (string)$attributeId);
+        self::assertEquals($uuid, $attrId->getValue());
+        self::assertEquals($uuid, (string)$attrId);
     }
 }

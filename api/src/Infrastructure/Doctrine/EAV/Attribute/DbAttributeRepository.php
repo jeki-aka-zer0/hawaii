@@ -18,14 +18,14 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
         parent::__construct($registry, $entityClass);
     }
 
-    public function get(AttributeId $attributeId): Attribute
+    public function get(AttributeId $attrId): Attribute
     {
-        $attribute = $this->find($attributeId->getValue());
-        if ($attribute === null) {
-            throw EntityNotFoundException::byId($attributeId, Attribute::NAME);
+        $attr = $this->find($attrId->getValue());
+        if ($attr === null) {
+            throw EntityNotFoundException::byId($attrId, Attribute::NAME);
         }
 
-        return $attribute;
+        return $attr;
     }
 
     public function hasByName(string $name): bool
@@ -39,8 +39,8 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
                 ->getSingleScalarResult() > 0;
     }
 
-    public function add(Attribute $attribute): void
+    public function add(Attribute $attr): void
     {
-        $this->getEntityManager()->persist($attribute);
+        $this->getEntityManager()->persist($attr);
     }
 }

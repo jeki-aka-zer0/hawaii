@@ -17,23 +17,23 @@ final class InMemoryRepository extends SplObjectStorage implements AttributeRepo
         array_map(fn(Attribute $e) => $this->attach($e), $collection);
     }
 
-    public function get(AttributeId $attributeId): Attribute
+    public function get(AttributeId $attrId): Attribute
     {
-        foreach ($this as $attribute) {
-            /** @var Attribute $attribute */
-            if ($attribute->isEqual($attributeId)) {
-                return $attribute;
+        foreach ($this as $attr) {
+            /** @var Attribute $attr */
+            if ($attr->isEqual($attrId)) {
+                return $attr;
             }
         }
 
-        throw EntityNotFoundException::byId($attributeId, Attribute::NAME);
+        throw EntityNotFoundException::byId($attrId, Attribute::NAME);
     }
 
     public function hasByName(string $name): bool
     {
-        foreach ($this as $attribute) {
-            /** @var Attribute $attribute */
-            if ($attribute->isNameMatch($name)) {
+        foreach ($this as $attr) {
+            /** @var Attribute $attr */
+            if ($attr->isNameMatch($name)) {
                 return true;
             }
         }
@@ -41,8 +41,8 @@ final class InMemoryRepository extends SplObjectStorage implements AttributeRepo
         return false;
     }
 
-    public function add(Attribute $attribute): void
+    public function add(Attribute $attr): void
     {
-        $this->attach($attribute);
+        $this->attach($attr);
     }
 }

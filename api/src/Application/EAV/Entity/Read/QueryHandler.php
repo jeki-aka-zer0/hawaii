@@ -12,7 +12,6 @@ use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\Shared\Repository\EntityNotFoundException;
 use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
-use App\Infrastructure\Doctrine\EAV\Value\ValueIdType;
 use App\Infrastructure\Doctrine\Shared\QB;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -20,7 +19,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 final readonly class QueryHandler
 {
-    public const KEY_ATTRIBUTES_VALUES = 'attributes_values';
+    public const KEY_ATTRS_VALUES = 'attributes_values';
 
     public function __construct(private Connection $connection)
     {
@@ -47,7 +46,7 @@ final readonly class QueryHandler
             ->setParameter('entity_id', $entityId->getValue())
             ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::NAME);
 
-        return $this->addAttributesValues([$entity])[0];
+        return $this->addAttrsValues([$entity])[0];
     }
 
     private function getBasicQueryBuilder(Query $query): QueryBuilder
@@ -89,7 +88,7 @@ final readonly class QueryHandler
             ->orderBy(Entity::FIELD_CREATED_AT, QB::DESC)
             ->fetchAllAssociative();
 
-        return $this->addAttributesValues($entities);
+        return $this->addAttrsValues($entities);
     }
 
     private function qbFrom(): QueryBuilder
@@ -102,15 +101,15 @@ final readonly class QueryHandler
         return $qb->select(EntityIdType::FIELD_ENTITY_ID, Entity::FIELD_NAME, Entity::FIELD_DESCRIPTION);
     }
 
-    private function addAttributesValues(array $entities): array
+    private function addAttrsValues(array $entities): array
     {
         $entityIds = array_map(static fn(array $row): string => $row[EntityIdType::FIELD_ENTITY_ID], $entities);
 
         /**
          * @noinspection PhpUnhandledExceptionInspection
-         * @var array<int, array{entity_id: string, name: string, value: string}> $attributesValues
+         * @var array<int, array{entity_id: string, name: string, value: string}> $attrsValues
          */
-        $attributesValues = $this->connection->createQueryBuilder()
+        $attrsValues = $this->connection->createQueryBuilder()
             ->select(
                 sprintf('v.%s', EntityIdType::FIELD_ENTITY_ID),
                 sprintf('a.%s', Attribute::FIELD_NAME),
@@ -121,24 +120,24 @@ final readonly class QueryHandler
                 'v',
                 Attribute::NAME,
                 'a',
-                sprintf('a.%s = v.%s', AttributeIdType::FIELD_ATTRIBUTE_ID, AttributeIdType::FIELD_ATTRIBUTE_ID)
+                sprintf('a.%s = v.%s', AttributeIdType::FIELD_ATTR_ID, AttributeIdType::FIELD_ATTR_ID)
             )
             ->where(sprintf('v.%s IN (:entity_ids)', EntityIdType::FIELD_ENTITY_ID))
             ->setParameter('entity_ids', $entityIds, ArrayParameterType::STRING)
             ->fetchAllAssociative();
 
-        $attributesValuesMap = [];
-        foreach ($attributesValues as $row) {
-            $attributesValuesMap[$row[EntityIdType::FIELD_ENTITY_ID]][] = [
+        $attrsValuesMap = [];
+        foreach ($attrsValues as $row) {
+            $attrsValuesMap[$row[EntityIdType::FIELD_ENTITY_ID]][] = [
                 Attribute::FIELD_NAME => $row[Attribute::FIELD_NAME],
                 Value::FIELD_VALUE => $row[Value::FIELD_VALUE],
             ];
         }
 
         foreach ($entities as $i => $entity) {
-            $entities[$i][self::KEY_ATTRIBUTES_VALUES] = [];
-            if (isset($attributesValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]])) {
-                $entities[$i][self::KEY_ATTRIBUTES_VALUES] = $attributesValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]];
+            $entities[$i][self::KEY_ATTRS_VALUES] = [];
+            if (isset($attrsValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]])) {
+                $entities[$i][self::KEY_ATTRS_VALUES] = $attrsValuesMap[$entity[EntityIdType::FIELD_ENTITY_ID]];
             }
         }
 

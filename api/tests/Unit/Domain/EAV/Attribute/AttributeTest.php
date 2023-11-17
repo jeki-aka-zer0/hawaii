@@ -42,6 +42,6 @@ final class AttributeTest extends TestCase
 
     private static function getAlreadyExistentAttribute(): Attribute
     {
-        return self::$alreadyExistentAttribute ??= Builder::buildAttribute();
+        return self::$alreadyExistentAttribute ??= Builder::buildAttr();
     }
 }

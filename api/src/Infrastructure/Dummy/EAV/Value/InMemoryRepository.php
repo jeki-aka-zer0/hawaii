@@ -36,11 +36,11 @@ final class InMemoryRepository extends SplObjectStorage implements ValueReposito
         $this->attach($value);
     }
 
-    public function findByEntityAndAttribute(EntityId $entityId, AttributeId $attributeId): ?Value
+    public function findByEntityAndAttr(EntityId $entityId, AttributeId $attrId): ?Value
     {
         foreach ($this as $value) {
             /** @var Value $value */
-            if ($value->isEqual(entityId: $entityId, attributeId: $attributeId)) {
+            if ($value->isEqual(entityId: $entityId, attrId: $attrId)) {
                 return $value;
             }
         }

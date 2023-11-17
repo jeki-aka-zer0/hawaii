@@ -10,7 +10,7 @@ use App\Domain\EAV\Value\Entity\Value;
 
 interface ValueRepository
 {
-    public function findByEntityAndAttribute(EntityId $entityId, AttributeId $attributeId): ?Value;
+    public function findByEntityAndAttr(EntityId $entityId, AttributeId $attrId): ?Value;
 
     public function add(Value $value): void;
 }
