@@ -35,7 +35,7 @@ final class Entity
         public string $name,
 
         #[ORM\Column(type: Types::TEXT, nullable: true)]
-        private ?string $description,
+        public ?string $description,
 
         #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
         private DateTimeImmutable $createdAt = new DateTimeImmutable()

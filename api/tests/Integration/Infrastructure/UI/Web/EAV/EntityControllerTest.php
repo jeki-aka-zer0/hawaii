@@ -21,25 +21,6 @@ final class EntityControllerTest extends AbstractEndpointTestCase
 {
     use AssertTrait;
 
-    private const ENTITY_NAME = 'Hello';
-    private const ATTRIBUTE_NAME = 'Language';
-    private const VALUE = 'en';
-    private const EXPECTED_RESPONSE_ALL = [
-        ListDTO::KEY_COUNT => 1,
-        ListDTO::KEY_RESULTS => [
-            [
-                EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
-                Entity::FIELD_NAME => self::ENTITY_NAME,
-                Entity::FIELD_DESCRIPTION => null,
-                QueryHandler::KEY_ATTRIBUTES_VALUES => [
-                    [
-                        Attribute::FIELD_NAME => self::ATTRIBUTE_NAME,
-                        Value::FIELD_VALUE => self::VALUE,
-                    ],
-                ],
-            ],
-        ],
-    ];
     private static EntityController $SUT;
     private static QueryHandler $queryHandler;
     private static Builder $builder;
@@ -63,9 +44,24 @@ final class EntityControllerTest extends AbstractEndpointTestCase
         return [
             'read all' => [
                 'queryParams' => [],
-                'expected' => self::EXPECTED_RESPONSE_ALL,
+                'expected' => [
+                    ListDTO::KEY_COUNT => 1,
+                    ListDTO::KEY_RESULTS => [
+                        [
+                            EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
+                            Entity::FIELD_NAME => $entityName = Builder::getRandomEntityName(),
+                            Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName],
+                            QueryHandler::KEY_ATTRIBUTES_VALUES => [
+                                [
+                                    Attribute::FIELD_NAME => $attributeName = Builder::getRandomAttributeName(),
+                                    Value::FIELD_VALUE => Builder::getRandomValue(Builder::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName]),
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
-            'read return an empty result when no name matched' => [
+            'read returns an empty result when no name matched' => [
                 'queryParams' => [
                     Entity::FIELD_NAME => 'some non existent entity name',
                 ],
@@ -79,10 +75,19 @@ final class EntityControllerTest extends AbstractEndpointTestCase
      */
     public function testRead(array $queryParams, array $expected): void
     {
-        self::$builder
-            ->createAll(self::ENTITY_NAME, self::ATTRIBUTE_NAME, AttributeType::String, self::VALUE);
-        $query = new Query();
-        $query->name = $queryParams[Entity::FIELD_NAME] ?? null;
+        $value = $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRIBUTES_VALUES][0][Value::FIELD_VALUE] ?? null;
+        self::$builder->createAll(
+            $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_NAME] ?? null,
+                $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRIBUTES_VALUES][0][Attribute::FIELD_NAME] ?? null,
+            match (true) {
+                is_string($value) => AttributeType::String,
+                is_int($value) => AttributeType::Int,
+                default => null,
+            },
+            $value,
+            $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_DESCRIPTION] ?? null
+        );
+        $query = Query::build($queryParams[Entity::FIELD_NAME] ?? null);
 
         $response = self::$SUT->read($query, self::$queryHandler);
 

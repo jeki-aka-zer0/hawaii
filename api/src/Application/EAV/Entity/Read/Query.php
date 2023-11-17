@@ -28,4 +28,12 @@ final class Query implements QueryListInterface
             Paginator::KEY_LIMIT => $this->limit,
         ];
     }
+
+    public static function build(?string $name): Query
+    {
+        $query = new self();
+        $query->name = $name;
+
+        return $query;
+    }
 }

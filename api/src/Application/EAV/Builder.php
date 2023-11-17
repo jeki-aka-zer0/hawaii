@@ -17,7 +17,7 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
-use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
+use RuntimeException;
 
 final readonly class Builder
 {
@@ -63,15 +63,24 @@ final readonly class Builder
     }
 
     public function createAll(
-        string $entityName,
-        string $attributeName,
-        AttributeType $attributeType,
-        int|string $value,
+        string $entityName = null,
+        string $attributeName = null,
+        AttributeType $attributeType = null,
+        int|string $value = null,
         string $entityDescription = null,
     ): void {
-        $entityId = $this->createEntity($entityName, $entityDescription);
-        $attributeId = $this->createAttribute($attributeName, $attributeType);
-        $this->createValue($entityId, $attributeId, $value);
+        $entityId = $this->createEntity(
+            $entityName ??= self::getRandomEntityName(),
+            $entityDescription ?? self::ENTITY_NAME_TO_DESC_MAP[$entityName] ?? null,
+        );
+        /** @var AttributeType $attributeType */
+        $attributeId = $this->createAttribute(
+            $attributeName ??= self::getRandomAttributeName(),
+            $attributeType ??=
+            self::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName] ??
+            throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
+        );
+        $this->createValue($entityId, $attributeId, $value ?? self::getRandomValue($attributeType));
     }
 
     public function createEntity(string $name, string $description = null): EntityId
@@ -107,7 +116,7 @@ final readonly class Builder
     {
         return new Value(
             ValueId::generate(),
-            $entity ?? (new EntityBuilder())->build(EntityId::generate()),
+            $entity ?? self::buildEntity(),
             $attribute ??= self::buildAttribute(),
             self::getRandomValue($attribute),
         );
@@ -130,9 +139,12 @@ final readonly class Builder
         return $exclude === $name ? self::getRandomStrFromArray($array, $exclude) : $name;
     }
 
-    public static function getRandomValue(Attribute $attribute): string|int
+    public static function getRandomValue(Attribute|AttributeType $attribute): string|int
     {
-        return match ($attribute->type) {
+        return match (match ($attribute::class) {
+            Attribute::class => $attribute->type,
+            AttributeType::class => $attribute,
+        }) {
             AttributeType::String => self::getRandomStrValue(),
             AttributeType::Int => self::getRandomIntValue(),
         };
