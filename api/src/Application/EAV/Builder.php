@@ -13,8 +13,11 @@ use App\Application\EAV\Value\Upsert\CommandHandler as ValueHandler;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
+use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
+use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
+use App\Tests\Unit\Domain\EAV\Entity\EntityBuilder;
 
 final readonly class Builder
 {
@@ -91,11 +94,29 @@ final readonly class Builder
         return new Attribute($id ?? AttributeId::generate(), self::getRandomAttributeName(), $type);
     }
 
+    public static function buildValue(Entity $entity = null, Attribute $attribute = null): Value
+    {
+        return new Value(
+            ValueId::generate(),
+            $entity ?? (new EntityBuilder())->build(EntityId::generate()),
+            $attribute ??= self::buildAttribute(),
+            self::getRandomValue($attribute),
+        );
+    }
+
     public static function getRandomAttributeName(string $exclude = ''): string
     {
         $name = array_rand(self::ATTRIBUTE_NAME_TO_TYPE_MAP);
 
         return $exclude === $name ? self::getRandomAttributeName($exclude) : $name;
+    }
+
+    public static function getRandomValue(Attribute $attribute): string|int
+    {
+        return match ($attribute->type) {
+            AttributeType::String => self::getRandomStrValue(),
+            AttributeType::Int => self::getRandomIntValue(),
+        };
     }
 
     public static function getRandomStrValue(): string
@@ -105,6 +126,7 @@ final readonly class Builder
 
     public static function getRandomIntValue(): int
     {
-        return rand(1, 10);
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return random_int(PHP_INT_MIN, PHP_INT_MAX);
     }
 }

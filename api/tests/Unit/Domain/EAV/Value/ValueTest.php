@@ -18,8 +18,8 @@ final class ValueTest extends TestCase
     public function testUpdateValue(): void
     {
         $attribute = Builder::buildAttribute();
-        $value = (new ValueBuilder())->build();
-        $newValue = ValueBuilder::generateRandomValueByAttribute($attribute);
+        $value = Builder::buildValue();
+        $newValue = Builder::getRandomValue($attribute);
 
         $value->updateValue($newValue);
 
@@ -30,7 +30,7 @@ final class ValueTest extends TestCase
     {
         $entity = (new EntityBuilder())->build($entityId = EntityId::generate());
         $attribute = Builder::buildAttribute($attributeId = AttributeId::generate());
-        $value = (new ValueBuilder())->build($entity, $attribute);
+        $value = Builder::buildValue($entity, $attribute);
 
         return [
             'same by all attributes' => [
@@ -88,6 +88,6 @@ final class ValueTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        (new ValueBuilder())->build()->isEqual();
+        Builder::buildValue()->isEqual();
     }
 }

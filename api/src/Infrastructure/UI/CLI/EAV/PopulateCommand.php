@@ -60,10 +60,7 @@ final class PopulateCommand extends AbstractCommand
                 $this->builder->createValue(
                     $entityId,
                     $attributeNameToEntityMap[$attributeName = Builder::getRandomAttributeName()],
-                    match (Builder::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName]) {
-                        AttributeType::String => Builder::getRandomStrValue(),
-                        AttributeType::Int => Builder::getRandomIntValue(),
-                    }
+                    Builder::getRandomValue(Builder::ATTRIBUTE_NAME_TO_TYPE_MAP[$attributeName])
                 );
             }
         }
