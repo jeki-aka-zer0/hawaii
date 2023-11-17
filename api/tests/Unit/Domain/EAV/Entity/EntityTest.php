@@ -24,7 +24,7 @@ final class EntityTest extends TestCase
                 'isNameMatchExpected' => true,
             ],
             'different names' => [
-                'name' => Builder::getRandomEntityName(self::getAlreadyExistentEntity()->name),
+                'name' => Builder::getRandEntityName(self::getAlreadyExistentEntity()->name),
                 'isNameMatchExpected' => false,
             ],
         ];

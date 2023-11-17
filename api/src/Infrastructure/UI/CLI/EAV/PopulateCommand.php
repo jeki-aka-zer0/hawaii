@@ -59,8 +59,8 @@ final class PopulateCommand extends AbstractCommand
             for ($i = 0; $i < $attrsNumber; $i++) {
                 $this->builder->createVal(
                     $entityId,
-                    $attrNameToEntityMap[$attrName = Builder::getRandomAttrName()],
-                    Builder::getRandomVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attrName])
+                    $attrNameToEntityMap[$attrName = Builder::getRandAttrName()],
+                    Builder::getRandVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attrName])
                 );
             }
         }

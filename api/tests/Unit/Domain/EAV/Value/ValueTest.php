@@ -18,7 +18,7 @@ final class ValueTest extends TestCase
     {
         $attr = Builder::buildAttr();
         $val = Builder::buildVal();
-        $newVal = Builder::getRandomVal($attr);
+        $newVal = Builder::getRandVal($attr);
 
         $val->updateVal($newVal);
 

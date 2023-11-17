@@ -52,7 +52,7 @@ final class CommandHandlerTest extends TestCase
 
     public function testHandleShouldSuccess(): void
     {
-        $name = Builder::getRandomEntityName(self::getAlreadyExistentEntity()->name);
+        $name = Builder::getRandEntityName(self::getAlreadyExistentEntity()->name);
 
         $entityId = $this->handler->handle(Command::build($name));
 

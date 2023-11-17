@@ -70,17 +70,17 @@ final readonly class Builder
         string $entityDescription = null,
     ): void {
         $entityId = $this->createEntity(
-            $entityName ??= self::getRandomEntityName(),
+            $entityName ??= self::getRandEntityName(),
             $entityDescription ?? self::ENTITY_NAME_TO_DESC_MAP[$entityName] ?? null,
         );
         /** @var AttributeType $attrType */
         $attrId = $this->createAttr(
-            $attrName ??= self::getRandomAttrName(),
+            $attrName ??= self::getRandAttrName(),
             $attrType ??=
             self::ATTR_NAME_TO_TYPE_MAP[$attrName] ??
             throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
         );
-        $this->createVal($entityId, $attrId, $val ?? self::getRandomVal($attrType));
+        $this->createVal($entityId, $attrId, $val ?? self::getRandVal($attrType));
     }
 
     public function createEntity(string $name, string $description = null): EntityId
@@ -100,14 +100,14 @@ final readonly class Builder
 
     public static function buildAttr(AttributeId $id = null, AttributeType $type = AttributeType::String): Attribute
     {
-        return new Attribute($id ?? AttributeId::generate(), self::getRandomAttrName(), $type);
+        return new Attribute($id ?? AttributeId::generate(), self::getRandAttrName(), $type);
     }
 
     public static function buildEntity(EntityId $entityId = null): Entity
     {
         return new Entity(
             $entityId ?? EntityId::generate(),
-            $name = self::getRandomEntityName(),
+            $name = self::getRandEntityName(),
             self::ENTITY_NAME_TO_DESC_MAP[$name]
         );
     }
@@ -118,44 +118,44 @@ final readonly class Builder
             ValueId::generate(),
             $entity ?? self::buildEntity(),
             $attr ??= self::buildAttr(),
-            self::getRandomVal($attr),
+            self::getRandVal($attr),
         );
     }
 
-    public static function getRandomAttrName(string $exclude = ''): string
+    public static function getRandAttrName(string $exclude = ''): string
     {
-        return self::getRandomStrFromArray(self::ATTR_NAME_TO_TYPE_MAP, $exclude);
+        return self::getRandStrFromArray(self::ATTR_NAME_TO_TYPE_MAP, $exclude);
     }
 
-    public static function getRandomEntityName(string $exclude = ''): string
+    public static function getRandEntityName(string $exclude = ''): string
     {
-        return self::getRandomStrFromArray(self::ENTITY_NAME_TO_DESC_MAP, $exclude);
+        return self::getRandStrFromArray(self::ENTITY_NAME_TO_DESC_MAP, $exclude);
     }
 
-    private static function getRandomStrFromArray(array $array, string $exclude): string
+    private static function getRandStrFromArray(array $array, string $exclude): string
     {
         $name = array_rand($array);
 
-        return $exclude === $name ? self::getRandomStrFromArray($array, $exclude) : $name;
+        return $exclude === $name ? self::getRandStrFromArray($array, $exclude) : $name;
     }
 
-    public static function getRandomVal(Attribute|AttributeType $attr): string|int
+    public static function getRandVal(Attribute|AttributeType $attr): string|int
     {
         return match (match ($attr::class) {
             Attribute::class => $attr->type,
             AttributeType::class => $attr,
         }) {
-            AttributeType::String => self::getRandomStrValue(),
-            AttributeType::Int => self::getRandomIntValue(),
+            AttributeType::String => self::getRandStrValue(),
+            AttributeType::Int => self::getRandIntValue(),
         };
     }
 
-    public static function getRandomStrValue(): string
+    public static function getRandStrValue(): string
     {
         return self::STR_VALUES[array_rand(self::STR_VALUES)];
     }
 
-    public static function getRandomIntValue(): int
+    public static function getRandIntValue(): int
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         return random_int(PHP_INT_MIN, PHP_INT_MAX);

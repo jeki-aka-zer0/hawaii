@@ -49,12 +49,12 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                     ListDTO::KEY_RESULTS => [
                         [
                             EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
-                            Entity::FIELD_NAME => $entityName = Builder::getRandomEntityName(),
+                            Entity::FIELD_NAME => $entityName = Builder::getRandEntityName(),
                             Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName],
                             QueryHandler::KEY_ATTRS_VALUES => [
                                 [
-                                    Attribute::FIELD_NAME => $attributeName = Builder::getRandomAttrName(),
-                                    Value::FIELD_VALUE => Builder::getRandomVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
+                                    Attribute::FIELD_NAME => $attributeName = Builder::getRandAttrName(),
+                                    Value::FIELD_VALUE => Builder::getRandVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
                                 ],
                             ],
                         ],
