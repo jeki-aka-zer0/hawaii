@@ -45,20 +45,20 @@ final class CommandHandlerTest extends TestCase
      */
     public function testHandleShouldFailWhenAttributeWithSameNameAlreadyExists(string $name): void
     {
-        $command = $this->getCommand(self::getAlreadyExistentAttribute()->name);
+        $cmd = $this->getCommand(self::getAlreadyExistentAttribute()->name);
 
         $this->expectException(FieldException::class);
         $this->expectExceptionMessage(sprintf('Attribute with the name "%s" already exists', trim($name)));
 
-        self::$handler->handle($command);
+        self::$handler->handle($cmd);
     }
 
     public function testHandleShouldCreateAttribute(): void
     {
         $name = Builder::getRandomAttributeName(self::getAlreadyExistentAttribute()->name);
-        $command = $this->getCommand($name);
+        $cmd = $this->getCommand($name);
 
-        $attributeId = self::$handler->handle($command);
+        $attributeId = self::$handler->handle($cmd);
 
         self::assertNotEmpty($attributeId);
         self::assertTrue(self::$entities->hasByName($name));

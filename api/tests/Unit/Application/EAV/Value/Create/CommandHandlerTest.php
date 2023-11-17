@@ -38,22 +38,22 @@ final class CommandHandlerTest extends TestCase
      */
     public function testHandleShouldCreate(string|int $value): void
     {
-        [$handler, $flusher, $command, $values] = $this->buildHandlerAndOtherEntities(false, $value);
+        [$handler, $flusher, $cmd, $values] = $this->buildHandlerAndOtherEntities(false, $value);
 
-        $valueId = $handler->handle($command);
+        $valueId = $handler->handle($cmd);
 
         self::assertTrue($flusher->isFlushed());
-        self::assertEquals($command->value, $values->get($valueId)->value);
+        self::assertEquals($cmd->value, $values->get($valueId)->value);
     }
 
     public function testHandleShouldUpdate(): void
     {
-        [$handler, $flusher, $command, $values, $value] = $this->buildHandlerAndOtherEntities(true);
+        [$handler, $flusher, $cmd, $values, $value] = $this->buildHandlerAndOtherEntities(true);
 
-        $valueId = $handler->handle($command);
+        $valueId = $handler->handle($cmd);
 
         self::assertTrue($flusher->isFlushed());
-        self::assertEquals($command->value, $values->get($valueId)->value);
+        self::assertEquals($cmd->value, $values->get($valueId)->value);
         self::assertSame($value, $values->get($valueId));
     }
 
@@ -65,10 +65,7 @@ final class CommandHandlerTest extends TestCase
         $entityId = EntityId::generate();
         $attributeId = AttributeId::generate();
 
-        $command = new Command();
-        $command->entityId = $entityId->getValue();
-        $command->attributeId = $attributeId->getValue();
-        $command->value = $value ?? self::STRING_VALUE;
+        $cmd = Command::build($entityId, $attributeId, $value ?? self::STRING_VALUE);
 
         $entity = Builder::buildEntity($entityId);
         $attribute = Builder::buildAttribute($attributeId);
@@ -82,7 +79,7 @@ final class CommandHandlerTest extends TestCase
                 $flusher = new DummyFlusher()
             ),
             $flusher,
-            $command,
+            $cmd,
             $values,
             $value,
         ];

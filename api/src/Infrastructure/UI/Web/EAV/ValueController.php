@@ -15,11 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ValueController extends AbstractController
 {
     #[Route('/eav/value', name: 'eav_value_upsert', methods: ['POST'])]
-    public function upsert(Command $command, CommandHandler $handler): Response
+    public function upsert(Command $cmd, CommandHandler $handler): Response
     {
         return new JsonResponse(
             [
-                ValueIdType::FIELD_VALUE_ID => $handler->handle($command)->getValue(),
+                ValueIdType::FIELD_VALUE_ID => $handler->handle($cmd)->getValue(),
             ],
             status: 201
         );

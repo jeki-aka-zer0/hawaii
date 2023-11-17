@@ -17,11 +17,11 @@ use Symfony\Component\Routing\Annotation\Route;
 final class AttributeController extends AbstractController
 {
     #[Route('/eav/attribute', name: 'eav_attribute_create', methods: ['POST'])]
-    public function create(Command $command, CommandHandler $handler): Response
+    public function create(Command $cmd, CommandHandler $handler): Response
     {
         return new JsonResponse(
             [
-                AttributeIdType::FIELD_ATTRIBUTE_ID => $handler->handle($command)->getValue(),
+                AttributeIdType::FIELD_ATTRIBUTE_ID => $handler->handle($cmd)->getValue(),
             ],
             status: 201
         );

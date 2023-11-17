@@ -23,10 +23,10 @@ final readonly class CommandHandler
     ) {
     }
 
-    public function handle(Command $command): ValueId
+    public function handle(Command $cmd): ValueId
     {
-        $entity = $this->entities->get($entityId = new EntityId($command->entityId));
-        $attribute = $this->attributes->get($attributeId = new AttributeId($command->attributeId));
+        $entity = $this->entities->get($entityId = new EntityId($cmd->entityId));
+        $attribute = $this->attributes->get($attributeId = new AttributeId($cmd->attributeId));
         $value = $this->values->findByEntityAndAttribute($entityId, $attributeId);
         if (null === $value) {
             $this->values->add(
@@ -34,11 +34,11 @@ final readonly class CommandHandler
                     ValueId::generate(),
                     $entity,
                     $attribute,
-                    $command->value,
+                    $cmd->value,
                 )
             );
         } else {
-            $value->updateValue($command->value);
+            $value->updateValue($cmd->value);
         }
 
         $this->flusher->flush();

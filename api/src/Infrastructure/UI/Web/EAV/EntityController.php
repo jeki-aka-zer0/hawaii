@@ -26,11 +26,11 @@ final class EntityController extends AbstractController
     }
 
     #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'])]
-    public function create(Command $command, CommandHandler $handler): Response
+    public function create(Command $cmd, CommandHandler $handler): Response
     {
         return new JsonResponse(
             [
-                EntityIdType::FIELD_ENTITY_ID => $handler->handle($command)->getValue(),
+                EntityIdType::FIELD_ENTITY_ID => $handler->handle($cmd)->getValue(),
             ],
             status: 201
         );
