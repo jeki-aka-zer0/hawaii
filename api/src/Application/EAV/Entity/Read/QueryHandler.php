@@ -135,10 +135,7 @@ final readonly class QueryHandler
         }
 
         foreach ($entities as $i => $entity) {
-            $entities[$i][self::KEY_ATTRS_VALUES] = [];
-            if (isset($attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]])) {
-                $entities[$i][self::KEY_ATTRS_VALUES] = $attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]];
-            }
+            $entities[$i][self::KEY_ATTRS_VALUES] = $attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]] ?? [];
         }
 
         return $entities;

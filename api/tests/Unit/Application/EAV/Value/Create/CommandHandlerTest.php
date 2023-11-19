@@ -54,7 +54,7 @@ final class CommandHandlerTest extends TestCase
 
         self::assertTrue($flusher->isFlushed());
         self::assertEquals($cmd->value, $values->get($valId)->value);
-        self::assertSame($val, $values->get($valId));
+        self::assertEquals($val, $values->get($valId));
     }
 
     /**

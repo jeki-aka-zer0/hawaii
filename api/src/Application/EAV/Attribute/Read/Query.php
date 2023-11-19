@@ -19,4 +19,12 @@ final class Query implements QueryListInterface
             Attribute::FIELD_NAME => $this->name,
         ];
     }
+
+    public static function build(?string $name): Query
+    {
+        $query = new self();
+        $query->name = $name;
+
+        return $query;
+    }
 }

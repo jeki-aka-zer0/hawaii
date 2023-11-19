@@ -16,6 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class AttributeController extends AbstractController
 {
+    public const KEY_ATTRIBUTES = 'attributes';
+
     #[Route('/eav/attribute', name: 'eav_attribute_create', methods: ['POST'])]
     public function create(Command $cmd, CommandHandler $handler): Response
     {
@@ -32,7 +34,7 @@ final class AttributeController extends AbstractController
     {
         return new JsonResponse(
             [
-                'attributes' => $handler->fetch($query),
+                self::KEY_ATTRIBUTES => $handler->fetch($query),
             ]
         );
     }

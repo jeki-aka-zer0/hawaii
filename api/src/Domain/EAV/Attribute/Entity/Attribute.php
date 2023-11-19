@@ -19,6 +19,7 @@ final class Attribute
 {
     public const NAME = 'attribute';
     public const FIELD_NAME = 'name';
+    public const FIELD_TYPE = 'type';
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private DateTimeImmutable $updatedAt;

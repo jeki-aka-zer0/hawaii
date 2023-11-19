@@ -9,7 +9,6 @@ use App\Application\EAV\Entity\Read\Query;
 use App\Application\EAV\Entity\Read\QueryHandler;
 use App\Application\Shared\ListDTO;
 use App\Domain\EAV\Attribute\Entity\Attribute;
-use App\Domain\EAV\Attribute\Entity\AttributeType;
 use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;

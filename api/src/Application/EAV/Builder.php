@@ -17,6 +17,9 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\EAV\Value\Entity\ValueId;
+use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
+use App\Infrastructure\Doctrine\EAV\Entity\EntityIdType;
+use App\Infrastructure\Doctrine\EAV\Value\ValueIdType;
 use RuntimeException;
 
 final readonly class Builder
@@ -62,13 +65,28 @@ final readonly class Builder
     ) {
     }
 
+    /**
+     * @return array{
+     *     entity: array{
+     *          entity_id: string,
+     *          name: string,
+     *          description: ?string,
+     *     },
+     *     attribute: array{
+     *          attribute_id: string,
+     *          name: string,
+     *          type: AttributeType,
+     *     },
+     *     value: string|int,
+     * }
+     */
     public function createAll(
         string $entityName = null,
         string $attrName = null,
         AttributeType $attrType = null,
         int|string $val = null,
         string $entityDescription = null,
-    ): void {
+    ): array {
         $entityId = $this->createEntity(
             $entityName ??= self::getRandEntityName(),
             $entityDescription ?? self::ENTITY_NAME_TO_DESC_MAP[$entityName] ?? null,
@@ -80,7 +98,24 @@ final readonly class Builder
             self::ATTR_NAME_TO_TYPE_MAP[$attrName] ??
             throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
         );
-        $this->createVal($entityId, $attrId, $val ?? self::getRandVal($attrType));
+        $valId = $this->createVal($entityId, $attrId, $val ??= self::getRandVal($attrType));
+
+        return [
+            Entity::NAME => [
+                EntityIdType::FIELD_ENTITY_ID => $entityId,
+                Entity::FIELD_NAME => $entityName,
+                Entity::FIELD_DESCRIPTION => $entityDescription,
+            ],
+            Attribute::NAME => [
+                AttributeIdType::FIELD_ATTR_ID => $attrId,
+                Attribute::FIELD_NAME => $attrName,
+                Attribute::FIELD_TYPE => $attrType,
+            ],
+            Value::NAME => [
+                ValueIdType::FIELD_VALUE_ID => $valId,
+                Value::FIELD_VALUE => $val,
+            ]
+        ];
     }
 
     public function createEntity(string $name, string $description = null): EntityId
@@ -139,15 +174,17 @@ final readonly class Builder
         return $exclude === $name ? self::getRandStrFromArray($array, $exclude) : $name;
     }
 
-    public static function getRandVal(Attribute|AttributeType $attr): string|int
+    public static function getRandVal(Attribute|AttributeType $attr, string|int $except = null): string|int
     {
-        return match (match ($attr::class) {
+        $val = match (match ($attr::class) {
             Attribute::class => $attr->type,
             AttributeType::class => $attr,
         }) {
             AttributeType::String => self::getRandStrValue(),
             AttributeType::Int => self::getRandIntValue(),
         };
+
+        return $except != null && $val === $except ? self::getRandVal($attr, $except) : $val;
     }
 
     public static function getRandStrValue(): string
