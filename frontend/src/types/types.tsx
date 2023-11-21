@@ -20,15 +20,15 @@ export type Entity = {
   readonly attributes_values: attrVal[]
 }
 
-type val = {
+export type Val = {
   value_id: string
-  value: string|number
+  value: string | number
 }
 
 export type Attr = {
   attribute_id: string
   name: string
-  values: val[]
+  values: Val[]
 }
 
 export type FormErrors = {
