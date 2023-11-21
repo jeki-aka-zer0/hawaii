@@ -47,24 +47,27 @@ const EntitiesList: React.FC = () => {
   return loading
       ? <Loader/>
       : (
-          <>
-            {entities.map((e: Entity) => (
-              <div key={e.name}>
-                  <p>
-                    {e.name}</p>
-                  <p>
-                    <Link to={`/entity/${e.entity_id}`}>View</Link>&nbsp;
-                    {e.attributes_values.map(av => <span className={"tag"} title={av.name} key={av.name + av.value}>{av.value}</span>)}
-                  </p>
-                  <p>{e.description}</p>
-                  <p>&nbsp;</p>
-              </div>
-            ))}
-            {(prevPageUrl || nextPageUrl) && <div className="pager">
-              {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
-              {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
-            </div>}
-          </>
+          entities.length ?
+              <>
+                {entities.map((e: Entity) => (
+                    <div key={e.name}>
+                      <p>
+                        {e.name}</p>
+                      <p>
+                        <Link to={`/entity/${e.entity_id}`}>View</Link>&nbsp;
+                        {e.attributes_values.map(av => <span className={"tag"} title={av.name}
+                                                             key={av.name + av.value}>{av.value}</span>)}
+                      </p>
+                      <p>{e.description}</p>
+                      <p>&nbsp;</p>
+                    </div>
+                ))}
+                {(prevPageUrl || nextPageUrl) && <div className="pager">
+                  {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
+                  {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
+                </div>}
+              </>
+              : <p>There are no entities yet.</p>
       )
 }
 
