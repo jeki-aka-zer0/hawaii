@@ -59,7 +59,7 @@ final class AttributeControllerTest extends AbstractEndpointTestCase
                  [
                      AttributeIdType::FIELD_ATTR_ID => self::TYPE_UUID,
                      Attribute::FIELD_NAME => $attrName,
-                     'values' => [
+                     QueryHandler::KEY_VAL => [
                          [
                              ValueIdType::FIELD_VALUE_ID => self::TYPE_UUID,
                              Value::FIELD_VALUE => $val1,

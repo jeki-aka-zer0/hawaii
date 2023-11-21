@@ -53,6 +53,10 @@ input.size-m, textarea.size-m {
     width: 300px;
 }
 
+input.size-s, textarea.size-s {
+    width: 150px;
+}
+
 .error {
     color: #fa0259;
 }

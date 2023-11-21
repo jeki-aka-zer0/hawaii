@@ -1,8 +1,8 @@
-import React, { FC } from 'react'
+import React, {FC, useEffect, useRef, useState} from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message/dist'
 import axios, { AxiosResponse } from 'axios'
-import { CreatedEntity, FormErrors } from '../../types/types'
+import {Attr, CreatedEntity, FormErrors } from '../../types/types'
 import { hasOwnProperty, isValidationError } from '../../utils/utils'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 
@@ -15,7 +15,29 @@ const EntityForm: FC = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
     criteriaMode: 'all'
   })
+  const [attrs, setAttrs] = useState<Attr[]>([])
   const navigate: NavigateFunction = useNavigate();
+  const effectRun = useRef(false);
+
+  useEffect(() => {
+    const controller : AbortController = new AbortController()
+    if (effectRun.current) {
+      axios
+          .get(`${process.env.REACT_APP_API_URL}/eav/attribute`, {
+            signal: controller.signal
+          })
+          .then(res => {
+            console.log(res.data.attributes)
+            setAttrs(res.data.attributes)
+          })
+          .catch(error => console.log(error))
+    }
+
+    return (): void => {
+      controller.abort()
+      effectRun.current = true;
+    }
+  }, [])
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs): Promise<void> => {
     try {
@@ -70,6 +92,18 @@ const EntityForm: FC = () => {
       <div>
         <label htmlFor="description">Description</label>
         <textarea {...register<keyof Inputs>('description')} id="description" className={'size-m'}></textarea>
+      </div>
+      <div>
+        <label htmlFor="attributes">Attribute</label>
+        <input
+            id="attributes"
+            className={'size-s'}
+            type="text"
+            list="Languages"
+        />
+        {attrs.length && <datalist id="Languages">
+          {attrs.map((a: Attr) => <option key={a.attribute_id} value={a.name}/>)}
+        </datalist>}
       </div>
       <div>
         <input type="submit" value="Create" disabled={isSubmitting && isDirty && isValid} data-testid="entity-form-submit-btn"/>
