@@ -47,4 +47,16 @@ final class InMemoryRepository extends SplObjectStorage implements ValueReposito
 
         return null;
     }
+
+    public function hasByValEntityAndAttrNames(string|int $valRaw, string $entityName, string $attrName): ?bool
+    {
+        foreach ($this as $val) {
+            /** @var Value $val */
+            if ($val->value === $valRaw && $val->entity->name === $entityName && $val->attribute->name === $attrName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

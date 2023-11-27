@@ -4,7 +4,17 @@ Content-Type: application/json
 
 {
   "name": "Hello world",
-  "description": "Hello world - it's an old phrase used by developers"
+  "description": "Hello world - it's an old phrase used by developers",
+  "attributes_values": [
+    {
+      "name": "Year",
+      "value": 2023
+    },
+    {
+      "name": "Type",
+      "value": "First program"
+    }
+  ]
 }
 
 ### Read entities

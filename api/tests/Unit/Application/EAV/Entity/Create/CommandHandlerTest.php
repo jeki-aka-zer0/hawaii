@@ -7,25 +7,33 @@ namespace App\Tests\Unit\Application\EAV\Entity\Create;
 use App\Application\EAV\Builder;
 use App\Application\EAV\Entity\Create\Command;
 use App\Application\EAV\Entity\Create\CommandHandler;
+use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Value\Entity\Value;
 use App\Infrastructure\Dummy\DummyFlusher;
-use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository;
+use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository as AttrsRepo;
+use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository as EntitiesRepo;
+use App\Infrastructure\Dummy\EAV\Value\InMemoryRepository as ValRepo;
 use DomainException;
 use PHPUnit\Framework\TestCase;
 
 final class CommandHandlerTest extends TestCase
 {
-    private InMemoryRepository $entities;
+    private EntitiesRepo $entities;
     private DummyFlusher $flusher;
     private CommandHandler $handler;
     private static Entity $alreadyExistentEntity;
+    private AttrsRepo $attrs;
+    private ValRepo $val;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->handler = new CommandHandler(
-            $this->entities = new InMemoryRepository([self::getAlreadyExistentEntity()]),
+            $this->entities = new EntitiesRepo([self::getAlreadyExistentEntity()]),
+            $this->attrs = new AttrsRepo([]),
+            $this->val = new ValRepo([]),
             $this->flusher = new DummyFlusher()
         );
     }
@@ -52,17 +60,54 @@ final class CommandHandlerTest extends TestCase
 
     public function testHandleShouldSuccess(): void
     {
-        $name = Builder::getRandEntityName(self::getAlreadyExistentEntity()->name);
+        $cmd = Command::build($name = self::getNonExistentEntityName());
 
-        $entityId = $this->handler->handle(Command::build($name));
+        $this->handler->handle($cmd);
 
-        self::assertNotEmpty($entityId);
-        self::assertTrue($this->entities->hasByName($name));
-        self::assertTrue($this->flusher->isFlushed());
+        $this
+            ->assertEntityExists($name)
+            ->assertFlushed();
+    }
+
+    public function testHandleShouldCreateNewAttrsVal(): void
+    {
+        $this->handler->handle(
+            Command::build($entityName = self::getNonExistentEntityName(), attrsVal: [
+                [
+                    Attribute::FIELD_NAME => $attrName = Builder::getRandAttrName(),
+                    Value::FIELD_VALUE => $val = Builder::getRandStrValue(),
+                ],
+            ])
+        );
+
+        $this
+            ->assertEntityExists($entityName)
+            ->assertFlushed();
+        self::assertTrue($this->attrs->hasByName($attrName));
+        self::assertTrue($this->val->hasByValEntityAndAttrNames($val, $entityName, $attrName));
     }
 
     private static function getAlreadyExistentEntity(): Entity
     {
         return self::$alreadyExistentEntity ??= Builder::buildEntity();
+    }
+
+    private static function getNonExistentEntityName(): string
+    {
+        return Builder::getRandEntityName(self::getAlreadyExistentEntity()->name);
+    }
+
+    private function assertEntityExists(string $name): self
+    {
+        self::assertTrue($this->entities->hasByName($name));
+
+        return $this;
+    }
+
+    private function assertFlushed(): self
+    {
+        self::assertTrue($this->flusher->isFlushed());
+
+        return $this;
     }
 }

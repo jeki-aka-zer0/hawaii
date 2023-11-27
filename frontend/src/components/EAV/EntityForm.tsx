@@ -44,7 +44,7 @@ const EntityForm: FC = () => {
             // create lower cased attribute name to attribute_id map
             const attrToIdMap = new Map<string, Attr>()
             const values: (string | number)[] = []
-            res.data.attributes.forEach((attr: Attr) => {
+            res.data.attributes && res.data.attributes.forEach((attr: Attr): void => {
               attr.values.map(v => values.push(v.value))
               attrToIdMap.set(attr.name.toLowerCase(), attr)
             })
@@ -176,7 +176,7 @@ const EntityForm: FC = () => {
             value={attrName}
             onChange={handleAttrChange}
         />
-        {attrs.length > 0 && <datalist id="Languages">
+        {attrs?.length > 0 && <datalist id="Languages">
           {attrs.map((a: Attr) => <option key={a.attribute_id} value={a.name}/>)}
         </datalist>}
         <label htmlFor="value">Value</label>
@@ -188,7 +188,7 @@ const EntityForm: FC = () => {
             value={val}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setVal(e.target.value)}
         />
-        {values.length > 0 && <datalist id="Values">
+        {values?.length > 0 && <datalist id="Values">
           {values.map((v: string | number, i) => <option key={i} value={v}/>)}
         </datalist>}
         <button title="Add attribute with value" onClick={addAttrVal}>+</button>

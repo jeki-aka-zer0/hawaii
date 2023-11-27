@@ -45,4 +45,16 @@ final class InMemoryRepository extends SplObjectStorage implements AttributeRepo
     {
         $this->attach($attr);
     }
+
+    public function find(AttributeId $attrId): ?Attribute
+    {
+        foreach ($this as $attr) {
+            /** @var Attribute $attr */
+            if ($attr->isEqual($attrId)) {
+                return $attr;
+            }
+        }
+
+        return null;
+    }
 }

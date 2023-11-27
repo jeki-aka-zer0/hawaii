@@ -47,7 +47,7 @@ const EntitiesList: React.FC = () => {
   return loading
       ? <Loader/>
       : (
-          entities.length ?
+          entities?.length ?
               <>
                 {entities.map((e: Entity) => (
                     <div key={e.name}>

@@ -15,6 +15,11 @@ interface AttributeRepository
      */
     public function get(AttributeId $attrId): Attribute;
 
+    /**
+     * @return ?Attribute
+     */
+    public function find(AttributeId $attrId);
+
     public function hasByName(string $name): bool;
 
     public function add(Attribute $attr): void;

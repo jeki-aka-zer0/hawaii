@@ -19,8 +19,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 
 final readonly class QueryHandler
 {
-    public const KEY_ATTRS_VALUES = 'attributes_values';
-
     public function __construct(private Connection $connection)
     {
     }
@@ -135,7 +133,7 @@ final readonly class QueryHandler
         }
 
         foreach ($entities as $i => $entity) {
-            $entities[$i][self::KEY_ATTRS_VALUES] = $attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]] ?? [];
+            $entities[$i][Attribute::KEY_ATTRS_VALUES] = $attrsValMap[$entity[EntityIdType::FIELD_ENTITY_ID]] ?? [];
         }
 
         return $entities;

@@ -50,7 +50,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                             EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
                             Entity::FIELD_NAME => $entityName = Builder::getRandEntityName(),
                             Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName],
-                            QueryHandler::KEY_ATTRS_VALUES => [
+                            Attribute::KEY_ATTRS_VALUES => [
                                 [
                                     Attribute::FIELD_NAME => $attributeName = Builder::getRandAttrName(),
                                     Value::FIELD_VALUE => Builder::getRandVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
@@ -74,10 +74,10 @@ final class EntityControllerTest extends AbstractEndpointTestCase
      */
     public function testRead(array $queryParams, array $expected): void
     {
-        $val = $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE] ?? null;
+        $val = $expected[ListDTO::KEY_RESULTS][0][Attribute::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE] ?? null;
         self::$builder->createAll(
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_NAME] ?? null,
-                $expected[ListDTO::KEY_RESULTS][0][QueryHandler::KEY_ATTRS_VALUES][0][Attribute::FIELD_NAME] ?? null,
+                $expected[ListDTO::KEY_RESULTS][0][Attribute::KEY_ATTRS_VALUES][0][Attribute::FIELD_NAME] ?? null,
                 $val ? Builder::getAttrTypeByVal($val) : null,
             $val,
             $expected[ListDTO::KEY_RESULTS][0][Entity::FIELD_DESCRIPTION] ?? null
@@ -102,7 +102,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                     EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
                     Entity::FIELD_NAME => $name,
                     Entity::FIELD_DESCRIPTION => null,
-                    QueryHandler::KEY_ATTRS_VALUES => [],
+                    Attribute::KEY_ATTRS_VALUES => [],
                 ],
             ],
         ], $this->assertSuccessfulJson($response));

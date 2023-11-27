@@ -33,11 +33,11 @@ final class Value
 
         #[ORM\ManyToOne(targetEntity: Entity::class, inversedBy: 'values')]
         #[ORM\JoinColumn(name: EntityIdType::FIELD_ENTITY_ID, referencedColumnName: EntityIdType::FIELD_ENTITY_ID, nullable: false, onDelete: 'CASCADE')]
-        private Entity $entity,
+        public Entity $entity,
 
         #[ORM\ManyToOne(targetEntity: Attribute::class, inversedBy: 'values')]
         #[ORM\JoinColumn(name: AttributeIdType::FIELD_ATTR_ID, referencedColumnName: AttributeIdType::FIELD_ATTR_ID, nullable: false, onDelete: 'CASCADE')]
-        private Attribute $attribute,
+        public Attribute $attribute,
 
         #[ORM\Column(type: Types::STRING, length: 255)]
         public string|int $value,

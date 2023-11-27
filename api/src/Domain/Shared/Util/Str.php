@@ -12,6 +12,11 @@ final class Str
     {
     }
 
+    public static function build(mixed $str): self
+    {
+        return new self((string)$str);
+    }
+
     public function trunc(int $maxLen = self::MAX_STR_LEN, string $ending = '...'): self
     {
         if (mb_strlen($this->str) >= $maxLen) {
