@@ -20,11 +20,12 @@ use PHPUnit\Framework\TestCase;
 final class CommandHandlerTest extends TestCase
 {
     private EntitiesRepo $entities;
+    private AttrsRepo $attrs;
+    private ValRepo $val;
     private DummyFlusher $flusher;
     private CommandHandler $handler;
     private static Entity $alreadyExistentEntity;
-    private AttrsRepo $attrs;
-    private ValRepo $val;
+    private static Attribute $alreadyExistentAttr;
 
     protected function setUp(): void
     {
@@ -32,7 +33,7 @@ final class CommandHandlerTest extends TestCase
 
         $this->handler = new CommandHandler(
             $this->entities = new EntitiesRepo([self::getAlreadyExistentEntity()]),
-            $this->attrs = new AttrsRepo([]),
+            $this->attrs = new AttrsRepo([self::getAlreadyExistentAttr()]),
             $this->val = new ValRepo([]),
             $this->flusher = new DummyFlusher()
         );
@@ -74,8 +75,12 @@ final class CommandHandlerTest extends TestCase
         $this->handler->handle(
             Command::build($entityName = self::getNonExistentEntityName(), attrsVal: [
                 [
-                    Attribute::FIELD_NAME => $attrName = Builder::getRandAttrName(),
-                    Value::FIELD_VALUE => $val = Builder::getRandStrValue(),
+                    Attribute::FIELD_NAME => $newAttrName = Builder::getRandAttrName(self::getAlreadyExistentAttr()->name),
+                    Value::FIELD_VALUE => $valOfNewAttr = Builder::getRandStrVal(),
+                ],
+                [
+                    Attribute::FIELD_NAME => $existentAttrName = self::getAlreadyExistentAttr()->name,
+                    Value::FIELD_VALUE => $valForExistentAttr = Builder::getRandVal(self::getAlreadyExistentAttr()),
                 ],
             ])
         );
@@ -83,13 +88,20 @@ final class CommandHandlerTest extends TestCase
         $this
             ->assertEntityExists($entityName)
             ->assertFlushed();
-        self::assertTrue($this->attrs->hasByName($attrName));
-        self::assertTrue($this->val->hasByValEntityAndAttrNames($val, $entityName, $attrName));
+        self::assertTrue($this->attrs->hasByName($newAttrName));
+        self::assertTrue($this->attrs->hasByName($existentAttrName));
+        self::assertTrue($this->val->hasByValEntityAndAttrNames($valOfNewAttr, $entityName, $newAttrName));
+        self::assertTrue($this->val->hasByValEntityAndAttrNames($valForExistentAttr, $entityName, $existentAttrName));
     }
 
     private static function getAlreadyExistentEntity(): Entity
     {
         return self::$alreadyExistentEntity ??= Builder::buildEntity();
+    }
+
+    private static function getAlreadyExistentAttr(): Attribute
+    {
+        return self::$alreadyExistentAttr ??= Builder::buildAttr();
     }
 
     private static function getNonExistentEntityName(): string

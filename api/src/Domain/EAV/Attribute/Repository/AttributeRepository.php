@@ -22,5 +22,7 @@ interface AttributeRepository
 
     public function hasByName(string $name): bool;
 
+    public function findByName(string $name): ?Attribute;
+
     public function add(Attribute $attr): void;
 }

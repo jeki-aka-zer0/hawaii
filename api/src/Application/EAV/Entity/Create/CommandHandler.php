@@ -66,6 +66,8 @@ final readonly class CommandHandler
                 $attrId = $attr = null;
                 if ('' !== $attrIdRaw) {
                     $attr = $this->attrs->find($attrId = new AttributeId($attrIdRaw));
+                } else {
+                    $attr = $this->attrs->findByName($attrName);
                 }
 
                 if (null === $attr) {

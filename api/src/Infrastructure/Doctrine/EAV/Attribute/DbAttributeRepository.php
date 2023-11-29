@@ -8,6 +8,7 @@ use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeId;
 use App\Domain\EAV\Attribute\Repository\AttributeRepository;
 use App\Domain\Shared\Repository\EntityNotFoundException;
+use App\Infrastructure\Doctrine\Shared\QB;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,12 +32,26 @@ final class DbAttributeRepository extends ServiceEntityRepository implements Att
     public function hasByName(string $name): bool
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->createQueryBuilder('a')
-                ->select('COUNT(a.attributeId)')
-                ->andWhere(sprintf('lower(a.%s) = :name', Attribute::FIELD_NAME))
-                ->setParameter('name', mb_strtolower($name))
+        return (new QB(
+                $this
+                    ->createQueryBuilder('a')
+                    ->select('COUNT(a.attributeId)')
+            ))
+                ->whereFieldLike(Attribute::FIELD_NAME, $name, 'a')
+                ->getORMQB()
                 ->getQuery()
                 ->getSingleScalarResult() > 0;
+    }
+
+    public function findByName(string $name): ?Attribute
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return (new QB($this->createQueryBuilder('a')))
+            ->whereFieldLike(Attribute::FIELD_NAME, $name, 'a')
+            ->getORMQB()
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function add(Attribute $attr): void

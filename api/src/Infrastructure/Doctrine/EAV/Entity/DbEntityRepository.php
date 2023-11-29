@@ -8,6 +8,7 @@ use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Entity\Entity\EntityId;
 use App\Domain\EAV\Entity\Repository\EntityRepository;
 use App\Domain\Shared\Repository\EntityNotFoundException;
+use App\Infrastructure\Doctrine\Shared\QB;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -31,10 +32,13 @@ final class DbEntityRepository extends ServiceEntityRepository implements Entity
     public function hasByName(string $name): bool
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->createQueryBuilder('e')
-                ->select('COUNT(e.entityId)')
-                ->andWhere(sprintf('lower(e.%s) = :name', Entity::FIELD_NAME))
-                ->setParameter(':name', $name)
+        return (new QB(
+                $this
+                    ->createQueryBuilder('e')
+                    ->select('COUNT(e.entityId)')
+            ))
+                ->whereFieldLike(Entity::FIELD_NAME, $name, 'e')
+                ->getORMQB()
                 ->getQuery()
                 ->getSingleScalarResult() > 0;
     }

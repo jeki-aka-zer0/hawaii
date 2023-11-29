@@ -180,19 +180,19 @@ final readonly class Builder
             Attribute::class => $attr->type,
             AttributeType::class => $attr,
         }) {
-            AttributeType::String => self::getRandStrValue(),
-            AttributeType::Int => self::getRandIntValue(),
+            AttributeType::String => self::getRandStrVal(),
+            AttributeType::Int => self::getRandIntVal(),
         };
 
         return $except != null && $val === $except ? self::getRandVal($attr, $except) : $val;
     }
 
-    public static function getRandStrValue(): string
+    public static function getRandStrVal(): string
     {
         return self::STR_VALUES[array_rand(self::STR_VALUES)];
     }
 
-    public static function getRandIntValue(): int
+    public static function getRandIntVal(): int
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         return random_int(PHP_INT_MIN, PHP_INT_MAX);

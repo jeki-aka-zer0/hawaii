@@ -31,14 +31,19 @@ final class InMemoryRepository extends SplObjectStorage implements AttributeRepo
 
     public function hasByName(string $name): bool
     {
+        return $this->findByName($name) !== null;
+    }
+
+    public function findByName(string $name): ?Attribute
+    {
         foreach ($this as $attr) {
             /** @var Attribute $attr */
             if ($attr->isNameMatch($name)) {
-                return true;
+                return $attr;
             }
         }
 
-        return false;
+        return null;
     }
 
     public function add(Attribute $attr): void

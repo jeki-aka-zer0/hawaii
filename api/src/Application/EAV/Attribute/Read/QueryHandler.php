@@ -30,7 +30,7 @@ final readonly class QueryHandler
                 ->from(Attribute::NAME)
         ))
             ->whereFieldLike(Attribute::FIELD_NAME, $query->name)
-            ->getQb()
+            ->getDBALQB()
             ->fetchAllAssociative();
 
         $attrIds = array_map(static fn(array $row): string => $row[AttributeIdType::FIELD_ATTR_ID], $attrs);

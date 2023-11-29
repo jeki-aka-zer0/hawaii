@@ -51,7 +51,7 @@ final readonly class QueryHandler
     {
         return (new QB($this->qbFrom()))
             ->whereFieldLike(Entity::FIELD_NAME, $query->name)
-            ->getQb();
+            ->getDBALQB();
     }
 
     private function getCount(QueryBuilder $qb): int
