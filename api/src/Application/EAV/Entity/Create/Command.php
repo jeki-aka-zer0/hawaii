@@ -7,6 +7,8 @@ namespace App\Application\EAV\Entity\Create;
 use App\Application\Shared\Field;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Entity\Entity\Entity;
+use App\Domain\EAV\Value\Entity\Value;
+use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use App\Infrastructure\UI\Web\Request\CommandInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +21,21 @@ final class Command implements CommandInterface
     #[Assert\Type('string')]
     public ?string $description = null;
 
-    #[SerializedName(Attribute::KEY_ATTRS_VALUES)]
+    #[Assert\All(new Assert\Collection([
+        AttributeIdType::FIELD_ATTR_ID => [
+            new Assert\Uuid,
+        ],
+        /** @see \App\Application\EAV\Attribute\Create\Command::$name */
+        Attribute::FIELD_NAME => [
+            new Assert\NotBlank,
+            new Assert\Length(min: 2, max: 255),
+        ],
+        /** @see \App\Application\EAV\Value\Upsert\Command::$value */
+        Value::FIELD_VALUE => [
+            new Assert\NotBlank,
+            new Assert\Type(['string', 'int']),
+        ],
+    ], allowMissingFields: true)), Assert\Count(max: 50), SerializedName(Attribute::KEY_ATTRS_VALUES)]
     public array $attributesValues = [];
 
     public function getNameField(): Field

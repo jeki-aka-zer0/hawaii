@@ -20,6 +20,7 @@ final class Command implements CommandInterface
     #[Assert\NotBlank, Assert\Uuid, SerializedName(AttributeIdType::FIELD_ATTR_ID)]
     public string $attributeId;
 
+    /** @see \App\Application\EAV\Entity\Create\Command::$attributesValues */
     #[Assert\NotBlank, Assert\Type(['string', 'int'])]
     public string|int $value;
 
