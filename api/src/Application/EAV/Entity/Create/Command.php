@@ -8,6 +8,7 @@ use App\Application\Shared\Field;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Value\Entity\Value;
+use App\Domain\Shared\Util\Str;
 use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use App\Infrastructure\UI\Web\Request\CommandInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
@@ -51,5 +52,33 @@ final class Command implements CommandInterface
         $cmd->attributesValues = $attrsVal;
 
         return $cmd;
+    }
+
+    /**
+     * @return array{string, array{value: string|int, attribute_id: string}}
+     */
+    public function getAttrsValMap(): array
+    {
+        $map = [];
+        foreach ($this->attributesValues as $attrVal) {
+            $attrName = (string)Str::build((string)($attrVal[Attribute::FIELD_NAME] ?? ''))->trim();
+            if ('' === $attrName) {
+                continue;
+            }
+            $val = (string)Str::build((string)($attrVal[Value::FIELD_VALUE] ?? ''))->trim();
+            if ('' === $val) {
+                continue;
+            }
+            if (is_numeric($val)) {
+                $val = (int)$val;
+            }
+            $map[$attrName] = [
+                Value::FIELD_VALUE => $val,
+                AttributeIdType::FIELD_ATTR_ID => (string)Str::build((string)($attrVal[AttributeIdType::FIELD_ATTR_ID] ?? ''))
+                    ->trim()
+                    ->low(),
+            ];
+        }
+        return $map;
     }
 }

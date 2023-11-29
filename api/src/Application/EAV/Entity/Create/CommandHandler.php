@@ -20,7 +20,6 @@ use App\Domain\Shared\Util\Str;
 use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use DateTimeImmutable;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class CommandHandler
 {
@@ -47,56 +46,18 @@ final readonly class CommandHandler
             )
         );
 
-        $alreadyAddedAttrs = [];
         try {
-            foreach ($cmd->attributesValues as $attrVal) {
-                $attrName = (string)Str::build((string)($attrVal[Attribute::FIELD_NAME] ?? ''))->trim();
-                if ('' === $attrName) {
-                    continue;
-                }
-                // until checkbox attribute is implemented, accept only one value for every attribute like radio button
-                if (isset($alreadyAddedAttrs[$attrName])) {
-                    continue;
-                }
-                $valRaw = (string)Str::build((string)($attrVal[Value::FIELD_VALUE] ?? ''))->trim();
-                if ('' === $valRaw) {
-                    continue;
-                }
-                if (is_numeric($valRaw)) {
-                    $valRaw = (int)$valRaw;
-                }
-
-                $attrIdRaw = (string)Str::build((string)($attrVal[AttributeIdType::FIELD_ATTR_ID] ?? ''))->trim()->low();
-                $attr = '' === $attrIdRaw
-                    ? $this->attrs->findByName($attrName)
-                    : $this->attrs->find(new AttributeId($attrIdRaw));
-
-                if (null === $attr) {
-                    $this->attrs->add(
-                        $attr = new Attribute(
-                            AttributeId::generate(),
-                            $attrName,
-                            Builder::getAttrTypeByVal($valRaw),
-                            new DateTimeImmutable(),
-                        )
-                    );
-                }
-
-                if (null === $attr) {
-                    throw new RuntimeException(
-                        sprintf('%s is required', (new Str(Attribute::NAME))->humanize())
-                    );
-                }
-
+            foreach ($cmd->getAttrsValMap() as $attrName => $row) {
                 $this->val->add(
                     new Value(
                         ValueId::generate(),
                         $entity,
-                        $attr,
-                        $valRaw,
+                        $this->findAttrById($row[AttributeIdType::FIELD_ATTR_ID])
+                        ?? $this->attrs->findByName($attrName)
+                        ?? $this->createAttr($attrName, $row[Value::FIELD_VALUE]),
+                        $row[Value::FIELD_VALUE],
                     )
                 );
-                $alreadyAddedAttrs[$attrName] = true;
             }
         } catch (InvalidArgumentException $e) {
             throw FieldException::build(Attribute::KEY_ATTRS_VALUES, $e->getMessage());
@@ -105,5 +66,24 @@ final readonly class CommandHandler
         $this->flusher->flush();
 
         return $entityId;
+    }
+
+    private function findAttrById(?string $attrId): ?Attribute
+    {
+        return empty($attrId) ? null : $this->attrs->find(new AttributeId($attrId));
+    }
+
+    private function createAttr(string $attrName, string|int $val): Attribute
+    {
+        $this->attrs->add(
+            $attr = new Attribute(
+                AttributeId::generate(),
+                $attrName,
+                Builder::getAttrTypeByVal($val),
+                new DateTimeImmutable(),
+            )
+        );
+
+        return $attr;
     }
 }
