@@ -47,10 +47,15 @@ final readonly class CommandHandler
             )
         );
 
+        $alreadyAddedAttrs = [];
         try {
             foreach ($cmd->attributesValues as $attrVal) {
                 $attrName = (string)Str::build((string)($attrVal[Attribute::FIELD_NAME] ?? ''))->trim();
                 if ('' === $attrName) {
+                    continue;
+                }
+                // until checkbox attribute is implemented, accept only one value for every attribute like radio button
+                if (isset($alreadyAddedAttrs[$attrName])) {
                     continue;
                 }
                 $valRaw = (string)Str::build((string)($attrVal[Value::FIELD_VALUE] ?? ''))->trim();
@@ -62,28 +67,18 @@ final readonly class CommandHandler
                 }
 
                 $attrIdRaw = (string)Str::build((string)($attrVal[AttributeIdType::FIELD_ATTR_ID] ?? ''))->trim()->low();
-
-                $attrId = $attr = null;
-                if ('' !== $attrIdRaw) {
-                    $attr = $this->attrs->find($attrId = new AttributeId($attrIdRaw));
-                } else {
-                    $attr = $this->attrs->findByName($attrName);
-                }
+                $attr = '' === $attrIdRaw
+                    ? $this->attrs->findByName($attrName)
+                    : $this->attrs->find(new AttributeId($attrIdRaw));
 
                 if (null === $attr) {
                     $this->attrs->add(
                         $attr = new Attribute(
-                            $attrId = AttributeId::generate(),
+                            AttributeId::generate(),
                             $attrName,
                             Builder::getAttrTypeByVal($valRaw),
                             new DateTimeImmutable(),
                         )
-                    );
-                }
-
-                if (null === $attrId) {
-                    throw new RuntimeException(
-                        sprintf('%s is required', (new Str(AttributeIdType::FIELD_ATTR_ID))->humanize())
                     );
                 }
 
@@ -93,19 +88,15 @@ final readonly class CommandHandler
                     );
                 }
 
-                $val = $this->val->findByEntityAndAttr($entityId, $attrId);
-                if (null === $val) {
-                    $this->val->add(
-                        new Value(
-                            ValueId::generate(),
-                            $entity,
-                            $attr,
-                            $valRaw,
-                        )
-                    );
-                } else {
-                    $val->updateVal($valRaw);
-                }
+                $this->val->add(
+                    new Value(
+                        ValueId::generate(),
+                        $entity,
+                        $attr,
+                        $valRaw,
+                    )
+                );
+                $alreadyAddedAttrs[$attrName] = true;
             }
         } catch (InvalidArgumentException $e) {
             throw FieldException::build(Attribute::KEY_ATTRS_VALUES, $e->getMessage());
