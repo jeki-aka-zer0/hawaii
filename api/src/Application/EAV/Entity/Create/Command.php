@@ -11,6 +11,7 @@ use App\Domain\EAV\Value\Entity\Value;
 use App\Domain\Shared\Util\Str;
 use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use App\Infrastructure\UI\Web\Request\CommandInterface;
+use InvalidArgumentException;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -56,6 +57,7 @@ final class Command implements CommandInterface
 
     /**
      * @return array{string, array{value: string|int, attribute_id: string}}
+     * @throws InvalidArgumentException
      */
     public function getAttrsValMap(): array
     {
@@ -74,11 +76,14 @@ final class Command implements CommandInterface
             }
             $map[$attrName] = [
                 Value::FIELD_VALUE => $val,
-                AttributeIdType::FIELD_ATTR_ID => (string)Str::build((string)($attrVal[AttributeIdType::FIELD_ATTR_ID] ?? ''))
+                AttributeIdType::FIELD_ATTR_ID => (string)Str::build(
+                    (string)($attrVal[AttributeIdType::FIELD_ATTR_ID] ?? '')
+                )
                     ->trim()
                     ->low(),
             ];
         }
+
         return $map;
     }
 }

@@ -95,8 +95,8 @@ final readonly class Builder
         $attrId = $this->createAttr(
             $attrName ??= self::getRandAttrName(),
             $attrType ??=
-            self::ATTR_NAME_TO_TYPE_MAP[$attrName] ??
-            throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
+                self::ATTR_NAME_TO_TYPE_MAP[$attrName] ??
+                throw new RuntimeException(sprintf('Cannot detect %s type', Attribute::NAME))
         );
         $valId = $this->createVal($entityId, $attrId, $val ??= self::getRandVal($attrType));
 
@@ -114,7 +114,7 @@ final readonly class Builder
             Value::NAME => [
                 ValueIdType::FIELD_VALUE_ID => $valId,
                 Value::FIELD_VALUE => $val,
-            ]
+            ],
         ];
     }
 
@@ -174,17 +174,19 @@ final readonly class Builder
         return $exclude === $name ? self::getRandStrFromArray($array, $exclude) : $name;
     }
 
-    public static function getRandVal(Attribute|AttributeType $attr, string|int $except = null): string|int
+    public static function getRandVal(Attribute|AttributeType|null $attr = null, string|int $exclude = null): string|int
     {
-        $val = match (match ($attr::class) {
-            Attribute::class => $attr->type,
-            AttributeType::class => $attr,
-        }) {
-            AttributeType::String => self::getRandStrVal(),
-            AttributeType::Int => self::getRandIntVal(),
-        };
+        $val = null === $attr
+            ? self::getRandStrVal()
+            : match (match ($attr::class) {
+                Attribute::class => $attr->type,
+                AttributeType::class => $attr,
+            }) {
+                AttributeType::String => self::getRandStrVal(),
+                AttributeType::Int => self::getRandIntVal(),
+            };
 
-        return $except != null && $val === $except ? self::getRandVal($attr, $except) : $val;
+        return $exclude != null && $val === $exclude ? self::getRandVal($attr, $exclude) : $val;
     }
 
     public static function getRandStrVal(): string
