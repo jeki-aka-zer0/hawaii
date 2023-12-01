@@ -197,7 +197,7 @@ final readonly class Builder
     public static function getRandIntVal(): int
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return random_int(PHP_INT_MIN, PHP_INT_MAX);
+        return random_int(0, 10000);
     }
 
     public static function getAttrTypeByVal(string|int $val): ?AttributeType

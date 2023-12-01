@@ -152,12 +152,8 @@ const EntityForm: FC = () => {
         <ErrorMessage
           errors={errors}
           name="name"
-          render={({ message }) => <span className={'error'}>{message}</span>}
+          render={({message}) => <span className={'error'}>{message}</span>}
         />
-      </div>
-      <div>
-        <label htmlFor="description">Description</label>
-        <textarea {...register<keyof Inputs>('description')} id="description" className={'size-m'}></textarea>
       </div>
       <div>
         {[...attrsVal.keys()].map((key: string, i: number) => {
@@ -165,6 +161,10 @@ const EntityForm: FC = () => {
           return attrVal !== undefined &&
               <span className={"tag"} title={attrVal.name} key={attrVal.name + attrVal.value}>{attrVal.value}</span>
         })}
+      </div>
+      <div>
+        <label htmlFor="description">Description</label>
+        <textarea {...register<keyof Inputs>('description')} id="description" className={'size-m'}></textarea>
       </div>
       <div>
         <label htmlFor="attribute">Attribute</label>

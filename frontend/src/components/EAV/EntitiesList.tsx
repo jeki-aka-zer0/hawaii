@@ -51,8 +51,7 @@ const EntitiesList: React.FC = () => {
               <>
                 {entities.map((e: Entity) => (
                     <div key={e.name}>
-                      <p>
-                        {e.name}</p>
+                      <p>{e.name}</p>
                       <p>
                         <Link to={`/entity/${e.entity_id}`}>View</Link>&nbsp;
                         {e.attributes_values.map(av => <span className={"tag"} title={av.name}
