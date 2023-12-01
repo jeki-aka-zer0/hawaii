@@ -10,6 +10,8 @@ use App\Application\EAV\Entity\Create\CommandHandler;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Entity\Entity\Entity;
 use App\Domain\EAV\Value\Entity\Value;
+use App\Domain\Shared\Repository\FieldException;
+use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
 use App\Infrastructure\Dummy\DummyFlusher;
 use App\Infrastructure\Dummy\EAV\Attribute\InMemoryRepository as AttrsRepo;
 use App\Infrastructure\Dummy\EAV\Entity\InMemoryRepository as EntitiesRepo;
@@ -23,7 +25,7 @@ final class CommandHandlerTest extends TestCase
     private AttrsRepo $attrs;
     private ValRepo $val;
     private DummyFlusher $flusher;
-    private CommandHandler $handler;
+    private CommandHandler $SUT;
     private static Entity $alreadyExistentEntity;
     private static Attribute $alreadyExistentAttr;
 
@@ -31,7 +33,7 @@ final class CommandHandlerTest extends TestCase
     {
         parent::setUp();
 
-        $this->handler = new CommandHandler(
+        $this->SUT = new CommandHandler(
             $this->entities = new EntitiesRepo([self::getAlreadyExistentEntity()]),
             $this->attrs = new AttrsRepo([self::getAlreadyExistentAttr()]),
             $this->val = new ValRepo([]),
@@ -53,17 +55,19 @@ final class CommandHandlerTest extends TestCase
      */
     public function testHandleShouldFailWhenEntityWithSameNameAlreadyExists(string $name): void
     {
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage(sprintf('Entity with the name "%s" already exists', trim($name)));
+        $this->expectExceptionWithMsg(
+            DomainException::class,
+            sprintf('Entity with the name "%s" already exists', trim($name))
+        );
 
-        $this->handler->handle(Command::build($name));
+        $this->SUT->handle(Command::build($name));
     }
 
     public function testHandleShouldSuccess(): void
     {
         $cmd = Command::build($name = self::getNonExistentEntityName());
 
-        $this->handler->handle($cmd);
+        $this->SUT->handle($cmd);
 
         $this
             ->assertEntityExists($name)
@@ -72,18 +76,18 @@ final class CommandHandlerTest extends TestCase
 
     public function testHandleShouldCreateNewAttrsVal(): void
     {
-        $this->handler->handle(
-            Command::build($entityName = self::getNonExistentEntityName(), attrsVal: [
-                [
-                    Attribute::FIELD_NAME => $newAttrName = Builder::getRandAttrName(self::getAlreadyExistentAttr()->name),
-                    Value::FIELD_VALUE => $valOfNewAttr = Builder::getRandStrVal(),
-                ],
-                [
-                    Attribute::FIELD_NAME => $existentAttrName = self::getAlreadyExistentAttr()->name,
-                    Value::FIELD_VALUE => $valForExistentAttr = Builder::getRandVal(self::getAlreadyExistentAttr()),
-                ],
-            ])
-        );
+        $cmd = Command::build($entityName = self::getNonExistentEntityName(), attrsVal: [
+            'attribute should be created' => [
+                Attribute::FIELD_NAME => $newAttrName = Builder::getRandAttrName(self::getAlreadyExistentAttr()->name),
+                Value::FIELD_VALUE => $valOfNewAttr = Builder::getRandVal(),
+            ],
+            'already existent attribute should be found' => [
+                Attribute::FIELD_NAME => $existentAttrName = self::getAlreadyExistentAttr()->name,
+                Value::FIELD_VALUE => $valForExistentAttr = Builder::getRandVal(self::getAlreadyExistentAttr()),
+            ],
+        ]);
+
+        $this->SUT->handle($cmd);
 
         $this
             ->assertEntityExists($entityName)
@@ -92,6 +96,20 @@ final class CommandHandlerTest extends TestCase
         self::assertTrue($this->attrs->hasByName($existentAttrName));
         self::assertTrue($this->val->hasByValEntityAndAttrNames($valOfNewAttr, $entityName, $newAttrName));
         self::assertTrue($this->val->hasByValEntityAndAttrNames($valForExistentAttr, $entityName, $existentAttrName));
+    }
+
+    public function testHandleShouldFailWhenAttrIdIsNotValidUuid(): void
+    {
+        $cmd = Command::build(self::getNonExistentEntityName(), attrsVal: [
+            [
+                AttributeIdType::FIELD_ATTR_ID => 'non valid uuid',
+                Attribute::FIELD_NAME => Builder::getRandAttrName(self::getAlreadyExistentAttr()->name),
+                Value::FIELD_VALUE => Builder::getRandStrVal(),
+            ],
+        ]);
+        $this->expectExceptionWithMsg(FieldException::class, 'Attribute id is invalid identifier');
+
+        $this->SUT->handle($cmd);
     }
 
     private static function getAlreadyExistentEntity(): Entity
@@ -121,5 +139,11 @@ final class CommandHandlerTest extends TestCase
         self::assertTrue($this->flusher->isFlushed());
 
         return $this;
+    }
+
+    public function expectExceptionWithMsg(string $class, string $msg): void
+    {
+        $this->expectException($class);
+        $this->expectExceptionMessage($msg);
     }
 }

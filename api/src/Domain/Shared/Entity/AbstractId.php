@@ -14,7 +14,7 @@ abstract class AbstractId
 
     public function __construct(private string $val)
     {
-        Assert::uuid($val, sprintf('%s is invalid identifier', (new Str(static::getField()))->humanize()));
+        Assert::uuid($val, sprintf('%s is invalid identifier', (new Str(static::getField()))->humanize()->upFirst()));
         $this->val = mb_strtolower($val);
     }
 
