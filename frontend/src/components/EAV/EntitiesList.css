@@ -2,11 +2,28 @@
     margin: 15px 0 0;
 }
 
+.entity-card {
+    margin-bottom: 2em;
+}
+
+.entity-card__header {
+    margin-bottom: 0.1em;
+}
+
+.entity-card__name {
+    display: inline;
+    margin-right: 0.4em;
+}
+
+.entity-card__btn-view {
+    margin-right: 0.6em;
+}
+
 .tag {
     background: #fa0259;
     border-radius: 10px;
     display: inline-block;
     font-size: .8em;
-    margin: 0 5px 0 0;
-    padding: 2px 7px;
+    margin: 0 0.5em 0 0;
+    padding: 1px 6px;
 }

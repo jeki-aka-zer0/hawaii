@@ -4,6 +4,18 @@ html, body {
     font-family: 'Courier', monospace;
 }
 
+h1 {
+    font-size: 1.8em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
 a {
     color: #02abfa;
 }

@@ -50,15 +50,14 @@ const EntitiesList: React.FC = () => {
           entities?.length ?
               <>
                 {entities.map((e: Entity) => (
-                    <div key={e.name}>
-                      <p>{e.name}</p>
-                      <p>
-                        <Link to={`/entity/${e.entity_id}`}>View</Link>&nbsp;
-                        {e.attributes_values.map(av => <span className={"tag"} title={av.name}
-                                                             key={av.name + av.value}>{av.value}</span>)}
-                      </p>
+                    <div key={e.name} className={"entity-card"}>
+                      <div className={"entity-card__header"}>
+                        <h2 className={"entity-card__name"}>{e.name}</h2>
+                        <Link className={"entity-card__btn-view"} to={`/entity/${e.entity_id}`}>View</Link>
+                        {e.attributes_values.map(av =>
+                            <span className={"tag"} title={av.name} key={av.name + av.value}>{av.value}</span>)}
+                      </div>
                       <p>{e.description}</p>
-                      <p>&nbsp;</p>
                     </div>
                 ))}
                 {(prevPageUrl || nextPageUrl) && <div className="pager">
