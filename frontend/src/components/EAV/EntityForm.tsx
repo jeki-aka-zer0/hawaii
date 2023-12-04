@@ -135,67 +135,80 @@ const EntityForm: FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} data-testid="entity-form">
-      <div>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          className={'size-m'}
-          type="text"
-          {...register<keyof Inputs>('name', {
-            required: 'Name is required.',
-            minLength: { value: 2, message: 'Name must be at least 2 characters.' },
-            maxLength: { value: 255, message: 'Name must be at max 255 characters.' }
+      <div className={'row'}>
+        <div className={'col-6'}>
+          <label htmlFor="name">Name</label>
+          <input
+              id="name"
+              type="text"
+              {...register<keyof Inputs>('name', {
+                required: 'Name is required.',
+                minLength: { value: 2, message: 'Name must be at least 2 characters.' },
+                maxLength: { value: 255, message: 'Name must be at max 255 characters.' }
+              })}
+          />
+          <ErrorMessage
+              errors={errors}
+              name="name"
+              render={({message}) => <span className={'error'}>{message}</span>}
+          />
+        </div>
+      </div>
+      {attrsVal.size > 0 && <div className={'row'}>
+        <div className={'col-12'}>
+          {[...attrsVal.keys()].map((key: string) => {
+            const attrVal: AttrVal | undefined = attrsVal.get(key)
+            return attrVal !== undefined &&
+                <span className={"tag"} title={attrVal.name} key={attrVal.name + attrVal.value}>{attrVal.value}</span>
           })}
-        />
-        <ErrorMessage
-          errors={errors}
-          name="name"
-          render={({message}) => <span className={'error'}>{message}</span>}
-        />
+        </div>
+      </div>}
+      <div className={'row'}>
+        <div className={'col-12'}>
+          <label htmlFor="description">Description</label>
+          <textarea {...register<keyof Inputs>('description')} id="description"></textarea>
+        </div>
       </div>
-      <div>
-        {[...attrsVal.keys()].map((key: string, i: number) => {
-          const attrVal: AttrVal | undefined = attrsVal.get(key)
-          return attrVal !== undefined &&
-              <span className={"tag"} title={attrVal.name} key={attrVal.name + attrVal.value}>{attrVal.value}</span>
-        })}
+      <div className={'row'}>
+        <div className={'col-3'}>
+          <label htmlFor="attribute">Attribute</label>
+          <input
+              id="attribute"
+              type="text"
+              list="Attributes"
+              value={attrName}
+              onChange={handleAttrChange}
+          />
+          {<datalist id="Attributes">
+            {attrs.map((a: Attr) => <option key={a.attribute_id} value={a.name}/>)}
+          </datalist>}
+        </div>
+        <div className={'col-3'}>
+          <label htmlFor="value">Value</label>
+          <input
+              id="value"
+              type="text"
+              list="Values"
+              value={val}
+              onChange={(e: ChangeEvent<HTMLInputElement>): void => setVal(e.target.value)}
+          />
+          {<datalist id="Values">
+            {values.map((v: string | number) => <option key={v} value={v}/>)}
+          </datalist>}
+        </div>
+        <div className={'col-3'}>
+          <button title="Add attribute with value" onClick={addAttrVal}>+</button>
+        </div>
       </div>
-      <div>
-        <label htmlFor="description">Description</label>
-        <textarea {...register<keyof Inputs>('description')} id="description" className={'size-m'}></textarea>
-      </div>
-      <div>
-        <label htmlFor="attribute">Attribute</label>
-        <input
-            id="attribute"
-            className={'size-s'}
-            type="text"
-            list="Attributes"
-            value={attrName}
-            onChange={handleAttrChange}
-        />
-        {<datalist id="Attributes">
-          {attrs.map((a: Attr) => <option key={a.attribute_id} value={a.name}/>)}
-        </datalist>}
-        <label htmlFor="value">Value</label>
-        <input
-            id="value"
-            className={'size-s'}
-            type="text"
-            list="Values"
-            value={val}
-            onChange={(e: ChangeEvent<HTMLInputElement>): void => setVal(e.target.value)}
-        />
-        {<datalist id="Values">
-          {values.map((v: string | number) => <option key={v} value={v}/>)}
-        </datalist>}
-        <button title="Add attribute with value" onClick={addAttrVal}>+</button>
-        <div>
+      <div className={'row'} style={{display: 'none'}}>
+        <div className={'col-12'}>
           <span className="error">{/* todo show error */}</span>
         </div>
       </div>
-      <div>
-        <input type="submit" value="Create" disabled={isSubmitting && isDirty && isValid} data-testid="entity-form-submit-btn"/>
+      <div className={'row'}>
+        <div className={'col-12'}>
+          <input type="submit" value="Create" disabled={isSubmitting && isDirty && isValid} data-testid="entity-form-submit-btn"/>
+        </div>
       </div>
     </form>
   )
