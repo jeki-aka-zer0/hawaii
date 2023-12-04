@@ -8,16 +8,14 @@ export type CreatedEntity = {
   readonly entity_id: string
 }
 
-type attrVal = {
-  name: string
-  value: string|number
-}
-
 export type Entity = {
   readonly entity_id: string
   readonly name: string
   readonly description: string | null
-  readonly attributes_values: attrVal[]
+  readonly attributes_values: {
+    name: string
+    value: string | number
+  }[]
 }
 
 export type Val = {
@@ -28,7 +26,13 @@ export type Val = {
 export type Attr = {
   attribute_id: string
   name: string
-  values: Val[]
+  values: (string | number)[]
+}
+
+export type AttrVal = {
+  attribute_id?: string
+  name: string
+  value: string | number
 }
 
 export type FormErrors = {

@@ -38,7 +38,6 @@ final readonly class QueryHandler
         /** @noinspection PhpUnhandledExceptionInspection */
         $attrsVal = $this->connection->createQueryBuilder()
             ->select(
-                ValueIdType::FIELD_VALUE_ID,
                 AttributeIdType::FIELD_ATTR_ID,
                 Value::FIELD_VALUE,
             )
@@ -50,14 +49,11 @@ final readonly class QueryHandler
 
         $attrsValMap = [];
         foreach ($attrsVal as $row) {
-            $attrsValMap[$row[AttributeIdType::FIELD_ATTR_ID]][] = [
-                ValueIdType::FIELD_VALUE_ID => $row[ValueIdType::FIELD_VALUE_ID],
-                Value::FIELD_VALUE => $row[Value::FIELD_VALUE],
-            ];
+            $attrsValMap[$row[AttributeIdType::FIELD_ATTR_ID]][] = $row[Value::FIELD_VALUE];
         }
 
         foreach ($attrs as $i => $attr) {
-            $attrs[$i][self::KEY_VAL] = $attrsValMap[$attr[AttributeIdType::FIELD_ATTR_ID]] ?? [];
+            $attrs[$i][self::KEY_VAL] = array_unique($attrsValMap[$attr[AttributeIdType::FIELD_ATTR_ID]] ?? []);
         }
 
         return $attrs;

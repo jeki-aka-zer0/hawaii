@@ -2,22 +2,15 @@ import React, {ChangeEvent, FC, useEffect, useRef, useState} from 'react'
 import {SubmitHandler, useForm} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message/dist'
 import axios, {AxiosResponse} from 'axios'
-import {Attr, CreatedEntity, FormErrors, Val} from '../../types/types'
+import {Attr, AttrVal, CreatedEntity, FormErrors} from '../../types/types'
 import {hasOwnProperty, isValidationError} from '../../utils/utils'
 import {NavigateFunction, useNavigate} from 'react-router-dom'
 
 type Inputs = {
   name: string;
   description: string;
-  attributes_values: attrVal[]
+  attributes_values: AttrVal[]
 };
-
-type attrVal = {
-  attribute_id?: string
-  name: string
-  value_id?: string
-  value: string|number
-}
 
 const EntityForm: FC = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
@@ -25,31 +18,32 @@ const EntityForm: FC = () => {
   })
   const [attrs, setAttrs] = useState<Attr[]>([])
   const [attrMap, setAttrMap] = useState<Map<string, Attr>>(new Map<string, Attr>())
-  const [attrsVal, setAttrsVal] = useState<Map<string, attrVal>>(new Map<string, attrVal>())
+  const [attrsVal, setAttrsVal] = useState<Map<string, AttrVal>>(new Map<string, AttrVal>())
   const [values, setValues] = useState<(string | number)[]>([])
+  const [areAllValuesShown, setAreAllValuesShown] = useState<boolean>(true)
   const navigate: NavigateFunction = useNavigate();
   const effectRun = useRef(false);
   const [attrName, setAttrName] = useState<string>('')
   const [val, setVal] = useState<string>('')
 
   useEffect(() => {
-    const controller : AbortController = new AbortController()
+    const controller: AbortController = new AbortController()
     if (effectRun.current) {
       axios
           .get(`${process.env.REACT_APP_API_URL}/eav/attribute`, {
             signal: controller.signal
           })
-          .then((res: AxiosResponse<any, any>) => {
+          .then((res: AxiosResponse<any, any>): void => {
             setAttrs(res.data.attributes)
             // create lower cased attribute name to attribute_id map
-            const attrToIdMap = new Map<string, Attr>()
-            const values: (string | number)[] = []
-            res.data.attributes && res.data.attributes.forEach((attr: Attr): void => {
-              attr.values.map(v => values.push(v.value))
-              attrToIdMap.set(attr.name.toLowerCase(), attr)
+            const attrMapNew: Map<string, Attr> = new Map<string, Attr>()
+            const valMap: Map<(string | number), boolean> = new Map<string, boolean>()
+            res.data.attributes.forEach((attr: Attr): void => {
+              attrMapNew.set(attr.name.toLowerCase(), attr)
+              attr.values.map((v: string | number) => valMap.set(v, true))
             })
-            setValues(values)
-            setAttrMap(attrToIdMap)
+            setValues([...valMap.keys()])
+            setAttrMap(attrMapNew)
           })
           .catch(error => console.log(error))
     }
@@ -61,15 +55,14 @@ const EntityForm: FC = () => {
   }, [])
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs): Promise<void> => {
-    const attributesValues: attrVal[] = []
-    attrsVal.forEach((attrVal: attrVal) => {
-      attributesValues.push({
-        "attribute_id": attrVal.attribute_id,
-        "name": attrVal.name,
-        "value": attrVal.value
+    data.attributes_values = []
+    attrsVal.forEach((attrVal: AttrVal): void => {
+      data.attributes_values.push({
+        attribute_id: attrVal.attribute_id,
+        name: attrVal.name,
+        value: attrVal.value
       })
     })
-    data.attributes_values = attributesValues
 
     try {
       const response: AxiosResponse<CreatedEntity> = await axios.post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
@@ -107,32 +100,37 @@ const EntityForm: FC = () => {
     }
 
     const key: string = attrName.toLowerCase()
-    const attrVal: attrVal = {
+    const attrsValNew: Map<string, AttrVal> = attrsVal
+    attrsValNew.set(key, {
       attribute_id: attrMap.get(key)?.attribute_id,
       name: attrName,
       value: val,
-    }
+    })
+    setAttrsVal(new Map<string, AttrVal>(attrsValNew))
 
-    const rows: Map<string, attrVal> = attrsVal
-    rows.set(key, attrVal)
-    setAttrsVal(new Map<string, attrVal>(rows))
-
-    // reset attribute and value
+    // reset attribute and value inputs
     setAttrName("")
     setVal("")
   }
 
-  const handleAttrChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const values: (string | number)[] = []
+  const handleAttrChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const valMap: Map<(string | number), boolean> = new Map<string, boolean>()
+
+    // if such an attribute exist, prefill with its values
+    // otherwise prefill with all the values
     if (e.target.value.length >= 3) {
-      const key: string = e.target.value.toLowerCase()
-      if (attrMap.has(key)) {
-        attrMap.get(key)?.values.map((v: Val) => values.push(v.value))
-      }
+      const name: string = e.target.value.toLowerCase()
+      attrMap.get(name)?.values.map((v: (string | number)) => valMap.set(v, true))
+      setAreAllValuesShown(false)
+    } else if (!areAllValuesShown) {
+      attrs.forEach((attr: Attr): void => {
+        attr.values.map((v: string | number) => valMap.set(v, true))
+      })
+      setAreAllValuesShown(true)
     }
 
     setAttrName(e.target.value)
-    setValues(values)
+    setValues([...valMap.keys()])
   }
 
   return (
@@ -157,7 +155,7 @@ const EntityForm: FC = () => {
       </div>
       <div>
         {[...attrsVal.keys()].map((key: string, i: number) => {
-          const attrVal: attrVal | undefined = attrsVal.get(key)
+          const attrVal: AttrVal | undefined = attrsVal.get(key)
           return attrVal !== undefined &&
               <span className={"tag"} title={attrVal.name} key={attrVal.name + attrVal.value}>{attrVal.value}</span>
         })}
@@ -172,11 +170,11 @@ const EntityForm: FC = () => {
             id="attribute"
             className={'size-s'}
             type="text"
-            list="Languages"
+            list="Attributes"
             value={attrName}
             onChange={handleAttrChange}
         />
-        {attrs?.length > 0 && <datalist id="Languages">
+        {<datalist id="Attributes">
           {attrs.map((a: Attr) => <option key={a.attribute_id} value={a.name}/>)}
         </datalist>}
         <label htmlFor="value">Value</label>
@@ -186,10 +184,10 @@ const EntityForm: FC = () => {
             type="text"
             list="Values"
             value={val}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setVal(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>): void => setVal(e.target.value)}
         />
-        {values?.length > 0 && <datalist id="Values">
-          {values.map((v: string | number, i) => <option key={i} value={v}/>)}
+        {<datalist id="Values">
+          {values.map((v: string | number) => <option key={v} value={v}/>)}
         </datalist>}
         <button title="Add attribute with value" onClick={addAttrVal}>+</button>
         <div>

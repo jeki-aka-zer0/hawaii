@@ -59,16 +59,7 @@ final class AttributeControllerTest extends AbstractEndpointTestCase
                  [
                      AttributeIdType::FIELD_ATTR_ID => self::TYPE_UUID,
                      Attribute::FIELD_NAME => $attrName,
-                     QueryHandler::KEY_VAL => [
-                         [
-                             ValueIdType::FIELD_VALUE_ID => self::TYPE_UUID,
-                             Value::FIELD_VALUE => $val1,
-                         ],
-                         [
-                             ValueIdType::FIELD_VALUE_ID => self::TYPE_UUID,
-                             Value::FIELD_VALUE => $val2,
-                         ],
-                     ],
+                     QueryHandler::KEY_VAL => [$val1, $val2],
                  ]
             ],
         ], $this->assertSuccessfulJson($response));
