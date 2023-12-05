@@ -160,6 +160,13 @@ const EntityForm: FC = () => {
     return isValid
   }
 
+  const removeAttrVal = (key: string): void => {
+    const attrsValNew: Map<string, AttrVal> = attrsVal
+    attrsValNew.delete(key)
+    setAttrsVal(new Map<string, AttrVal>(attrsValNew))
+    setAttrsValErr('')
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} data-testid="entity-form">
       <div className={'row'}>
@@ -186,7 +193,12 @@ const EntityForm: FC = () => {
           {[...attrsVal.keys()].map((key: string) => {
             const attrVal: AttrVal | undefined = attrsVal.get(key)
             return attrVal !== undefined &&
-                <span className={"tag"} title={attrVal.name} key={attrVal.name + attrVal.value}>{attrVal.value}</span>
+                <span key={attrVal.name + attrVal.value}>
+                  <span className={"tag"} title={attrVal.name}>{attrVal.value}</span>
+                  <span className={'entity-form__remove-attr-val-btn'}
+                     onClick={() => removeAttrVal(key)}
+                  >❌</span>
+                </span>
           })}
         </div>
       </div>}

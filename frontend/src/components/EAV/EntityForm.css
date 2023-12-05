@@ -1,3 +1,13 @@
 .entity-form__add-attr-val-btn {
     margin: 1.2em 0 0;
 }
+
+.entity-form__remove-attr-val-btn {
+    font-size: .8em;
+    margin: 0 .8em 0 0;
+    cursor: pointer;
+}
+
+.entity-form__remove-attr-val-btn:hover {
+    opacity: .8;
+}
