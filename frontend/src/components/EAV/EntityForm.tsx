@@ -1,4 +1,5 @@
 import React, {ChangeEvent, FC, useEffect, useRef, useState} from 'react'
+import './EntityForm.css'
 import {SubmitHandler, useForm} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message/dist'
 import axios, {AxiosResponse} from 'axios'
@@ -166,7 +167,7 @@ const EntityForm: FC = () => {
       <div className={'row'}>
         <div className={'col-12'}>
           <label htmlFor="description">Description</label>
-          <textarea {...register<keyof Inputs>('description')} id="description"></textarea>
+          <textarea {...register<keyof Inputs>('description')} id="description" rows={7}></textarea>
         </div>
       </div>
       <div className={'row'}>
@@ -197,7 +198,7 @@ const EntityForm: FC = () => {
           </datalist>}
         </div>
         <div className={'col-3'}>
-          <button title="Add attribute with value" onClick={addAttrVal}>+</button>
+          <button title="Add attribute with value" onClick={addAttrVal} className={'entity-form__add-attr-val-btn'}>+</button>
         </div>
       </div>
       <div className={'row'} style={{display: 'none'}}>
