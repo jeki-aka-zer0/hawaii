@@ -4,7 +4,7 @@ import {SubmitHandler, useForm} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message/dist'
 import axios, {AxiosResponse} from 'axios'
 import {Attr, AttrVal, CreatedEntity, FormErrors} from '../../types/types'
-import {hasOwnProperty, isValidationError} from '../../utils/utils'
+import {isValidationError} from '../../utils/utils'
 import {NavigateFunction, useNavigate} from 'react-router-dom'
 
 type Inputs = {
@@ -20,6 +20,8 @@ const EntityForm: FC = () => {
   const [attrs, setAttrs] = useState<Attr[]>([])
   const [attrMap, setAttrMap] = useState<Map<string, Attr>>(new Map<string, Attr>())
   const [attrsVal, setAttrsVal] = useState<Map<string, AttrVal>>(new Map<string, AttrVal>())
+  const [attrsValErr, setAttrsValErr] = useState<string>('')
+  const [isAttrValValid, setIsAttrValValid] = useState<boolean>(false)
   const [values, setValues] = useState<(string | number)[]>([])
   const [areAllValuesShown, setAreAllValuesShown] = useState<boolean>(true)
   const navigate: NavigateFunction = useNavigate();
@@ -78,11 +80,24 @@ const EntityForm: FC = () => {
       let errorShown: boolean = false
       if (err.response.status === 422 && isValidationError<Inputs>(err)) {
         const validationErrors: FormErrors = err.response!.data.errors
+        const attrsValMatcher: RegExp = new RegExp(/^attributesValues\[(\d+)]\[([a-zA-Z_]+)]/)
+        const attrsValErrs: string[] = []
         for (const fieldName in validationErrors) {
-          if (hasOwnProperty(validationErrors, fieldName)) {
+          const isErrorAttrsVal: RegExpExecArray | null = attrsValMatcher.exec(fieldName);
+          if (isErrorAttrsVal && isErrorAttrsVal.length > 1) {
+            const index: number = parseInt(isErrorAttrsVal[1]) + 1;
+            const attrName: string = isErrorAttrsVal[2];
+            const err: string = `${index}) ${attrName}: ${validationErrors[fieldName].join(' ')}`
+            attrsValErrs.push(err)
             errorShown = true
+          } else {
             setError(fieldName as keyof Inputs, { message: validationErrors[fieldName].join(' ') })
+            errorShown = true
           }
+        }
+
+        if (attrsValErrs.length > 0) {
+          setAttrsValErr(attrsValErrs.join(' '))
         }
       }
 
@@ -95,9 +110,8 @@ const EntityForm: FC = () => {
   const addAttrVal = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
 
-    if (attrName.length === 0 || val.length === 0) {
-      // setError("attributes_values" as keyof Inputs, { message: "Attribute cannot be empty" })
-      return
+    if (!toggleAttrVal(attrName, val)) {
+      return;
     }
 
     const key: string = attrName.toLowerCase()
@@ -125,13 +139,25 @@ const EntityForm: FC = () => {
       setAreAllValuesShown(false)
     } else if (!areAllValuesShown) {
       attrs.forEach((attr: Attr): void => {
-        attr.values.map((v: string | number) => valMap.set(v, true))
+        Object.keys(attr.values).map((v: string | number) => valMap.set(v, true))
       })
       setAreAllValuesShown(true)
     }
 
     setAttrName(e.target.value)
     setValues([...valMap.keys()])
+    toggleAttrVal(e.target.value, val)
+  }
+
+  const handleValChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setVal(e.target.value)
+    toggleAttrVal(attrName, e.target.value)
+  }
+
+  const toggleAttrVal = (first: string, second: string): boolean => {
+    const isValid: boolean = first.length >= 2 && second.length >= 2;
+    setIsAttrValValid(isValid)
+    return isValid
   }
 
   return (
@@ -164,6 +190,11 @@ const EntityForm: FC = () => {
           })}
         </div>
       </div>}
+      {attrsValErr.length > 0 && <div className={'row'}>
+        <div className={'col-12'}>
+          <span className="error entity-form__add-attr-val-errs">{attrsValErr}</span>
+        </div>
+      </div>}
       <div className={'row'}>
         <div className={'col-12'}>
           <label htmlFor="description">Description</label>
@@ -191,19 +222,14 @@ const EntityForm: FC = () => {
               type="text"
               list="Values"
               value={val}
-              onChange={(e: ChangeEvent<HTMLInputElement>): void => setVal(e.target.value)}
+              onChange={handleValChange}
           />
           {<datalist id="Values">
             {values.map((v: string | number) => <option key={v} value={v}/>)}
           </datalist>}
         </div>
         <div className={'col-3'}>
-          <button title="Add attribute with value" onClick={addAttrVal} className={'entity-form__add-attr-val-btn'}>+</button>
-        </div>
-      </div>
-      <div className={'row'} style={{display: 'none'}}>
-        <div className={'col-12'}>
-          <span className="error">{/* todo show error */}</span>
+          <button title="Add attribute with value" onClick={addAttrVal} className={'entity-form__add-attr-val-btn'} disabled={!isAttrValValid}>+</button>
         </div>
       </div>
       <div className={'row'}>
