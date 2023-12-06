@@ -6,6 +6,7 @@ namespace App\Infrastructure\UI\Web\Response;
 
 use App\Infrastructure\UI\Web\Request\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 
 final class ValidationErrorJsonResponse extends AbstractErrorJsonResponse
 {
@@ -17,8 +18,12 @@ final class ValidationErrorJsonResponse extends AbstractErrorJsonResponse
     private static function violationsToArray(ValidationException $exception): array
     {
         $errors = [];
+        $camelCaseToSnake = new CamelCaseToSnakeCaseNameConverter();
         foreach ($exception->getViolations() as $violation) {
-            $errors[$violation->getPropertyPath()] = array_merge($errors[$violation->getPropertyPath()] ?? [], [$violation->getMessage()]);
+            $errors[($camelCaseToSnake)->normalize($violation->getPropertyPath())] = array_merge(
+                $errors[$violation->getPropertyPath()] ?? [],
+                [$violation->getMessage()],
+            );
         }
 
         return $errors;

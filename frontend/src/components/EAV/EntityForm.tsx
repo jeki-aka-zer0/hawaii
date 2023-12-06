@@ -80,7 +80,7 @@ const EntityForm: FC = () => {
       let errorShown: boolean = false
       if (err.response.status === 422 && isValidationError<Inputs>(err)) {
         const validationErrors: FormErrors = err.response!.data.errors
-        const attrsValMatcher: RegExp = new RegExp(/^attributesValues\[(\d+)]\[([a-zA-Z_]+)]/)
+        const attrsValMatcher: RegExp = new RegExp(/^attributes_values\[(\d+)]\[([a-zA-Z_]+)]/)
         const attrsValErrs: string[] = []
         for (const fieldName in validationErrors) {
           const isErrorAttrsVal: RegExpExecArray | null = attrsValMatcher.exec(fieldName);
