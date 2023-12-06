@@ -28,7 +28,6 @@ final class QueryResolver extends AbstractValidationResolver
     protected function getRequestDto(Request $request, ArgumentMetadata $argument): QueryInterface
     {
         try {
-            /** @noinspection PhpUnhandledExceptionInspection */
             return $this->serializer->denormalize(
                 $request->query->all() + $request->attributes->all(),
                 $argument->getType(),

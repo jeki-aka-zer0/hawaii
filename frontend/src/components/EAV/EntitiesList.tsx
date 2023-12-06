@@ -11,7 +11,7 @@ const EntitiesList: React.FC = () => {
   const [currentPageUrl, setCurrentPageUrl] = useState<string>(`${process.env.REACT_APP_API_URL}/eav/entity`)
   const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null)
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
-  const effectRun = useRef(false);
+  const effectRun:React.MutableRefObject<boolean> = useRef(false);
 
   useEffect(() => {
     setLoading(true)

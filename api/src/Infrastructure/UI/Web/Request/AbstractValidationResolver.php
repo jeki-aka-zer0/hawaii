@@ -6,11 +6,11 @@ namespace App\Infrastructure\UI\Web\Request;
 
 use Generator;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-abstract class AbstractValidationResolver implements ArgumentValueResolverInterface
+abstract class AbstractValidationResolver implements ValueResolverInterface
 {
     public function __construct(private readonly ValidatorInterface $validator)
     {

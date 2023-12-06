@@ -57,7 +57,7 @@ final readonly class QueryHandler
     private function getCount(QueryBuilder $qb): int
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return (int)$qb->select(['COUNT(*)'])->fetchOne();
+        return (int)$qb->select('COUNT(*)')->fetchOne();
     }
 
     /**
