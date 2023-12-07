@@ -20,17 +20,4 @@ abstract class AbstractIntegrationTestCase extends KernelTestCase
         $connection = self::getContainer()->get(Connection::class);
         self::$connection = $connection;
     }
-
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        self::$connection->beginTransaction();
-    }
-
-    protected function tearDown(): void
-    {
-        self::$connection->rollBack();
-        parent::tearDown();
-    }
 }
