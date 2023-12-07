@@ -25,6 +25,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'auto_generate_proxy_classes' => true,
             'naming_strategy' => 'doctrine.orm.naming_strategy.underscore_number_aware',
             'auto_mapping' => true,
+            'report_fields_where_declared' => true,
+            'enable_lazy_ghost_objects' => true,
             'mappings' => [
                 /**
                  * Describe each entity folder separately
