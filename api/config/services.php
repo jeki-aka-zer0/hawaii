@@ -10,8 +10,7 @@ use App\Infrastructure\Doctrine\DbFlusher;
 use App\Infrastructure\Doctrine\EAV\Attribute\DbAttributeRepository;
 use App\Infrastructure\Doctrine\EAV\Entity\DbEntityRepository;
 use App\Infrastructure\Doctrine\EAV\Value\DbValueRepository;
-use App\Infrastructure\UI\Web\Request\BodyResolver;
-use App\Infrastructure\UI\Web\Request\QueryResolver;
+use App\Infrastructure\UI\Web\Request\ValidationResolver;
 use App\Infrastructure\UI\Web\Response\ExceptionListener;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -35,10 +34,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ]
         );
 
-    $services->set(BodyResolver::class)
-        ->tag('controller.argument_value_resolver', ['priority' => 50]);
-
-    $services->set(QueryResolver::class)
+    $services->set(ValidationResolver::class)
         ->tag('controller.argument_value_resolver', ['priority' => 50]);
 
     $services->set(ExceptionListener::class)
