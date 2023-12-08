@@ -155,7 +155,7 @@ const EntityForm: FC = () => {
   }
 
   const toggleAttrVal = (first: string, second: string): boolean => {
-    const isValid: boolean = first.length >= 2 && second.length >= 2;
+    const isValid: boolean = first.length >= 2 && second.length >= 1;
     setIsAttrValValid(isValid)
     return isValid
   }
