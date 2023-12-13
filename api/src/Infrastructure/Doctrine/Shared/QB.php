@@ -22,13 +22,13 @@ final readonly class QB
     {
     }
 
-    public function whereFieldLike(string $field, ?string $searchStr, string $alias = null): self
+    public function whereFieldLike(string $field, string|int|null $search, string $alias = null): self
     {
-        if ($searchStr) {
+        if ($search) {
             $withAlias = join('.', array_filter([$alias, $field]));
             $this->qb
-                ->where($this->qb->expr()->like(sprintf('lower(%s)', $withAlias), sprintf(':%s', $field)))
-                ->setParameter($field, '%'.(new Str($searchStr))->low().'%');
+                ->orWhere($this->qb->expr()->like(sprintf('lower(%s)', $withAlias), sprintf(':%s', $field)))
+                ->setParameter($field, '%'.Str::build($search)->low().'%');
         }
 
         return $this;

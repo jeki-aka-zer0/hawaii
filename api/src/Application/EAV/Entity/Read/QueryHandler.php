@@ -40,7 +40,7 @@ final readonly class QueryHandler
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $entity = $this->select($this->qbFrom())
-            ->where(sprintf('%s = :entity_id', EntityIdType::FIELD_ENTITY_ID))
+            ->where(sprintf('e.%s = :entity_id', EntityIdType::FIELD_ENTITY_ID))
             ->setParameter('entity_id', $entityId->getVal())
             ->fetchAssociative() ?: throw EntityNotFoundException::byId($entityId, Entity::NAME);
 
@@ -49,15 +49,25 @@ final readonly class QueryHandler
 
     private function getBasicQueryBuilder(Query $query): QueryBuilder
     {
-        return (new QB($this->qbFrom()))
-            ->whereFieldLike(Entity::FIELD_NAME, $query->name)
+        return (new QB(
+            $this
+                ->qbFrom()
+                ->leftJoin(
+                    'e',
+                    Value::NAME,
+                    'v',
+                    sprintf('e.%s = v.%s', EntityIdType::FIELD_ENTITY_ID, EntityIdType::FIELD_ENTITY_ID)
+                )
+        ))
+            ->whereFieldLike(Entity::FIELD_NAME, $query->search, 'e')
+            ->whereFieldLike(Value::FIELD_VALUE, $query->search, 'v')
             ->getDBALQB();
     }
 
     private function getCount(QueryBuilder $qb): int
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return (int)$qb->select('COUNT(*)')->fetchOne();
+        return (int)$qb->select('COUNT(e.entity_id)')->fetchOne();
     }
 
     /**
@@ -83,7 +93,7 @@ final readonly class QueryHandler
         $entities = $this->select($qb)
             ->setFirstResult($query->offset)
             ->setMaxResults($query->limit)
-            ->orderBy(Entity::FIELD_CREATED_AT, QB::DESC)
+            ->orderBy(sprintf('e.%s', Entity::FIELD_CREATED_AT), QB::DESC)
             ->fetchAllAssociative();
 
         return $this->addAttrsVal($entities);
@@ -91,16 +101,24 @@ final readonly class QueryHandler
 
     private function qbFrom(): QueryBuilder
     {
-        return $this->connection->createQueryBuilder()->from(Entity::NAME);
+        return $this->connection->createQueryBuilder()->from(Entity::NAME, 'e');
     }
 
     private function select(QueryBuilder $qb): QueryBuilder
     {
-        return $qb->select(EntityIdType::FIELD_ENTITY_ID, Entity::FIELD_NAME, Entity::FIELD_DESCRIPTION);
+        return $qb->select(
+            sprintf('e.%s', EntityIdType::FIELD_ENTITY_ID),
+            sprintf('e.%s', Entity::FIELD_NAME),
+            sprintf('e.%s', Entity::FIELD_DESCRIPTION),
+        );
     }
 
     private function addAttrsVal(array $entities): array
     {
+        if (count($entities) === 0) {
+            return [];
+        }
+
         $entityIds = array_map(static fn(array $row): string => $row[EntityIdType::FIELD_ENTITY_ID], $entities);
 
         /**

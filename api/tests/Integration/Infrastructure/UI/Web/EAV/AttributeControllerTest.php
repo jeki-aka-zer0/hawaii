@@ -9,9 +9,8 @@ use App\Application\EAV\Attribute\Read\QueryHandler;
 use App\Application\EAV\Builder;
 use App\Domain\EAV\Attribute\Entity\Attribute;
 use App\Domain\EAV\Attribute\Entity\AttributeType;
-use App\Domain\EAV\Value\Entity\Value;
+use App\Domain\EAV\Entity\Entity\Entity;
 use App\Infrastructure\Doctrine\EAV\Attribute\AttributeIdType;
-use App\Infrastructure\Doctrine\EAV\Value\ValueIdType;
 use App\Infrastructure\UI\Web\EAV\AttributeController;
 use App\Tests\Integration\Infrastructure\UI\Web\AbstractEndpointTestCase;
 use App\Tests\Shared\AssertTrait;
@@ -35,7 +34,7 @@ final class AttributeControllerTest extends AbstractEndpointTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        self::$connection->executeQuery(sprintf('TRUNCATE %s, %s CASCADE', Attribute::NAME, Value::NAME));
+        self::$connection->executeQuery(sprintf('TRUNCATE %s, %s CASCADE', Entity::NAME, Attribute::NAME));
     }
 
     public function testRead(): void

@@ -8,8 +8,8 @@ use App\Application\Shared\ListDTO;
 
 final readonly class PaginationDecoratorDTO
 {
-    private const KEY_PREVIOUS = 'previous';
-    private const KEY_NEXT = 'next';
+    public const KEY_PREVIOUS = 'previous';
+    public const KEY_NEXT = 'next';
 
     public function __construct(
         private ListDTO $list,

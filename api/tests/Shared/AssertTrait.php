@@ -19,11 +19,11 @@ trait AssertTrait
 
         foreach ($expected as $expectedKey => $expectedVal) {
             if (is_array($expectedVal)) {
-                $this->assertArray($expectedVal, $actual[$expectedKey]);
+                $this->assertArray($expectedVal, $actual[$expectedKey] ?? []);
             } elseif ($expectedVal === self::TYPE_UUID) {
-                Assert::uuid($actual[$expectedKey]);
+                Assert::uuid($actual[$expectedKey] ?? '');
             } else {
-                Assert::eq($actual[$expectedKey], $expectedVal);
+                Assert::eq($actual[$expectedKey] ?? null, $expectedVal);
             }
         }
     }
