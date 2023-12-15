@@ -49,7 +49,6 @@ const EntitiesList: React.FC = () => {
       : (
           entities?.length ?
               <>
-
                 {entities.map((e: Entity) => (
                     <div key={e.name} className={"entity-card"}>
                       <div className={"entity-card__header"}>

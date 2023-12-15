@@ -29,7 +29,7 @@ const EntityView: FC = () => {
             controller.abort()
             effectRun.current = true
         }
-    }, [])
+    }, [entityId])
 
     return loading
       ? <Loader/>

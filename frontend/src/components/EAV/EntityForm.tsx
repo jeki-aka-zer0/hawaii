@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, useEffect, useRef, useState} from 'react'
+import React, {FC, useEffect, useRef, useState} from 'react'
 import './EntityForm.css'
 import {SubmitHandler, useForm} from 'react-hook-form'
 import {ErrorMessage} from '@hookform/error-message/dist'

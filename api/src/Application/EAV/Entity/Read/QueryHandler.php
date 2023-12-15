@@ -58,6 +58,7 @@ final readonly class QueryHandler
                     'v',
                     sprintf('e.%s = v.%s', EntityIdType::FIELD_ENTITY_ID, EntityIdType::FIELD_ENTITY_ID)
                 )
+                ->groupBy(...$this->selectFields())
         ))
             ->whereFieldLike(Entity::FIELD_NAME, $query->search, 'e')
             ->whereFieldLike(Value::FIELD_VALUE, $query->search, 'v')
@@ -106,11 +107,16 @@ final readonly class QueryHandler
 
     private function select(QueryBuilder $qb): QueryBuilder
     {
-        return $qb->select(
+        return $qb->select(...$this->selectFields());
+    }
+
+    private function selectFields(): array
+    {
+        return [
             sprintf('e.%s', EntityIdType::FIELD_ENTITY_ID),
             sprintf('e.%s', Entity::FIELD_NAME),
             sprintf('e.%s', Entity::FIELD_DESCRIPTION),
-        );
+        ];
     }
 
     private function addAttrsVal(array $entities): array
