@@ -1,14 +1,14 @@
 import React, { useEffect, FC, useState, useRef } from 'react'
-import axios from "axios";
-import {Entity} from "../../types/types";
+import axios from "axios"
+import {Entity} from "../../types/types"
 import { useParams } from 'react-router-dom'
 import Loader from '../Shared/Loader'
 
 const EntityView: FC = () => {
     const [loading, setLoading] = useState<boolean>(true)
     const [entity, setEntity] = useState<Entity>()
-    let { entityId } = useParams<"entityId">();
-    const effectRun = useRef(false);
+    let { entityId } = useParams<"entityId">()
+    const effectRun = useRef(false)
 
     useEffect(() => {
         setLoading(true)
@@ -27,7 +27,7 @@ const EntityView: FC = () => {
 
         return (): void => {
             controller.abort()
-            effectRun.current = true;
+            effectRun.current = true
         }
     }, [])
 

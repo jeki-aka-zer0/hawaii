@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './EntitiesList.css'
 import axios from 'axios'
-import {Entity, ListResponse} from "../../types/types";
+import {Entity, ListResponse} from "../../types/types"
 import Loader from "../Shared/Loader"
 import { Link } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ const EntitiesList: React.FC = () => {
   const [currentPageUrl, setCurrentPageUrl] = useState<string>(`${process.env.REACT_APP_API_URL}/eav/entity`)
   const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null)
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
-  const effectRun:React.MutableRefObject<boolean> = useRef(false);
+  const effectRun:React.MutableRefObject<boolean> = useRef(false)
 
   useEffect(() => {
     setLoading(true)
@@ -32,7 +32,7 @@ const EntitiesList: React.FC = () => {
 
     return (): void => {
       controller.abort()
-      effectRun.current = true;
+      effectRun.current = true
     }
   }, [currentPageUrl])
 
@@ -49,6 +49,7 @@ const EntitiesList: React.FC = () => {
       : (
           entities?.length ?
               <>
+
                 {entities.map((e: Entity) => (
                     <div key={e.name} className={"entity-card"}>
                       <div className={"entity-card__header"}>

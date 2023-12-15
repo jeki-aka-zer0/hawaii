@@ -8,10 +8,10 @@ import {isValidationError} from '../../utils/utils'
 import {NavigateFunction, useNavigate} from 'react-router-dom'
 
 type Inputs = {
-  name: string;
-  description: string;
+  name: string
+  description: string
   attributes_values: AttrVal[]
-};
+}
 
 const EntityForm: FC = () => {
   const { register, handleSubmit, setError, formState: { errors, isSubmitting, isDirty, isValid } } = useForm<Inputs>({
@@ -24,8 +24,8 @@ const EntityForm: FC = () => {
   const [isAttrValValid, setIsAttrValValid] = useState<boolean>(false)
   const [values, setValues] = useState<(string | number)[]>([])
   const [areAllValuesShown, setAreAllValuesShown] = useState<boolean>(true)
-  const navigate: NavigateFunction = useNavigate();
-  const effectRun = useRef(false);
+  const navigate: NavigateFunction = useNavigate()
+  const effectRun = useRef(false)
   const [attrName, setAttrName] = useState<string>('')
   const [val, setVal] = useState<string>('')
 
@@ -53,7 +53,7 @@ const EntityForm: FC = () => {
 
     return (): void => {
       controller.abort()
-      effectRun.current = true;
+      effectRun.current = true
     }
   }, [])
 
@@ -71,7 +71,7 @@ const EntityForm: FC = () => {
       const response: AxiosResponse<CreatedEntity> = await axios.post(`${process.env.REACT_APP_API_URL}/eav/entity`, data)
 
       if (response.status === 201) {
-        const createdEntity: CreatedEntity = response.data;
+        const createdEntity: CreatedEntity = response.data
         navigate(`/entity/${createdEntity.entity_id}`)
       } else {
         alert('Unexpected server response')
@@ -83,10 +83,10 @@ const EntityForm: FC = () => {
         const attrsValMatcher: RegExp = new RegExp(/^attributes_values\[(\d+)]\[([a-zA-Z_]+)]/)
         const attrsValErrs: string[] = []
         for (const fieldName in validationErrors) {
-          const isErrorAttrsVal: RegExpExecArray | null = attrsValMatcher.exec(fieldName);
+          const isErrorAttrsVal: RegExpExecArray | null = attrsValMatcher.exec(fieldName)
           if (isErrorAttrsVal && isErrorAttrsVal.length > 1) {
-            const index: number = parseInt(isErrorAttrsVal[1]) + 1;
-            const attrName: string = isErrorAttrsVal[2];
+            const index: number = parseInt(isErrorAttrsVal[1]) + 1
+            const attrName: string = isErrorAttrsVal[2]
             const err: string = `${index}) ${attrName}: ${validationErrors[fieldName].join(' ')}`
             attrsValErrs.push(err)
             errorShown = true
@@ -108,10 +108,10 @@ const EntityForm: FC = () => {
   }
 
   const addAttrVal = (e: React.MouseEvent<HTMLButtonElement>): void => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!toggleAttrVal(attrName, val)) {
-      return;
+      return
     }
 
     const key: string = attrName.toLowerCase()
@@ -155,7 +155,7 @@ const EntityForm: FC = () => {
   }
 
   const toggleAttrVal = (first: string, second: string): boolean => {
-    const isValid: boolean = first.length >= 2 && second.length >= 1;
+    const isValid: boolean = first.length >= 2 && second.length >= 1
     setIsAttrValValid(isValid)
     return isValid
   }

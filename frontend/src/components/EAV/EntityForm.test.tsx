@@ -5,7 +5,7 @@ import EntityForm from './EntityForm'
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: () => jest.fn(),
-}));
+}))
 
 describe('<EntityForm/>', () => {
     test('should display empty form', () => {
