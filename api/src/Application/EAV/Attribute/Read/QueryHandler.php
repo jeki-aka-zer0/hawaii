@@ -41,6 +41,7 @@ final readonly class QueryHandler
                 AttributeIdType::FIELD_ATTR_ID,
                 Value::FIELD_VALUE,
             )
+            ->distinct()
             ->from(Value::NAME)
             ->where(sprintf('%s IN (:attr_ids)', AttributeIdType::FIELD_ATTR_ID))
             ->setParameter('attr_ids', $attrIds, ArrayParameterType::STRING)
