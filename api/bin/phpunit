@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+die('non used');
+
 if (!ini_get('date.timezone')) {
     ini_set('date.timezone', 'UTC');
 }
