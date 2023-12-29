@@ -45,24 +45,30 @@ final class EntityControllerTest extends AbstractEndpointTestCase
     {
         return [
             'read all' => [
-                'queryParams' => [],
+                'query' => new Query(),
                 'expected' => [
-                    ListDTO::KEY_COUNT => 2,
+                    ListDTO::KEY_COUNT => 3,
                     ListDTO::KEY_RESULTS => self::getAllResults(),
                     PaginationDecoratorDTO::KEY_PREVIOUS => null,
                     PaginationDecoratorDTO::KEY_NEXT => null,
                 ],
             ],
             'returns an empty result when no search matched' => [
-                'queryParams' => [
-                    Query::KEY_SEARCH => 'some non existent entity name or value',
-                ],
+                'query' => (static function (): Query {
+                    $q = new Query();
+                    $q->search = 'some non existent entity name or value';
+
+                    return $q;
+                })(),
                 'expected' => self::EXPECTED_RESPONSE_NONE,
             ],
             'returns one entity found by its name' => [
-                'queryParams' => [
-                    Query::KEY_SEARCH => self::getAllResults()[0][Entity::FIELD_NAME],
-                ],
+                'query' => (static function (): Query {
+                    $q = new Query();
+                    $q->search = self::getAllResults()[0][Entity::FIELD_NAME];
+
+                    return $q;
+                })(),
                 'expected' => [
                     ListDTO::KEY_COUNT => 1,
                     ListDTO::KEY_RESULTS => [self::getAllResults()[0]],
@@ -71,14 +77,32 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                 ],
             ],
             'returns one entity found by its value' => [
-                'queryParams' => [
-                    Query::KEY_SEARCH => self::getAllResults()[1][Attribute::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE],
-                ],
+                'query' => (static function (): Query {
+                    $q = new Query();
+                    $q->search = self::getAllResults()[1][Attribute::KEY_ATTRS_VALUES][0][Value::FIELD_VALUE];
+
+                    return $q;
+                })(),
                 'expected' => [
                     ListDTO::KEY_COUNT => 1,
                     ListDTO::KEY_RESULTS => [self::getAllResults()[1]],
                     PaginationDecoratorDTO::KEY_PREVIOUS => null,
                     PaginationDecoratorDTO::KEY_NEXT => null,
+                ],
+            ],
+            'returns one of several entities with limit and offset' => [
+                'query' => (static function (): Query {
+                    $q = new Query();
+                    $q->limit = 1;
+                    $q->offset = 1;
+
+                    return $q;
+                })(),
+                'expected' => [
+                    ListDTO::KEY_COUNT => 3,
+                    ListDTO::KEY_RESULTS => [self::getAllResults()[1]],
+                    PaginationDecoratorDTO::KEY_PREVIOUS => 'http://localhost/eav/entity?offset=0&limit=1',
+                    PaginationDecoratorDTO::KEY_NEXT => 'http://localhost/eav/entity?offset=2&limit=1',
                 ],
             ],
         ];
@@ -87,7 +111,7 @@ final class EntityControllerTest extends AbstractEndpointTestCase
     /**
      * @dataProvider readDataProvider
      */
-    public function testRead(array $queryParams, array $expected): void
+    public function testRead(Query $query, array $expected): void
     {
         foreach (self::getAllResults() as $row) {
             self::$builder->createAll(
@@ -98,7 +122,6 @@ final class EntityControllerTest extends AbstractEndpointTestCase
                 $row[Entity::FIELD_DESCRIPTION],
             );
         }
-        $query = Query::build($queryParams[Query::KEY_SEARCH] ?? null);
 
         $response = self::$SUT->read($query, self::$queryHandler);
 
@@ -107,30 +130,33 @@ final class EntityControllerTest extends AbstractEndpointTestCase
 
     private static function getAllResults(): array
     {
-        return self::$allResults ??= [
-            [
-                EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
-                Entity::FIELD_NAME => $entityName1 = Builder::getRandEntityName(),
-                Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName1],
-                Attribute::KEY_ATTRS_VALUES => [
-                    [
-                        Attribute::FIELD_NAME => $attributeName1 = Builder::getRandAttrName(),
-                        Value::FIELD_VALUE => $val1 = Builder::getRandVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName1]),
+        if (empty(self::$allResults)) {
+            $entityNames = [];
+            $attributeNames = [];
+            for ($i = 0; $i < 3; $i++) {
+                $entityName = Builder::getRandEntityName($entityNames);
+                $entityNames[] = $entityName;
+                $attributeName = Builder::getRandAttrName($attributeNames);
+                $attributeNames[] = $attributeName;
+
+                self::$allResults[] = [
+                    EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
+                    Entity::FIELD_NAME => $entityName,
+                    Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName],
+                    Attribute::KEY_ATTRS_VALUES => [
+                        [
+                            Attribute::FIELD_NAME => $attributeName,
+                            Value::FIELD_VALUE => Builder::getRandVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName]),
+                        ],
                     ],
-                ],
-            ],
-            [
-                EntityIdType::FIELD_ENTITY_ID => self::TYPE_UUID,
-                Entity::FIELD_NAME => $entityName2 = Builder::getRandEntityName($entityName1),
-                Entity::FIELD_DESCRIPTION => Builder::ENTITY_NAME_TO_DESC_MAP[$entityName2],
-                Attribute::KEY_ATTRS_VALUES => [
-                    [
-                        Attribute::FIELD_NAME => $attributeName2 = Builder::getRandAttrName($attributeName1),
-                        Value::FIELD_VALUE => Builder::getRandVal(Builder::ATTR_NAME_TO_TYPE_MAP[$attributeName2], $val1),
-                    ],
-                ],
-            ],
-        ];
+                ];
+            }
+            usort(self::$allResults, function ($a, $b){
+                return strnatcmp($a[Entity::FIELD_NAME], $b[Entity::FIELD_NAME]);
+            });
+        }
+
+        return self::$allResults;
     }
 
     public function testReadEntityWithoutAttrAndVal(): void

@@ -21,7 +21,7 @@ final class CommandTest extends TestCase
         $valShouldBeProcessed = Builder::getRandVal(exclude: $valShouldBeIgnored);
         $intValShouldBeProcessed = Builder::getRandIntVal();
         $attrNameShouldBeProcessed = Builder::getRandAttrName();
-        $attrNameShouldBeProcessedInt = Builder::getRandAttrName(exclude: $attrNameShouldBeProcessed);
+        $attrNameShouldBeProcessedInt = Builder::getRandAttrName(exclude: [$attrNameShouldBeProcessed]);
         $SUT = Command::build('', attrsVal: [
             'should be rewritten by the next value of the same attribute name' => [
                 Attribute::FIELD_NAME => $attrNameShouldBeProcessed,

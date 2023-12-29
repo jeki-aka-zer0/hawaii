@@ -55,7 +55,7 @@ final class CommandHandlerTest extends TestCase
 
     public function testHandleShouldCreateAttr(): void
     {
-        $name = Builder::getRandAttrName(self::getAlreadyExistentAttr()->name);
+        $name = Builder::getRandAttrName([self::getAlreadyExistentAttr()->name]);
         $cmd = $this->getCommand($name);
 
         $attrId = self::$handler->handle($cmd);

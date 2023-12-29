@@ -29,7 +29,7 @@ final readonly class QueryHandler
 
         return new ListDTO(
             $this->getCount($qb),
-            $this->getResults($qb, $query),
+            $this->getResults($qb->groupBy(sprintf('e.%s', Entity::FIELD_CREATED_AT), ...$this->selectFields()), $query),
         );
     }
 
@@ -58,7 +58,6 @@ final readonly class QueryHandler
                     'v',
                     sprintf('e.%s = v.%s', EntityIdType::FIELD_ENTITY_ID, EntityIdType::FIELD_ENTITY_ID)
                 )
-                ->groupBy(...$this->selectFields())
         ))
             ->whereFieldLike(Entity::FIELD_NAME, $query->search, 'e')
             ->whereFieldLike(Value::FIELD_VALUE, $query->search, 'v')
@@ -68,7 +67,7 @@ final readonly class QueryHandler
     private function getCount(QueryBuilder $qb): int
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return (int)$qb->select('COUNT(e.entity_id)')->fetchOne();
+        return (int)$qb->select('COUNT(DISTINCT e.entity_id)')->fetchOne();
     }
 
     /**
@@ -95,6 +94,7 @@ final readonly class QueryHandler
             ->setFirstResult($query->offset)
             ->setMaxResults($query->limit)
             ->orderBy(sprintf('e.%s', Entity::FIELD_CREATED_AT), QB::DESC)
+            ->addOrderBy(sprintf('e.%s', Entity::FIELD_NAME), 'ASC')
             ->fetchAllAssociative();
 
         return $this->addAttrsVal($entities);

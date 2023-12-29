@@ -157,21 +157,34 @@ final readonly class Builder
         );
     }
 
-    public static function getRandAttrName(string $exclude = ''): string
+    /**
+     * @param string[] $exclude
+     * @return string
+     */
+    public static function getRandAttrName(array $exclude = []): string
     {
         return self::getRandStrFromArray(self::ATTR_NAME_TO_TYPE_MAP, $exclude);
     }
 
-    public static function getRandEntityName(string $exclude = ''): string
+    /**
+     * @param string[] $exclude
+     * @return string
+     */
+    public static function getRandEntityName(array $exclude = []): string
     {
         return self::getRandStrFromArray(self::ENTITY_NAME_TO_DESC_MAP, $exclude);
     }
 
-    private static function getRandStrFromArray(array $array, string $exclude): string
+    /**
+     * @param array $array
+     * @param string[] $exclude
+     * @return string
+     */
+    private static function getRandStrFromArray(array $array, array $exclude): string
     {
         $name = array_rand($array);
 
-        return $exclude === $name ? self::getRandStrFromArray($array, $exclude) : $name;
+        return in_array($name, $exclude) ? self::getRandStrFromArray($array, $exclude) : $name;
     }
 
     public static function getRandVal(Attribute|AttributeType|null $attr = null, string|int $exclude = null): string|int

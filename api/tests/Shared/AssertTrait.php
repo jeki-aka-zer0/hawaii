@@ -8,7 +8,7 @@ use Webmozart\Assert\Assert;
 
 trait AssertTrait
 {
-    private const TYPE_UUID = 'uuid';
+    private const string TYPE_UUID = 'uuid';
 
     private function assertArray(array $expected, array $actual): void
     {

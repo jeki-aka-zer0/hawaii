@@ -46,7 +46,7 @@ final class AttributeControllerTest extends AbstractEndpointTestCase
             $val1 = 1,
         );
         self::$builder->createVal(
-            self::$builder->createEntity(Builder::getRandEntityName($entityName1)),
+            self::$builder->createEntity(Builder::getRandEntityName([$entityName1])),
             $attrId,
             $val2 = 2,
         );

@@ -78,7 +78,7 @@ final class CommandHandlerTest extends TestCase
     {
         $cmd = Command::build($entityName = self::getNonExistentEntityName(), attrsVal: [
             'attribute should be created' => [
-                Attribute::FIELD_NAME => $newAttrName = Builder::getRandAttrName(self::getAlreadyExistentAttr()->name),
+                Attribute::FIELD_NAME => $newAttrName = Builder::getRandAttrName([self::getAlreadyExistentAttr()->name]),
                 Value::FIELD_VALUE => $valOfNewAttr = Builder::getRandVal(),
             ],
             'already existent attribute should be found' => [
@@ -103,7 +103,7 @@ final class CommandHandlerTest extends TestCase
         $cmd = Command::build(self::getNonExistentEntityName(), attrsVal: [
             [
                 AttributeIdType::FIELD_ATTR_ID => 'non valid uuid',
-                Attribute::FIELD_NAME => Builder::getRandAttrName(self::getAlreadyExistentAttr()->name),
+                Attribute::FIELD_NAME => Builder::getRandAttrName([self::getAlreadyExistentAttr()->name]),
                 Value::FIELD_VALUE => Builder::getRandStrVal(),
             ],
         ]);
@@ -124,7 +124,7 @@ final class CommandHandlerTest extends TestCase
 
     private static function getNonExistentEntityName(): string
     {
-        return Builder::getRandEntityName(self::getAlreadyExistentEntity()->name);
+        return Builder::getRandEntityName([self::getAlreadyExistentEntity()->name]);
     }
 
     private function assertEntityExists(string $name): self
