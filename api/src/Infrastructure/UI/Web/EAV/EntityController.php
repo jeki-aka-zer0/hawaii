@@ -15,15 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class EntityController extends AbstractController
 {
-    private const EAV_ENTITIES_READ = 'eav_entities_read';
-
-    public function __construct(private readonly UrlGeneratorInterface $router)
-    {
-    }
+    private const string EAV_ENTITIES_READ = 'eav_entities_read';
 
     #[Route('/eav/entity', name: 'eav_entity_create', methods: ['POST'])]
     public function create(Command $cmd, CommandHandler $handler): Response
@@ -40,12 +35,7 @@ final class EntityController extends AbstractController
     public function read(Query $query, QueryHandler $handler): Response
     {
         return new JsonResponse(
-            (new Paginator(
-                $query,
-                self::EAV_ENTITIES_READ,
-                $this->router,
-                $handler->read($query),
-            ))
+            (new Paginator($query, $handler->read($query)))
                 ->build()
                 ->toArray()
         );

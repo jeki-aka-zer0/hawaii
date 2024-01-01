@@ -1,7 +1,7 @@
 export interface ListResponse {
   results: Entity[]
-  previous: string | null
-  next: string | null
+  previous: number | null
+  next: number | null
 }
 
 export type CreatedEntity = {

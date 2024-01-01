@@ -3,22 +3,23 @@ import './EntitiesList.css'
 import axios from 'axios'
 import {Entity, ListResponse} from "../../types/types"
 import Loader from "../Shared/Loader"
-import { Link } from 'react-router-dom'
+import { Link, NavigateFunction, useNavigate, useSearchParams } from 'react-router-dom'
 
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [currentPageUrl, setCurrentPageUrl] = useState<string>(`${process.env.REACT_APP_API_URL}/eav/entity`)
-  const [prevPageUrl, setPrevPageUrl] = useState<string | null>(null)
-  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null)
+  const [prevPageUrl, setPrevPageUrl] = useState<number | null>(0)
+  const [nextPageUrl, setNextPageUrl] = useState<number | null>(0)
   const effectRun:React.MutableRefObject<boolean> = useRef(false)
+  const navigate: NavigateFunction = useNavigate()
+  const [searchParams] = useSearchParams()
 
   useEffect(() => {
     setLoading(true)
     const controller : AbortController = new AbortController()
     if (effectRun.current) {
       axios
-        .get<ListResponse>(currentPageUrl, {
+        .get<ListResponse>(`${process.env.REACT_APP_API_URL}/eav/entity?${searchParams.toString()}`, {
           signal: controller.signal
         })
         .then(res => {
@@ -34,14 +35,14 @@ const EntitiesList: React.FC = () => {
       controller.abort()
       effectRun.current = true
     }
-  }, [currentPageUrl])
+  }, [searchParams])
 
-  function gotoPrevPage(): void {
-    prevPageUrl && setCurrentPageUrl(prevPageUrl)
-  }
-
-  function gotoNextPage(): void {
-    nextPageUrl && setCurrentPageUrl(nextPageUrl)
+  function goto(page: number | null): void {
+    if (page === null) {
+      return
+    }
+    searchParams.set("offset", page.toString())
+    navigate(`/entities?${searchParams.toString()}`)
   }
 
   return loading
@@ -60,9 +61,9 @@ const EntitiesList: React.FC = () => {
                       <p>{e.description}</p>
                     </div>
                 ))}
-                {(prevPageUrl || nextPageUrl) && <div className="pager">
-                  {<button onClick={gotoPrevPage} disabled={!prevPageUrl}>←</button>}
-                  {<button onClick={gotoNextPage} disabled={!nextPageUrl}>→</button>}
+                {(prevPageUrl !== null || nextPageUrl !== null) && <div className="pager">
+                  {<button onClick={() => goto(prevPageUrl)} disabled={prevPageUrl == null}>←</button>}
+                  {<button onClick={() => goto(nextPageUrl)} disabled={nextPageUrl == null}>→</button>}
                 </div>}
               </>
               : <p>There are no entities yet.</p>

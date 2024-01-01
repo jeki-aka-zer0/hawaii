@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class Query implements QueryListInterface
 {
-    public const KEY_SEARCH = 'search';
+    public const string KEY_SEARCH = 'search';
 
     #[Assert\Length(min: 2, max: 255)]
     public string|int|null $search = null;
