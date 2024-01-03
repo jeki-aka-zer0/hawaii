@@ -31,11 +31,18 @@ label {
     padding: 0 0 3px 3px;
 }
 
-input, textarea, button {
+input, button, select, textarea {
     border: 0;
     border-radius: 8px;
     font-family: 'Courier', monospace;
     padding: 10px 15px;
+}
+
+select {
+    appearance: none;
+    background: #0a233f;
+    color: #d9fa02;
+    cursor: pointer;
 }
 
 input[type=text], textarea {
@@ -45,7 +52,7 @@ input[type=text], textarea {
     width: calc(100% - 30px);
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
     outline: 0;
     background: #102b48;
 }

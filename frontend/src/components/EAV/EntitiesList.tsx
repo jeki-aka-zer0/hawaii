@@ -13,6 +13,18 @@ const EntitiesList: React.FC = () => {
   const effectRun:React.MutableRefObject<boolean> = useRef(false)
   const navigate: NavigateFunction = useNavigate()
   const [searchParams] = useSearchParams()
+  const [searchTerm, setSearchTerm] = useState<string>('')
+
+  const debounceColor = (value: string) => {
+    const debounced = () => {
+      return setTimeout(() => {
+        console.log(value)
+        // Send Axios request here
+      }, 1000)
+    }
+
+    return debounced;
+  };
 
   useEffect(() => {
     setLoading(true)
@@ -34,8 +46,9 @@ const EntitiesList: React.FC = () => {
     return (): void => {
       controller.abort()
       effectRun.current = true
+      clearTimeout(debounceColor())
     }
-  }, [searchParams])
+  }, [searchParams, searchTerm])
 
   function goto(page: number | null): void {
     if (page === null) {
@@ -50,6 +63,20 @@ const EntitiesList: React.FC = () => {
       : (
           entities?.length ?
               <>
+                <div className={'row'}>
+                  <div className={'col-6'}>
+                    <label htmlFor="search">Search</label>
+                    <input type="text" id={"search"} onChange={(e) => debounceColor(e.target.value)}/>
+                  </div>
+                  <div className={'col-6'} defaultValue={3}>
+                    <label htmlFor="limit">Per page</label>
+                      <select name="limit" id={"limit"} className={"select"}>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                      </select>
+                  </div>
+                </div>
                 {entities.map((e: Entity) => (
                     <div key={e.name} className={"entity-card"}>
                       <div className={"entity-card__header"}>
