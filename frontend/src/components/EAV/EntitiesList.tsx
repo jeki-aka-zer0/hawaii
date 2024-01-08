@@ -14,6 +14,7 @@ const EntitiesList: React.FC = () => {
   const [isDelayOn, setIsDelayOn] = useState<boolean>(false)
   const effectRun:React.MutableRefObject<boolean> = useRef(false)
   const navigate: NavigateFunction = useNavigate()
+  const limit: string = searchParams.get("limit") ?? "3"
 
   useEffect(() => {
     const controller : AbortController = new AbortController()
@@ -50,9 +51,18 @@ const EntitiesList: React.FC = () => {
     navigate(`/entities?${searchParams.toString()}`)
   }
 
-  function search(e: React.ChangeEvent<HTMLInputElement>): void {
+  function search(search: string): void {
     setIsDelayOn(true) // turn on delay to allow type the searching phrase
-    searchParams.set("search", e.target.value)
+    searchParams.set("search", search)
+    resetOffsetAndNavigate()
+  }
+
+  function changeLimit(limit: string): void {
+    searchParams.set("limit", limit)
+    resetOffsetAndNavigate()
+  }
+
+  function resetOffsetAndNavigate(): void {
     searchParams.delete("offset")
     navigate(`/entities?${searchParams.toString()}`)
   }
@@ -65,14 +75,19 @@ const EntitiesList: React.FC = () => {
             <label htmlFor="search">Search</label>
             <input type="text"
                    id={"search"}
-                   onChange={search}
+                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => search(e.target.value)}
                    value={searchParams.get("search") ?? ""}
                    autoFocus={Boolean(searchParams.get("search"))}
             />
           </div>
           <div className={'col-6'} defaultValue={3}>
             <label htmlFor="limit">Per page</label>
-            <select name="limit" id={"limit"} className={"select"}>
+            <select name="limit"
+                    id={"limit"}
+                    className={"select"}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => changeLimit(e.target.value)}
+                    value={limit}
+            >
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
