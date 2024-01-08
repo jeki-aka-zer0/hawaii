@@ -175,6 +175,7 @@ const EntityForm: FC = () => {
           <input
               id="name"
               type="text"
+              autoFocus={true}
               {...register<keyof Inputs>('name', {
                 required: 'Name is required.',
                 minLength: { value: 2, message: 'Name must be at least 2 characters.' },

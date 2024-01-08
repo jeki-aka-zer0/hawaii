@@ -1,5 +1,7 @@
 .entity-form__add-attr-val-btn {
-    margin: 1.2em 0 0;
+    @media (min-width: 900px) {
+        margin: 1.2em 0 0;
+    }
 }
 
 .entity-form__remove-attr-val-btn {

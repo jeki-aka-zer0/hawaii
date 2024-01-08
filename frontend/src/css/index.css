@@ -20,7 +20,7 @@ a {
     color: #02abfa;
 }
 
-a:hover {
+a:hover, a:focus {
     color: #1f96cc;
 }
 
@@ -52,7 +52,7 @@ input[type=text], textarea {
     width: calc(100% - 30px);
 }
 
-input:focus, textarea:focus, select:focus {
+input:focus, textarea:focus, select:focus, button:focus {
     outline: 0;
     background: #102b48;
 }
@@ -78,7 +78,7 @@ input[type=submit], button {
     color: #0a233f;
 }
 
-input[type=submit]:hover:enabled, button:hover:enabled {
+input[type=submit]:hover:enabled, input[type=submit]:focus:enabled, button:hover:enabled, button:focus:enabled {
     background: #c0de00;
     color: #102b48;
     position: relative;
@@ -107,27 +107,39 @@ input[type=submit]:disabled, button:disabled {
 }
 
 .col-2, .col-3, .col-4, .col-6, .col-12 {
-    flex-basis: 0;
-    flex-grow: 1;
-    padding: 0 1em 1em 0;
+    padding: 0 0 1em 0;
 }
 
-.col-2 {
-    max-width: 16.66667%;
+@media (max-width: 900px) {
+    .col-2, .col-3, .col-4, .col-6, .col-12 {
+        width: 100%;
+    }
 }
 
-.col-3 {
-    max-width: 25%;
-}
+@media (min-width: 900px) {
+    .col-2, .col-3, .col-4, .col-6, .col-12 {
+        flex-basis: 0;
+        flex-grow: 1;
+        padding-right: 1em;
+    }
 
-.col-4 {
-    max-width: 33.33333%;
-}
+    .col-2 {
+        max-width: 16.66667%;
+    }
 
-.col-6 {
-    max-width: 50%;
-}
+    .col-3 {
+        max-width: 25%;
+    }
 
-.col-12 {
-    max-width: 100%;
+    .col-4 {
+        max-width: 33.33333%;
+    }
+
+    .col-6 {
+        max-width: 50%;
+    }
+
+    .col-12 {
+        max-width: 100%;
+    }
 }
