@@ -8,13 +8,30 @@ import { Link, NavigateFunction, useNavigate, useSearchParams } from 'react-rout
 const EntitiesList: React.FC = () => {
   const [entities, setEntities] = useState<Entity[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const [count, setCount] = useState<number>(0)
   const [prevPageUrl, setPrevPageUrl] = useState<number | null>(0)
   const [nextPageUrl, setNextPageUrl] = useState<number | null>(0)
   const [searchParams] = useSearchParams()
   const [isDelayOn, setIsDelayOn] = useState<boolean>(false)
   const effectRun:React.MutableRefObject<boolean> = useRef(false)
   const navigate: NavigateFunction = useNavigate()
-  const limit: string = searchParams.get("limit") ?? "3"
+  let limit: number = ((): number => {
+    const limit: string | null = searchParams.get("limit")
+    if (limit) {
+      return parseInt(limit)
+    }
+    // default value
+    return 25
+  })()
+  const currentPage:number = ((): number => {
+    const offsetRaw: string | null = searchParams.get("offset")
+    let offset: number = 0
+    if (offsetRaw) {
+      offset = parseInt(offsetRaw)
+    }
+    return offset / limit + 1
+  })()
+  const totalPages: number = count / limit
 
   useEffect(() => {
     const controller : AbortController = new AbortController()
@@ -29,6 +46,7 @@ const EntitiesList: React.FC = () => {
             .then(res => {
               setLoading(false)
               setEntities(res.data.results)
+              setCount(res.data.count)
               setPrevPageUrl(res.data.previous)
               setNextPageUrl(res.data.next)
             })
@@ -80,7 +98,7 @@ const EntitiesList: React.FC = () => {
                    autoFocus={Boolean(searchParams.get("search"))}
             />
           </div>
-          <div className={'col-6'} defaultValue={3}>
+          <div className={'col-6'} defaultValue={25}>
             <label htmlFor="limit">Per page</label>
             <select name="limit"
                     id={"limit"}
@@ -88,9 +106,9 @@ const EntitiesList: React.FC = () => {
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => changeLimit(e.target.value)}
                     value={limit}
             >
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
             </select>
           </div>
         </div>
@@ -108,11 +126,12 @@ const EntitiesList: React.FC = () => {
                   </div>
               ))}
               {(prevPageUrl !== null || nextPageUrl !== null) && <div className="pager">
+                <span>{currentPage}/{totalPages}</span>
                 {<button onClick={() => goto(prevPageUrl)} disabled={prevPageUrl == null}>←</button>}
                 {<button onClick={() => goto(nextPageUrl)} disabled={nextPageUrl == null}>→</button>}
               </div>}
             </>
-            : <p>No entities.</p>}
+            : <p>No entities</p>}
       </>
 }
 

@@ -1,5 +1,6 @@
 export interface ListResponse {
   results: Entity[]
+  count: number
   previous: number | null
   next: number | null
 }
