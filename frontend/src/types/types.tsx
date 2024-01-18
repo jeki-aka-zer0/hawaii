@@ -12,7 +12,7 @@ export type CreatedEntity = {
 export type Entity = {
   readonly entity_id: string
   readonly name: string
-  readonly description: string | null
+  description: string | null
   readonly attributes_values: {
     name: string
     value: string | number

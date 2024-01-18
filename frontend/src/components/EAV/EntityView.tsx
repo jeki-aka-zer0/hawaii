@@ -3,6 +3,7 @@ import axios from "axios"
 import {Entity} from "../../types/types"
 import { useParams } from 'react-router-dom'
 import Loader from '../Shared/Loader'
+import Contenteditable from "../Shared/Contenteditable";
 
 const EntityView: FC = () => {
     const [loading, setLoading] = useState<boolean>(true)
@@ -39,8 +40,13 @@ const EntityView: FC = () => {
             <p>
                 {entity?.attributes_values.map(av => <span className={"tag"} title={av.name} key={av.name + av.value}>{av.value}</span>)}
             </p>
-            <p>&nbsp;</p>
-            <p>{entity?.description}</p>
+            <Contenteditable value={entity?.description ?? ""} onChange={(text: string):void => {
+                let entityNew: (Entity | undefined) = entity
+                if (entityNew) {
+                    entityNew.description = text
+                    setEntity(entityNew)
+                }
+            }}/>
         </div>
     )
 }
