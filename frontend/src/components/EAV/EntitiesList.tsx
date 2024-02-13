@@ -59,7 +59,7 @@ const EntitiesList: React.FC = () => {
       effectRun.current = true
       clearTimeout(timeout)
     }
-  }, [searchParams])
+  }, [isDelayOn, searchParams])
 
   function goto(page: number | null): void {
     if (page === null) {
